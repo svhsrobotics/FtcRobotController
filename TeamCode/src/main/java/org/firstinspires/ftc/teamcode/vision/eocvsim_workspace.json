@@ -1,6 +1,6 @@
 {
   "sourcesPath": ".",
   "resourcesPath": ".",
-  "excludedPaths": [],
-  "excludedFileExtensions": []
+  "excludedPaths": ["demos"],
+  "excludedFileExtensions": [".kt"]
 }
