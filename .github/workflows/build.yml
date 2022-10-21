@@ -22,4 +22,6 @@ jobs:
       uses: gradle/gradle-build-action@v2
       
     - name: Execute Gradle build (teamcode)
-      run: ./gradlew :teamcode:build
+      uses: gradle/gradle-build-action@v2
+      with:
+        arguments: teamcode:build
