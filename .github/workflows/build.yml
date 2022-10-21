@@ -18,10 +18,7 @@ jobs:
         cache: gradle
     - name: Setup Android SDK
       uses: android-actions/setup-android@v2
-    - name: Setup Gradle
-      uses: gradle/gradle-build-action@v2
-      
-    - name: Execute Gradle build (teamcode)
+    - name: Setup Gradle and execute teamcode build
       uses: gradle/gradle-build-action@v2
       with:
         arguments: teamcode:build
