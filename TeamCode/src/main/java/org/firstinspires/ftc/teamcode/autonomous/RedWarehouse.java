@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.Shared.Drive2;
+import org.firstinspires.ftc.teamcode.robot.CompetitionRobot;
 import org.firstinspires.ftc.teamcode.robot.Robot;
 import org.firstinspires.ftc.teamcode.robot.hardware.Arm.CollectorMode;
 import org.firstinspires.ftc.teamcode.robot.hardware.Arm.HubPosition;
@@ -43,7 +44,7 @@ public class RedWarehouse extends LinearOpMode {
         // Tell the camera to start using the pipeline
         webcam.setPipeline(detector);
         // Create the robot from the hardware map
-        Robot robot = new Robot(hardwareMap);
+        CompetitionRobot robot = new CompetitionRobot(hardwareMap);
         rightCarousel = hardwareMap.get(CRServo.class, "rightCarousel");
         leftCarousel = hardwareMap.get(CRServo.class, "leftCarousel");
         // Initialize the hardware

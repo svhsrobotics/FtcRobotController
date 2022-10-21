@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.Shared.Drive2;
-import org.firstinspires.ftc.teamcode.robot.Robot;
+import org.firstinspires.ftc.teamcode.robot.CompetitionRobot;
 import org.firstinspires.ftc.teamcode.robot.hardware.Arm;
 import org.firstinspires.ftc.teamcode.robot.hardware.Webcam;
 import org.firstinspires.ftc.teamcode.util.Configuration;
@@ -41,7 +41,7 @@ public class Topright extends LinearOpMode {
         // Tell the camera to start using the pipeline
         webcam.setPipeline(detector);
         // Create the robot from the hardware map
-        Robot robot = new Robot(hardwareMap);
+        CompetitionRobot robot = new CompetitionRobot(hardwareMap);
         rightCarousel = hardwareMap.get(CRServo.class, "rightCarousel");
         leftCarousel = hardwareMap.get(CRServo.class, "leftCarousel");
         // Initialize the hardware
@@ -101,16 +101,10 @@ public class Topright extends LinearOpMode {
 
         switch (position) {
             case LEFT:
-                robot.arm.goToBackPosition(Arm.HubPosition.BOTTOM);
-                sleep(3000);
                 drive.navigationMonitorTicksPhi(10, 0, -18, 92, 10);
                 drive.ceaseMotion();
-                robot.arm.setCollectorMode(Arm.CollectorMode.Eject);
-                sleep(3000);
-                robot.arm.setCollectorMode(Arm.CollectorMode.Stop);
                 // 20 total
                 drive.navigationMonitorTicksPhi(10, 0, 6, 92, 10);
-                robot.arm.goToBackPosition(Arm.HubPosition.PARK);
                 drive.navigationMonitorTicksPhi(10, 0, 14, 92, 10);
                 drive.navigationMonitorTicksPhi(10, 16, 0, 92, 10);
                 drive.ceaseMotion();
@@ -155,9 +149,6 @@ public class Topright extends LinearOpMode {
         while (opModeIsActive()) {
             sleep(50);
         }
-    }
-}
-
     }
 }
 

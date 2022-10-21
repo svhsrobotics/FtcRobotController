@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Shared.Drive2;
+import org.firstinspires.ftc.teamcode.robot.CompetitionRobot;
 import org.firstinspires.ftc.teamcode.robot.Robot;
 
 @Disabled
@@ -12,7 +13,7 @@ import org.firstinspires.ftc.teamcode.robot.Robot;
 public class CurrentTest extends LinearOpMode {
 
     public void runOpMode() {
-        Robot robot1 = new Robot(hardwareMap);
+        CompetitionRobot robot1 = new CompetitionRobot(hardwareMap);
         robot1.initHardware();
 
         Drive2 drive = new Drive2(robot1, this);

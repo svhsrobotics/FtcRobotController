@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.Shared.Drive2;
+import org.firstinspires.ftc.teamcode.robot.CompetitionRobot;
 import org.firstinspires.ftc.teamcode.robot.Robot;
 import org.firstinspires.ftc.teamcode.robot.hardware.Arm.CollectorMode;
 import org.firstinspires.ftc.teamcode.robot.hardware.Arm.HubPosition;
@@ -15,6 +16,8 @@ import org.firstinspires.ftc.teamcode.util.Configuration;
 import org.firstinspires.ftc.teamcode.util.Configurator;
 import org.firstinspires.ftc.teamcode.vision.HSVColor;
 import org.firstinspires.ftc.teamcode.vision.TeamElementDetector;
+
+import java.util.concurrent.CompletionException;
 
 @Autonomous(name = "Blue Carousel", group = "Competition")
 public class BlueCarousel extends LinearOpMode {
@@ -43,7 +46,7 @@ public class BlueCarousel extends LinearOpMode {
         // Tell the camera to start using the pipeline
         webcam.setPipeline(detector);
         // Create the robot from the hardware map
-        Robot robot = new Robot(hardwareMap);
+        CompetitionRobot robot = new CompetitionRobot(hardwareMap);
         rightCarousel = hardwareMap.get(CRServo.class, "rightCarousel");
         leftCarousel = hardwareMap.get(CRServo.class, "leftCarousel");
         // Initialize the hardware
