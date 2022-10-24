@@ -26,7 +26,7 @@ public class Timeout {
     }
 
     /**
-     * @return false if the timeout has expired
+     * @return true if the timeout has expired
      */
     // I really think that using !expired is more intuitive, so I'm suppressing the warning
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
