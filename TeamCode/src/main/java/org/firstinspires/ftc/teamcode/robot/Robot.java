@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.robot;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.robot.hardware.Drive;
 
@@ -18,7 +17,7 @@ public abstract class Robot {
         BACK_RIGHT
     }
 
-    public EnumMap<DrivePos, Drive> Drives = new EnumMap<DrivePos, Drive>(DrivePos.class);
+    public EnumMap<DrivePos, Drive> drives = new EnumMap<>(DrivePos.class);
 
     public abstract void initHardware();
 

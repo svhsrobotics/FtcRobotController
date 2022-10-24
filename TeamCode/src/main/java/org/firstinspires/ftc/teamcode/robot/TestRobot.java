@@ -8,35 +8,13 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.robot.hardware.Drive;
 import org.firstinspires.ftc.teamcode.util.Timeout;
 
-import java.util.EnumMap;
-
 public class TestRobot extends Robot{
 
-    // Hardware definitions
-    static final private class Hardware {
-        static final double revCounts = 28;
-        static final double gearReduction = 40;
-        static final double wheelDiameter = 3;
+    static final double REV_COUNTS = 28;
+    static final double GEAR_REDUCTION = 40;
+    static final double WHEEL_DIAMETER = 3;
 
-        static final String frontLeftMotorName = "left_front";//left_front_drive
-        static final String frontRightMotorName = "right_front";//right_front_drive
-        static final String backLeftMotorName = "left_back";//left_back_drive
-        static final String backRightMotorName = "right_back";//right_back_drive
-        static final String imuName = "imu";
-    }
-
-    private HardwareMap hardwareMap;
-
-    /*public enum DrivePos {
-        FRONT_LEFT,
-        FRONT_RIGHT,
-        BACK_LEFT,
-        BACK_RIGHT
-    }*/
-
-    //public EnumMap<DrivePos, Drive> Drives = new EnumMap<DrivePos, Drive>(DrivePos.class);
-
-    //public BNO055IMU imu;
+    private final HardwareMap hardwareMap;
 
     public TestRobot(HardwareMap hardwareMap) {
         this.hardwareMap = hardwareMap;
@@ -49,7 +27,7 @@ public class TestRobot extends Robot{
 
     public void initIMU() {
         // Get the imu
-        this.imu = hardwareMap.get(BNO055IMU.class, Hardware.imuName);
+        this.imu = hardwareMap.get(BNO055IMU.class, "imu");
 
         // Set the IMU parameters
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
@@ -67,29 +45,21 @@ public class TestRobot extends Robot{
         }
 
         Timeout t = new Timeout(5);
-        while (!imu.isAccelerometerCalibrated() && !t.timeout()) {
+        while (!imu.isAccelerometerCalibrated() && !t.expired()) {
             Thread.yield();
         }
     }
 
     public void initDrives() {
-        this.Drives.put(DrivePos.FRONT_LEFT,
-                new Drive(this.hardwareMap.get(DcMotorEx.class, Hardware.frontLeftMotorName),
-                        Hardware.revCounts, Hardware.gearReduction, Hardware.wheelDiameter));
-        this.Drives.put(DrivePos.FRONT_RIGHT,
-                new Drive(this.hardwareMap.get(DcMotorEx.class, Hardware.frontRightMotorName),
-                        Hardware.revCounts, Hardware.gearReduction, Hardware.wheelDiameter));
-        this.Drives.put(DrivePos.BACK_LEFT,
-                new Drive(this.hardwareMap.get(DcMotorEx.class, Hardware.backLeftMotorName),
-                        Hardware.revCounts, Hardware.gearReduction, Hardware.wheelDiameter));
-        this.Drives.put(DrivePos.BACK_RIGHT,
-                new Drive(this.hardwareMap.get(DcMotorEx.class, Hardware.backRightMotorName),
-                        Hardware.revCounts, Hardware.gearReduction, Hardware.wheelDiameter));
+        drives.put(DrivePos.FRONT_LEFT,  new Drive(this.hardwareMap.get(DcMotorEx.class, "left_front"),  REV_COUNTS, GEAR_REDUCTION, WHEEL_DIAMETER));
+        drives.put(DrivePos.FRONT_RIGHT, new Drive(this.hardwareMap.get(DcMotorEx.class, "right_front"), REV_COUNTS, GEAR_REDUCTION, WHEEL_DIAMETER));
+        drives.put(DrivePos.BACK_LEFT,   new Drive(this.hardwareMap.get(DcMotorEx.class, "left_back"),   REV_COUNTS, GEAR_REDUCTION, WHEEL_DIAMETER));
+        drives.put(DrivePos.BACK_RIGHT,  new Drive(this.hardwareMap.get(DcMotorEx.class, "right_back"),  REV_COUNTS, GEAR_REDUCTION, WHEEL_DIAMETER));
 
-        for (Drive drive : this.Drives.values())
+        for (Drive drive : drives.values())
             drive.run();
 
-        this.Drives.get(DrivePos.FRONT_LEFT).setDirection(DcMotorSimple.Direction.REVERSE);
-        this.Drives.get(DrivePos.BACK_LEFT).setDirection(DcMotorSimple.Direction.REVERSE);
+        drives.get(DrivePos.FRONT_LEFT).setDirection(DcMotorSimple.Direction.REVERSE);
+        drives.get(DrivePos.BACK_LEFT).setDirection(DcMotorSimple.Direction.REVERSE);
     }
 }

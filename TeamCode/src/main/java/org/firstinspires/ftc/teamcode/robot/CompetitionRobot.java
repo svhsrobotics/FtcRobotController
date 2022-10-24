@@ -95,7 +95,7 @@ public class CompetitionRobot extends Robot {
         }
 
         Timeout t = new Timeout(5);
-        while (!imu.isAccelerometerCalibrated() && !t.timeout()) {
+        while (!imu.isAccelerometerCalibrated() && !t.expired()) {
             Thread.yield();
         }
     }
