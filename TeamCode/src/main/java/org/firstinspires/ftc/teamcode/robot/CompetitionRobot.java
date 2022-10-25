@@ -56,11 +56,13 @@ public class CompetitionRobot extends Robot {
     private final Logger logger;
 
     public CompetitionRobot(HardwareMap hardwareMap, Logger logger) {
+        super(hardwareMap);
         this.hardwareMap = hardwareMap;
         this.logger = logger;
     }
 
     public CompetitionRobot(HardwareMap hardwareMap) {
+        super(hardwareMap);
         this.hardwareMap = hardwareMap;
         this.logger = new Logger();
     }

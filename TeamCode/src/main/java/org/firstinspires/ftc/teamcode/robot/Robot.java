@@ -4,6 +4,7 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.robot.hardware.Drive;
+import org.firstinspires.ftc.teamcode.util.Logger;
 import org.firstinspires.ftc.teamcode.util.Timeout;
 
 import java.util.EnumMap;
@@ -11,6 +12,7 @@ import java.util.EnumMap;
 public abstract class Robot {
 
     protected final HardwareMap hardwareMap;
+    protected Logger logger;
 
     public BNO055IMU imu;
 
@@ -24,7 +26,12 @@ public abstract class Robot {
     public EnumMap<DrivePos, Drive> drives = new EnumMap<>(DrivePos.class);
 
     public Robot(HardwareMap hardwareMap) {
+        this(hardwareMap, new Logger());
+    }
+
+    public Robot(HardwareMap hardwareMap, Logger logger) {
         this.hardwareMap = hardwareMap;
+        this.logger = logger;
     }
 
     public void initHardware() {
@@ -46,15 +53,19 @@ public abstract class Robot {
         // Initialize the imu with specified parameter
         imu.initialize(parameters);
 
-        // Wait while the gyro is calibrating...
-        while (!imu.isGyroCalibrated()) {
+        logger.debug("Waiting for the gyroscope to calibrate...");
+        Timeout t = new Timeout(2);
+        while(!imu.isGyroCalibrated() && !t.expired()) {
             Thread.yield();
+        }
+        if (!imu.isGyroCalibrated()) {
+            logger.warning("Gyroscope was not properly calibrated!");
+        } else {
+            logger.debug("Gyroscope calibrated successfully.");
         }
 
-        Timeout t = new Timeout(5);
-        while (!imu.isAccelerometerCalibrated() && !t.expired()) {
-            Thread.yield();
-        }
+        // TODO: We don't wait for the accelerometer or magnetometer to calibrate because it never seems to complete
+        // Should investigate sometime...
     }
 
     /**

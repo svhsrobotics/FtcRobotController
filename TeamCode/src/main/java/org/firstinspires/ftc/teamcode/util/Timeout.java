@@ -5,14 +5,14 @@ package org.firstinspires.ftc.teamcode.util;
  */
 public class Timeout {
     private final long startTime;
-    private final int duration;
+    private final long duration;
 
     /**
      * Creates a new timeout
      * @param duration The duration of the timeout in seconds
      */
     public Timeout(int duration) {
-        this.duration = duration;
+        this.duration = secondsToNano(duration);
         this.startTime = System.nanoTime();
     }
 
@@ -25,12 +25,24 @@ public class Timeout {
         return (long) seconds * 1000 * 1000 * 1000;
     }
 
+    private int nanoToSeconds(long nanos) {
+        return (int) (nanos / 1000 / 1000 / 1000);
+    }
+
+    public long elapsed() {
+        return System.nanoTime() - this.startTime;
+    }
+
+    public long elapsedSec() {
+        return nanoToSeconds(elapsed());
+    }
+
     /**
      * @return true if the timeout has expired
      */
     // I really think that using !expired is more intuitive, so I'm suppressing the warning
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean expired() {
-        return (System.nanoTime() - this.startTime) > secondsToNano(this.duration);
+        return elapsed() > this.duration;
     }
 }
