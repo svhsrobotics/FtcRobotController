@@ -21,4 +21,4 @@ jobs:
     - name: Setup Gradle and execute teamcode build
       uses: gradle/gradle-build-action@v2
       with:
-        arguments: teamcode:build
+        arguments: teamcode:compileReleaseSources
