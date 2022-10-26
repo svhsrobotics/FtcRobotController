@@ -37,6 +37,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Shared.Drive2;
+import org.firstinspires.ftc.teamcode.robot.CompetitionRobot;
 import org.firstinspires.ftc.teamcode.robot.Robot;
 
 /**
@@ -77,7 +78,7 @@ private ElapsedTime runtime = new ElapsedTime();
     @Override
     public void runOpMode() {
 
-        Robot robot = new Robot(hardwareMap);
+        CompetitionRobot robot = new CompetitionRobot(hardwareMap);
         // Initialize the hardware
         robot.initDrives();
         robot.initIMU();

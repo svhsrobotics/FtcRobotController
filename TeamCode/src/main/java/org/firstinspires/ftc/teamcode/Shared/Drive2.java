@@ -62,10 +62,10 @@ public class Drive2 {
         this.telemetry = opMode.telemetry;
         this.imu = robot.imu;
 
-        this.leftFrontDrive = robot.Drives.get(Robot.DrivePos.FRONT_LEFT);
-        this.rightFrontDrive = robot.Drives.get(Robot.DrivePos.FRONT_RIGHT);
-        this.leftBackDrive = robot.Drives.get(Robot.DrivePos.BACK_LEFT);
-        this.rightBackDrive = robot.Drives.get(Robot.DrivePos.BACK_RIGHT);
+        this.leftFrontDrive = robot.drives.get(Robot.DrivePos.FRONT_LEFT);
+        this.rightFrontDrive = robot.drives.get(Robot.DrivePos.FRONT_RIGHT);
+        this.leftBackDrive = robot.drives.get(Robot.DrivePos.BACK_LEFT);
+        this.rightBackDrive = robot.drives.get(Robot.DrivePos.BACK_RIGHT);
 
         motorPowerFactors = new HashMap<>();
         setTargetAngle(0);
@@ -755,7 +755,7 @@ public class Drive2 {
                 return false; //Wait 1 sec to allow for initial acceleration
             double a = robot.imu.getLinearAcceleration().yAccel;
             double current = 0;
-            for (Drive drive : robot.Drives.values()) {
+            for (Drive drive : robot.drives.values()) {
                 //double c = drive.getCurrent();
                 //android.util.Log.w("current", "" + c);
                 current += drive.getCurrent();
