@@ -1,30 +1,25 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
-import com.qualcomm.hardware.rev.RevBlinkinLedDriver.BlinkinPattern;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Servo;
+
 import org.firstinspires.ftc.teamcode.Shared.Drive2;
 import org.firstinspires.ftc.teamcode.robot.CompetitionRobot;
-import org.firstinspires.ftc.teamcode.robot.Robot;
-import org.firstinspires.ftc.teamcode.robot.hardware.Arm.CollectorMode;
-import org.firstinspires.ftc.teamcode.robot.hardware.Arm.HubPosition;
+import org.firstinspires.ftc.teamcode.robot.hardware.Arm;
 import org.firstinspires.ftc.teamcode.robot.hardware.Webcam;
 import org.firstinspires.ftc.teamcode.util.Configuration;
 import org.firstinspires.ftc.teamcode.util.Configurator;
 import org.firstinspires.ftc.teamcode.vision.HSVColor;
 import org.firstinspires.ftc.teamcode.vision.TeamElementDetector;
 
-import java.util.concurrent.CompletionException;
+public class Topright extends LinearOpMode {
 
-@Autonomous(name = "Blue Carousel", group = "Competition")
-public class BlueCarousel extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         RevBlinkinLedDriver lights = hardwareMap.get(RevBlinkinLedDriver.class, "LED");
-        lights.setPattern(BlinkinPattern.BLUE);
+        lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.BLUE);
 
         // Get the webcam from the hardware map
         Webcam webcam = new Webcam("Webcam 1", hardwareMap);
@@ -62,7 +57,7 @@ public class BlueCarousel extends LinearOpMode {
         webcam.open();
         cap.setPosition(1);
 
-        lights.setPattern(BlinkinPattern.LIGHT_CHASE_BLUE);
+        lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.LIGHT_CHASE_BLUE);
 
         // Wait for the OpMode to start
         // Make sure to do this after the camera is opened; otherwise "View Camera Stream" won't work
@@ -106,46 +101,40 @@ public class BlueCarousel extends LinearOpMode {
 
         switch (position) {
             case LEFT:
-                robot.arm.goToBackPosition(HubPosition.BOTTOM);
-                sleep(3000);
                 drive.navigationMonitorTicksPhi(10, 0, -18, 92, 10);
                 drive.ceaseMotion();
-                robot.arm.setCollectorMode(CollectorMode.Eject);
-                sleep(3000);
-                robot.arm.setCollectorMode(CollectorMode.Stop);
                 // 20 total
                 drive.navigationMonitorTicksPhi(10, 0, 6, 92, 10);
-                robot.arm.goToBackPosition(HubPosition.PARK);
                 drive.navigationMonitorTicksPhi(10, 0, 14, 92, 10);
                 drive.navigationMonitorTicksPhi(10, 16, 0, 92, 10);
                 drive.ceaseMotion();
                 break;
             case CENTER:
-                robot.arm.goToBackPosition(HubPosition.MIDDLE);
+                robot.arm.goToBackPosition(Arm.HubPosition.MIDDLE);
                 sleep(3000);
                 drive.navigationMonitorTicksPhi(10, 0, -19, 92, 10);
                 drive.ceaseMotion();
-                robot.arm.setCollectorMode(CollectorMode.Eject);
+                robot.arm.setCollectorMode(Arm.CollectorMode.Eject);
                 sleep(3000);
-                robot.arm.setCollectorMode(CollectorMode.Stop);
+                robot.arm.setCollectorMode(Arm.CollectorMode.Stop);
 
                 drive.navigationMonitorTicksPhi(10, 0, 6, 92, 10);
-                robot.arm.goToBackPosition(HubPosition.PARK);
+                robot.arm.goToBackPosition(Arm.HubPosition.PARK);
                 drive.navigationMonitorTicksPhi(10, 0, 14, 92, 10);
                 drive.navigationMonitorTicksPhi(10, 17, 0, 92, 10);
                 drive.ceaseMotion();
                 break;
             case RIGHT:
-                robot.arm.goToBackPosition(HubPosition.TOP);
+                robot.arm.goToBackPosition(Arm.HubPosition.TOP);
                 sleep(3000);
                 drive.navigationMonitorTicksPhi(10, 0, -21, 92, 10);
                 drive.ceaseMotion();
-                robot.arm.setCollectorMode(CollectorMode.Eject);
+                robot.arm.setCollectorMode(Arm.CollectorMode.Eject);
                 sleep(3000);
-                robot.arm.setCollectorMode(CollectorMode.Stop);
+                robot.arm.setCollectorMode(Arm.CollectorMode.Stop);
 
                 drive.navigationMonitorTicksPhi(10, 0, 6, 92, 10);
-                robot.arm.goToBackPosition(HubPosition.PARK);
+                robot.arm.goToBackPosition(Arm.HubPosition.PARK);
                 drive.navigationMonitorTicksPhi(10, 0, 16, 92, 10);
                 drive.navigationMonitorTicksPhi(10, 16, 0, 92, 10);
                 drive.ceaseMotion();
@@ -155,10 +144,11 @@ public class BlueCarousel extends LinearOpMode {
         drive.navigationMonitorTicksPhi(10, 0, 4, 92, 10);
         drive.ceaseMotion();
 
-        lights.setPattern(BlinkinPattern.BLUE);
+        lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.BLUE);
 
         while (opModeIsActive()) {
             sleep(50);
         }
     }
 }
+

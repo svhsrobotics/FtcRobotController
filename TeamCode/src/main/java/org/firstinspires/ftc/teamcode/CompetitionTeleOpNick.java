@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.robot.CompetitionRobot;
 import org.firstinspires.ftc.teamcode.robot.Robot;
 import org.firstinspires.ftc.teamcode.robot.hardware.Arm;
 
@@ -47,7 +48,7 @@ public class CompetitionTeleOpNick extends LinearOpMode {
         rightCarousel = hardwareMap.get(CRServo.class, "rightCarousel");
         leftCarousel = hardwareMap.get(CRServo.class, "leftCarousel");
         //Hardware map the imu
-        Robot robot = new Robot(hardwareMap);
+        CompetitionRobot robot = new CompetitionRobot(hardwareMap);
         robot.initArm();
         robot.initIMU();
 
