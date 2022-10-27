@@ -19,6 +19,33 @@ public class TopLeft extends LinearOpMode {
         Drive2 drive = new Drive2(robot, this);
 
         waitForStart();
-        drive.navigationMonitorTicks(10, 10, 10, 10);
+
+        drive.navigationMonitorTicks(100, 57, 0, 10);
+        drive.ceaseMotion();
+        drive.navigationMonitorTicks(100, 0, 105, 10);
+        drive.ceaseMotion();
+        sleep(2000);
+        drive.ceaseMotion();
+        drive.navigationMonitorTicks(100, 59, 0, 10);
+        drive.ceaseMotion();
+        drive.navigationMonitorTicks(100, 0, 105, 10);
+        drive.ceaseMotion();
+        drive.navigationMonitorTicksPhi(0, 1000, 1000, -90, 10);
+        drive.ceaseMotion();
+        logger.info("a");
+        String test = "none";
+        switch(test) {
+            case "left":
+                drive.navigationMonitorTicks(100, -118, 0, 10);
+                drive.navigationMonitorTicks(100, 0, 100, 10);
+                break;
+            case "middle":
+                drive.navigationMonitorTicks(100, 0, 100, 10);
+                break;
+            case "right":
+                drive.navigationMonitorTicks(100, 118, 0, 10);
+                drive.navigationMonitorTicks(100, 0, 100, 10);
+                break;
+        }
     }
 }
