@@ -38,7 +38,7 @@ public class PowerPlayBot extends Robot {
                 hardwareMap.get(DcMotor.class, "slide"),
                 hardwareMap.get(DcMotor.class, "pitch"),
                 hardwareMap.get(Servo.class, "wrist"),
-                hardwareMap.get(CRServo.class, "pinch")
+                hardwareMap.get(Servo.class, "pinch")
         );
     }
 

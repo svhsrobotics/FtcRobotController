@@ -55,10 +55,17 @@ public class Grabber {
     private Hand hand;
     private Lift lift;
 
+    public Grabber(DcMotor slide, DcMotor pitch,
+                   Servo wrist, Servo pinch) {
+        this.hand = new Hand(wrist, pinch);
+        this.lift = new Lift(slide, pitch);
+    }
+
     public Grabber(Hand hand, Lift lift) {
         this.hand = hand;
         this.lift = lift;
     }
+
     public enum Positions{
         START,
         SETONECONE,
@@ -76,7 +83,7 @@ public class Grabber {
         HIGHPOLE,
         RELEASE,
     }
-    public void goToPosition(Positions mode){
+    public void setGrabberPosition(Positions mode){
         switch(mode){
             case START:
                 lift.setPositions(100,100);
