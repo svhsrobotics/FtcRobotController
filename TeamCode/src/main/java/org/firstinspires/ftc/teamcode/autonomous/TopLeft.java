@@ -4,7 +4,9 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Shared.Drive2;
+import org.firstinspires.ftc.teamcode.robot.PowerPlayBot;
 import org.firstinspires.ftc.teamcode.robot.TestRobot;
+import org.firstinspires.ftc.teamcode.robot.hardware.Grabber;
 import org.firstinspires.ftc.teamcode.util.Logger;
 
 @Autonomous
@@ -13,12 +15,13 @@ public class TopLeft extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        TestRobot robot = new TestRobot(hardwareMap, logger);
+        PowerPlayBot robot = new PowerPlayBot(hardwareMap, logger);
         robot.initHardware();
 
         Drive2 drive = new Drive2(robot, this);
 
         waitForStart();
-        drive.navigationMonitorTicks(10, 10, 10, 10);
+        robot.grabber.setGrabberPosition(Grabber.Positions.SETFOURCONE);
+        //drive.navigationMonitorTicks(10, 10, 10, 10);
     }
 }

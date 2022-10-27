@@ -94,7 +94,8 @@ public class Arm {
 
     // Are we done moving to the position yet? (Only arm, not wrist)
     public boolean done() {
-        return this.arm.getCurrentPosition() == this.arm.getTargetPosition(); // should we allow for some difference??
+        return this.arm.getCurrentPosition() == this.arm.getTargetPosition();
+        // should we allow for some difference??
     }
 
     // Helper for goToPosition
