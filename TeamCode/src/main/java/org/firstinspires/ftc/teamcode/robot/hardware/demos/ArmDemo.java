@@ -26,16 +26,16 @@ public class ArmDemo extends LinearOpMode {
 
         //drive.init();
 
-        Arm = hardwareMap.get(DcMotor.class, "Arm");
-        Wrist = hardwareMap.get(Servo.class, "pivotCollector");
-        Collector = hardwareMap.get(CRServo.class, "spinCollector");
+       // Arm = hardwareMap.get(DcMotor.class, "Arm");
+        //Wrist = hardwareMap.get(Servo.class, "pivotCollector");
+        //Collector = hardwareMap.get(CRServo.class, "spinCollector");
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
-        leftFrontDrive = hardwareMap.get(DcMotor.class, "FL");
-        rightFrontDrive = hardwareMap.get(DcMotor.class, "FR");
-        leftBackDrive = hardwareMap.get(DcMotor.class, "BL");
-        rightBackDrive = hardwareMap.get(DcMotor.class, "BR");
+        leftFrontDrive = hardwareMap.get(DcMotor.class, "frontLeft");
+        rightFrontDrive = hardwareMap.get(DcMotor.class, "frontRight");
+        leftBackDrive = hardwareMap.get(DcMotor.class, "backLeft");
+        rightBackDrive = hardwareMap.get(DcMotor.class, "backRight");
 
         rightFrontDrive.setDirection(DcMotorSimple.Direction.REVERSE);
         rightBackDrive.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -47,7 +47,7 @@ public class ArmDemo extends LinearOpMode {
         while (opModeIsActive()) {
 
             // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
-            double frontRightPowerFactor, frontLeftPowerFactor, backRightPowerFactor, backLeftPowerFactor;
+            /*double frontRightPowerFactor, frontLeftPowerFactor, backRightPowerFactor, backLeftPowerFactor;
             double magRight = Math.hypot(gamepad1.right_stick_x, gamepad1.right_stick_y);
             double thetaRight = Math.atan2(-gamepad1.right_stick_y, gamepad1.right_stick_x);
             double magLeft = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
@@ -102,9 +102,15 @@ public class ArmDemo extends LinearOpMode {
             leftFrontDrive.setPower((frontLeftPowerFactor * magLeft));
             rightFrontDrive.setPower(-(frontRightPowerFactor * magRight));
             leftBackDrive.setPower((backLeftPowerFactor * magLeft));
-            rightBackDrive.setPower(-(backRightPowerFactor * magRight));
+            rightBackDrive.setPower(-(backRightPowerFactor * magRight)); */
 
-            if (gamepad2.back) {
+            leftFrontDrive.setPower(Math.pow(gamepad1.left_stick_y- gamepad1.left_stick_x+ gamepad1.left_trigger- gamepad1.right_trigger, 3));
+            rightFrontDrive.setPower(Math.pow(gamepad1.left_stick_y+gamepad1.left_stick_x+ gamepad1.right_trigger- gamepad1.left_trigger, 3));
+            leftBackDrive.setPower(Math.pow(gamepad1.left_stick_y+gamepad1.left_stick_x+ gamepad1.left_trigger-gamepad1.right_trigger, 3));
+            rightBackDrive.setPower(Math.pow(gamepad1.left_stick_y- gamepad1.left_stick_x+ gamepad1.right_trigger- gamepad1.left_trigger, 3));
+
+
+           /* if (gamepad2.back) {
                 if(gamepad2.dpad_down){
                 Arm.setTargetPosition(0);
                 Arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -133,7 +139,7 @@ public class ArmDemo extends LinearOpMode {
 
             Collector.setPower(-gamepad2.left_stick_y / 2);
 
-            telemetry.addData("Ticks", Arm.getCurrentPosition());
+            /*telemetry.addData("Ticks", Arm.getCurrentPosition());
             telemetry.addData("WristPos", Wrist.getPosition());
             telemetry.addData("Power", Collector.getPower());
             telemetry.addData("ArmPower", gamepad2.right_trigger + (-gamepad2.left_trigger));
@@ -145,7 +151,7 @@ public class ArmDemo extends LinearOpMode {
             telemetry.addData("left joystick y", ((float) Math.round(-gamepad1.left_stick_y * 100)) / 100);
             telemetry.addData("magnitude left", ((float) Math.round(magLeft * 100)) / 100);
             telemetry.addData("thetaLeft", ((float) Math.round(thetaLeft / pi * 100)) / 100);
-
+*/
             telemetry.update();
 
 
@@ -155,7 +161,7 @@ public class ArmDemo extends LinearOpMode {
         //drive.ceaseMotion();
     }
 
-    private void GoToHubLevel(int hubLevel) {
+    /*private void GoToHubLevel(int hubLevel) {
 
         if (hubLevel == 1) {
             Arm.setTargetPosition(-3720);
@@ -203,7 +209,7 @@ public class ArmDemo extends LinearOpMode {
                 Wrist.setPosition(0.43);
                 Arm.setPower(1);
             }
-
+*/
         }
-    }
-}
+   // }
+//}
