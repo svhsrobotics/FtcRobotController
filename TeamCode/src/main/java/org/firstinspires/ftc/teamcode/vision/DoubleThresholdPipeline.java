@@ -5,6 +5,7 @@ import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
+import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
@@ -81,7 +82,8 @@ public class DoubleThresholdPipeline extends OpenCvPipeline {
         Mat[] lumaBlocks = split(lumaCorrection, 20, 20);
         Mat[] outputBlocks = split(output, 20, 20);
         for (int i = 0; i < outputBlocks.length; i++) {
-            Core.inRange(outputBlocks[i], new Scalar(min), new Scalar(max), outputBlocks[i]); 
+            telemetry.log().add("Test:" + (lumaBlocks[i].get(0, 0)[0] - 100));
+            Core.inRange(outputBlocks[i], new Scalar(min + (lumaBlocks[i].get(0,0)[0] / 2)), new Scalar(max + (lumaBlocks[i].get(0,0)[0] / 2)), outputBlocks[i]);
         }
 
         return output;
@@ -198,12 +200,14 @@ public class DoubleThresholdPipeline extends OpenCvPipeline {
 
     @Override
     public Mat processFrame(Mat input) {
-        Mat luma = luma(input);
+        //Mat luma = luma(input);
         // This is the luma correction mat
-        Mat lumaCorrection = neighborhoodMean(luma, blockSize);
+        //Mat lumaCorrection = neighborhoodMean(luma, blockSize);
 
-        Mat correctHue = hueRangeLuma(input, minHue, maxHue, lumaCorrection);
-        Mat correctBlue = blueRangeLuma(input, minBlue, maxBlue);
+        //Mat correctHue = hueRangeLuma(input, minHue, maxHue, lumaCorrection);
+        //Mat correctBlue = blueRangeLuma(input, minBlue, maxBlue);
+        Mat correctHue = hueRange(input, minHue, maxHue);
+        Mat correctBlue = blueRange(input, minBlue, maxBlue);
         Mat selected = and(correctBlue, correctHue);
         selected = fuzz(selected);
 
@@ -216,6 +220,13 @@ public class DoubleThresholdPipeline extends OpenCvPipeline {
         telemetry.addData("Contours", contours.size());
 
         Imgproc.drawContours(input, contours, -1, new Scalar(255, 0, 0), 2);
+        for (MatOfPoint contour : contours) {
+            Rect rect = Imgproc.boundingRect(contour);
+            if (rect.width < 30 && rect.height > 80) {
+                Imgproc.rectangle(input, rect, new Scalar(0, 255, 0), 2);
+            }
+
+        }
 
         GlobalMatPool.returnAll(telemetry);
 
