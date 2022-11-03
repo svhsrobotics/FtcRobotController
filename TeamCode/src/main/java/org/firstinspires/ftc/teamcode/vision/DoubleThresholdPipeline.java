@@ -184,6 +184,21 @@ public class DoubleThresholdPipeline extends OpenCvPipeline {
         return output;
     }
 
+    private void contourSmooth(ArrayList<MatOfPoint> contours) {
+        for (MatOfPoint contour : contours) {
+            for (int i = 0; i < contour.cols(); i++) {
+                double thisCol;
+                for (int j = 0; j < contour.rows(); j++) {
+                    double[] point = contour.get(i, j);
+                    if (point.length >= 1) {
+                        telemetry.log().add("Point: " + point[0]);
+                    }
+
+                }
+            }
+        }
+    }
+
 
 
     /* TUNING VARIABLES */
@@ -220,9 +235,10 @@ public class DoubleThresholdPipeline extends OpenCvPipeline {
         telemetry.addData("Contours", contours.size());
 
         Imgproc.drawContours(input, contours, -1, new Scalar(255, 0, 0), 2);
+        contourSmooth(contours);
         for (MatOfPoint contour : contours) {
             Rect rect = Imgproc.boundingRect(contour);
-            if (rect.width < 30 && rect.height > 80) {
+            if (rect.width < 30 && rect.height > 20) {
                 Imgproc.rectangle(input, rect, new Scalar(0, 255, 0), 2);
             }
 
