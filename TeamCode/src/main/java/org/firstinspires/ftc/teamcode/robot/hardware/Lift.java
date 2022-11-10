@@ -1,12 +1,13 @@
 package org.firstinspires.ftc.teamcode.robot.hardware;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 public class Lift {
     public DcMotor slide;
-    public DcMotor pitch;
+    public DcMotorEx pitch;
 
-    public Lift(DcMotor slide, DcMotor pitch) {
+    public Lift(DcMotor slide, DcMotorEx pitch) {
         this.slide = slide;
         this.pitch = pitch;
         reset();

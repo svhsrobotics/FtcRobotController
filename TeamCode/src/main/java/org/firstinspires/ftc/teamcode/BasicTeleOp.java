@@ -5,6 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.robot.PowerPlayBot;
 import org.firstinspires.ftc.teamcode.robot.Robot;
 import org.firstinspires.ftc.teamcode.robot.hardware.Drive;
@@ -17,7 +19,9 @@ public class BasicTeleOp extends LinearOpMode {
     double wrist = 1;
     int slide = 0;
     boolean pinch = false;
+    boolean pinchButtonState = false;
     int pitch = 0;
+    Telemetry.Line errorLine;
 
     @Override
     public void runOpMode() {
@@ -108,13 +112,19 @@ public class BasicTeleOp extends LinearOpMode {
             rightBackDrive.setPower((ExMath.square_with_sign(backRightPowerFactor) * magRight));
             
             // ARM CODE
+
+            // This special code is so that when the button is held, we don't keep opening and closing
+            // Instead, we only change the servo state on the first time through and don't change it again until the button is released and pressed again
             if (gamepad1.a) {
-                pinch = true;
-                robot.grabber.hand.setPinchPosition(0.45);
-            } else if (gamepad1.b) {
-                pinch = false;
-                robot.grabber.hand.setPinchPosition(0);
+                if (!pinchButtonState) {
+                    pinch = !pinch;
+                    robot.grabber.hand.setPinchPosition(pinch ? 0.45 : 0);
+                }
+                pinchButtonState = true;
+            } else {
+                pinchButtonState = false;
             }
+
             telemetry.addData("Pinch", pinch);
 
             if (gamepad1.dpad_up) {
@@ -138,6 +148,10 @@ public class BasicTeleOp extends LinearOpMode {
                 slide += 10;
             }
 
+            if (gamepad1.b) {
+                slide = 5690;
+            }
+
 
             // Limit the slide to range 0 to 5600
             if (slide > 5690) {
@@ -155,16 +169,24 @@ public class BasicTeleOp extends LinearOpMode {
 
             if (gamepad1.right_trigger > 0.2) {
                 //if (robot.grabber.lift.pitch.getCurrentPosition() < 5320) {
+                if (robot.grabber.lift.pitch.getCurrent(CurrentUnit.AMPS) < 4.5) {
+                    telemetry.removeLine(errorLine);
                     robot.grabber.lift.pitch.setPower(Math.pow(gamepad1.right_trigger, 2));
-                /*} else {
+                } else {
+                    //logger.error("Pitch motor current too high");
+                    errorLine = telemetry.addLine(Logger.formatColor("Pitch motor current too high", "#F44336"));
                     robot.grabber.lift.pitch.setPower(0);
-                }*/
+                }
             } else if (gamepad1.left_trigger > 0.2) {
                 //if (robot.grabber.lift.pitch.getCurrentPosition() > 400) {
+                if (robot.grabber.lift.pitch.getCurrent(CurrentUnit.AMPS) < 4.5) {
+                    telemetry.removeLine(errorLine);
                     robot.grabber.lift.pitch.setPower(-Math.pow(gamepad1.left_trigger, 2));
-                /*} else {
+                } else {
+                    //logger.error("Pitch motor current too high");
+                    errorLine = telemetry.addLine(Logger.formatColor("Pitch motor current too high", "#F44336"));
                     robot.grabber.lift.pitch.setPower(0);
-                }*/
+                }
             } else {
                 robot.grabber.lift.pitch.setPower(0);
             }

@@ -1,13 +1,14 @@
 package org.firstinspires.ftc.teamcode.robot.hardware;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class Grabber {
     public Hand hand;
     public Lift lift;
 
-    public Grabber(DcMotor slide, DcMotor pitch,
+    public Grabber(DcMotor slide, DcMotorEx pitch,
                    Servo wrist, Servo pinch) {
         this.hand = new Hand(wrist, pinch);
         this.lift = new Lift(slide, pitch);

@@ -36,7 +36,7 @@ public class PowerPlayBot extends Robot {
     protected void initGrabber() {
         grabber = new Grabber(
                 hardwareMap.get(DcMotor.class, "reach"),
-                hardwareMap.get(DcMotor.class, "pivot"),
+                hardwareMap.get(DcMotorEx.class, "pivot"),
                 hardwareMap.get(Servo.class, "wrist"),
                 hardwareMap.get(Servo.class, "grab")
         );
