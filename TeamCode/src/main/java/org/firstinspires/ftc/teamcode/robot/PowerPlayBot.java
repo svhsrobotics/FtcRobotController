@@ -35,19 +35,19 @@ public class PowerPlayBot extends Robot {
 
     protected void initGrabber() {
         grabber = new Grabber(
-                hardwareMap.get(DcMotor.class, "slide"),
-                hardwareMap.get(DcMotor.class, "pitch"),
+                hardwareMap.get(DcMotor.class, "reach"),
+                hardwareMap.get(DcMotor.class, "pivot"),
                 hardwareMap.get(Servo.class, "wrist"),
-                hardwareMap.get(Servo.class, "pinch")
+                hardwareMap.get(Servo.class, "grab")
         );
     }
 
     @Override
     protected void initDrives() {
-        drives.put(DrivePos.FRONT_LEFT,  new Drive(this.hardwareMap.get(DcMotorEx.class, "left_front"),  REV_COUNTS, GEAR_REDUCTION, WHEEL_DIAMETER));
-        drives.put(DrivePos.FRONT_RIGHT, new Drive(this.hardwareMap.get(DcMotorEx.class, "right_front"), REV_COUNTS, GEAR_REDUCTION, WHEEL_DIAMETER));
-        drives.put(DrivePos.BACK_LEFT,   new Drive(this.hardwareMap.get(DcMotorEx.class, "left_back"),   REV_COUNTS, GEAR_REDUCTION, WHEEL_DIAMETER));
-        drives.put(DrivePos.BACK_RIGHT,  new Drive(this.hardwareMap.get(DcMotorEx.class, "right_back"),  REV_COUNTS, GEAR_REDUCTION, WHEEL_DIAMETER));
+        drives.put(DrivePos.FRONT_LEFT,  new Drive(this.hardwareMap.get(DcMotorEx.class, "front_left"),  REV_COUNTS, GEAR_REDUCTION, WHEEL_DIAMETER));
+        drives.put(DrivePos.FRONT_RIGHT, new Drive(this.hardwareMap.get(DcMotorEx.class, "front_right"), REV_COUNTS, GEAR_REDUCTION, WHEEL_DIAMETER));
+        drives.put(DrivePos.BACK_LEFT,   new Drive(this.hardwareMap.get(DcMotorEx.class, "back_left"),   REV_COUNTS, GEAR_REDUCTION, WHEEL_DIAMETER));
+        drives.put(DrivePos.BACK_RIGHT,  new Drive(this.hardwareMap.get(DcMotorEx.class, "back_right"),  REV_COUNTS, GEAR_REDUCTION, WHEEL_DIAMETER));
 
         for (Drive drive : drives.values())
             drive.run();

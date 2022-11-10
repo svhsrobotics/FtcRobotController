@@ -22,6 +22,9 @@ public class TopLeft extends LinearOpMode {
 
         waitForStart();
         robot.grabber.setGrabberPosition(Grabber.Positions.SETFOURCONE);
+        while (!isStopRequested()) {
+
+        }
         //drive.navigationMonitorTicks(10, 10, 10, 10);
     }
 }
