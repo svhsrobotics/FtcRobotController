@@ -38,10 +38,10 @@ public class BasicTeleOp extends LinearOpMode {
             Drive leftBackDrive = robot.drives.get(Robot.DrivePos.BACK_LEFT);
             Drive rightBackDrive = robot.drives.get(Robot.DrivePos.BACK_RIGHT);
 
-            leftFrontDrive.setPower(gamepad1.right_trigger-gamepad1.left_trigger+gamepad1.left_stick_x-gamepad1.right_stick_x);
-            rightFrontDrive.setPower(gamepad1.right_trigger-gamepad1.left_trigger-gamepad1.left_stick_x+gamepad1.right_stick_x);
-            leftBackDrive.setPower(gamepad1.right_trigger-gamepad1.left_trigger+gamepad1.left_stick_x+gamepad1.right_stick_x);
-            rightBackDrive.setPower(gamepad1.right_trigger-gamepad1.left_trigger-gamepad1.left_stick_x-gamepad1.right_stick_x);
+            leftFrontDrive.setPower(gamepad1.right_trigger-gamepad1.left_trigger+gamepad1.left_stick_x+gamepad1.right_stick_x);
+            rightFrontDrive.setPower(gamepad1.right_trigger-gamepad1.left_trigger-gamepad1.left_stick_x-gamepad1.right_stick_x);
+            leftBackDrive.setPower(gamepad1.right_trigger-gamepad1.left_trigger+gamepad1.left_stick_x-gamepad1.right_stick_x);
+            rightBackDrive.setPower(gamepad1.right_trigger-gamepad1.left_trigger-gamepad1.left_stick_x+gamepad1.right_stick_x);
 
 
 
