@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.robot.hardware.Drive;
 import org.firstinspires.ftc.teamcode.util.ExMath;
 import org.firstinspires.ftc.teamcode.util.Logger;
 
-@TeleOp(name = "Basic TeleOp", group = "TeleOp")
+@TeleOp(name = "TeleOp", group = "TeleOp")
 public class BasicTeleOp extends LinearOpMode {
     Logger logger = new Logger(telemetry);
 
@@ -39,25 +39,33 @@ public class BasicTeleOp extends LinearOpMode {
 
         while(!isStopRequested()) {
             // BEGIN DRIVE
-            robot.drives.get(Robot.DrivePos.FRONT_LEFT).setPower(gamepad1.right_trigger-gamepad1.left_trigger+Math.pow(gamepad1.left_stick_x, 3)+gamepad1.right_stick_x);
-            robot.drives.get(Robot.DrivePos.FRONT_RIGHT).setPower(gamepad1.right_trigger-gamepad1.left_trigger-Math.pow(gamepad1.left_stick_x, 3)-gamepad1.right_stick_x);
-            robot.drives.get(Robot.DrivePos.BACK_LEFT).setPower(gamepad1.right_trigger-gamepad1.left_trigger+Math.pow(gamepad1.left_stick_x, 3)-gamepad1.right_stick_x);
-            robot.drives.get(Robot.DrivePos.BACK_RIGHT).setPower(gamepad1.right_trigger-gamepad1.left_trigger-Math.pow(gamepad1.left_stick_x, 3)+gamepad1.right_stick_x);
+            robot.drives.get(Robot.DrivePos.FRONT_LEFT).setPower(
+                    (gamepad1.right_trigger-gamepad1.left_trigger+Math.pow(gamepad1.left_stick_x, 3)+gamepad1.right_stick_x)
+                    + (gamepad2.right_trigger-gamepad2.left_trigger+Math.pow(gamepad2.left_stick_x, 3)+gamepad2.right_stick_x));
+            robot.drives.get(Robot.DrivePos.FRONT_RIGHT).setPower(
+                    (gamepad1.right_trigger-gamepad1.left_trigger-Math.pow(gamepad1.left_stick_x, 3)-gamepad1.right_stick_x)
+                    + (gamepad2.right_trigger-gamepad2.left_trigger-Math.pow(gamepad2.left_stick_x, 3)-gamepad2.right_stick_x));
+            robot.drives.get(Robot.DrivePos.BACK_LEFT).setPower(
+                    (gamepad1.right_trigger-gamepad1.left_trigger+Math.pow(gamepad1.left_stick_x, 3)-gamepad1.right_stick_x)
+                    + (gamepad2.right_trigger-gamepad2.left_trigger+Math.pow(gamepad2.left_stick_x, 3)-gamepad2.right_stick_x));
+            robot.drives.get(Robot.DrivePos.BACK_RIGHT).setPower(
+                    (gamepad1.right_trigger-gamepad1.left_trigger-Math.pow(gamepad1.left_stick_x, 3)+gamepad1.right_stick_x)
+                    + (gamepad2.right_trigger-gamepad2.left_trigger-Math.pow(gamepad2.left_stick_x, 3)+gamepad2.right_stick_x));
             // END DRIVE
 
             // BEGIN ARM (and misc related controls)
             // Begin Pincher
-            if (gamepad1.a) {
+            if (gamepad1.a || gamepad2.a) {
                 robot.grabber.hand.setPinchPosition(0.45);
-            } else if (gamepad1.b) {
+            } else if (gamepad1.b || gamepad2.b) {
                 robot.grabber.hand.setPinchPosition(0);
             }
             // End Pincher
 
             // Begin Wrist
-            if (gamepad1.dpad_right) {
+            if (gamepad1.dpad_right || gamepad2.dpad_right) {
                 wrist += 0.002;
-            } else if (gamepad1.dpad_left) {
+            } else if (gamepad1.dpad_left || gamepad2.dpad_left) {
                 wrist -= 0.002;
             }
 
@@ -72,9 +80,9 @@ public class BasicTeleOp extends LinearOpMode {
             // End Wrist
 
             // Begin Slide
-            if (gamepad1.left_bumper) {
+            if (gamepad1.left_bumper || gamepad2.left_bumper) {
                 slide -= 10;
-            } else if (gamepad1.right_bumper) {
+            } else if (gamepad1.right_bumper || gamepad2.right_bumper) {
                 slide += 10;
             }
 
@@ -93,9 +101,9 @@ public class BasicTeleOp extends LinearOpMode {
             // End Slide
 
             // Begin Pitch
-            if (gamepad1.dpad_up) {
+            if (gamepad1.dpad_up || gamepad2.dpad_up) {
                 pitch += 10;
-            } else if (gamepad1.dpad_down) {
+            } else if (gamepad1.dpad_down || gamepad2.dpad_down) {
                 pitch -= 10;
             }
 
@@ -113,9 +121,9 @@ public class BasicTeleOp extends LinearOpMode {
             // End Pitch
 
             // Begin Flipper
-            if (gamepad1.x) {
+            if (gamepad1.x || gamepad2.x) {
                 flipper.setPosition(1);
-            } else if (gamepad1.y) {
+            } else if (gamepad1.y || gamepad2.y) {
                 flipper.setPosition(0);
             }
             // END ARM

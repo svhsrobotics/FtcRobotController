@@ -1,17 +1,14 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
-import com.qualcomm.hardware.rev.RevBlinkinLedDriver.BlinkinPattern;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Servo;
+
 import org.firstinspires.ftc.teamcode.Shared.Drive2;
 import org.firstinspires.ftc.teamcode.robot.CompetitionRobot;
-import org.firstinspires.ftc.teamcode.robot.Robot;
-import org.firstinspires.ftc.teamcode.robot.hardware.Arm.CollectorMode;
-import org.firstinspires.ftc.teamcode.robot.hardware.Arm.HubPosition;
+import org.firstinspires.ftc.teamcode.robot.hardware.Arm;
 import org.firstinspires.ftc.teamcode.robot.hardware.Webcam;
 import org.firstinspires.ftc.teamcode.util.Configuration;
 import org.firstinspires.ftc.teamcode.util.Configurator;
@@ -19,17 +16,18 @@ import org.firstinspires.ftc.teamcode.vision.HSVColor;
 import org.firstinspires.ftc.teamcode.vision.TeamElementDetector;
 
 @Disabled
-@Autonomous(name = "Red Carousel", group = "Competition")
-public class RedCarousel extends LinearOpMode {
+public class Topright extends LinearOpMode {
+
     @Override
     public void runOpMode() throws InterruptedException {
         RevBlinkinLedDriver lights = hardwareMap.get(RevBlinkinLedDriver.class, "LED");
-        lights.setPattern(BlinkinPattern.RED);
+        lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.BLUE);
 
         // Get the webcam from the hardware map
         Webcam webcam = new Webcam("Webcam 1", hardwareMap);
         Servo cap;
         CRServo rightCarousel;
+        CRServo leftCarousel;
         cap = hardwareMap.get(Servo.class, "cap");
         // Load the configuration
         Configuration config = Configurator.load();
@@ -47,6 +45,7 @@ public class RedCarousel extends LinearOpMode {
         // Create the robot from the hardware map
         CompetitionRobot robot = new CompetitionRobot(hardwareMap);
         rightCarousel = hardwareMap.get(CRServo.class, "rightCarousel");
+        leftCarousel = hardwareMap.get(CRServo.class, "leftCarousel");
         // Initialize the hardware
         robot.initHardware();
         // Reset the arm encoder to 0 to prevent some issues...
@@ -60,7 +59,7 @@ public class RedCarousel extends LinearOpMode {
         webcam.open();
         cap.setPosition(1);
 
-        lights.setPattern(BlinkinPattern.LIGHT_CHASE_RED);
+        lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.LIGHT_CHASE_BLUE);
 
         // Wait for the OpMode to start
         // Make sure to do this after the camera is opened; otherwise "View Camera Stream" won't work
@@ -83,81 +82,75 @@ public class RedCarousel extends LinearOpMode {
 
         // Raise the arm so it doesn't drag.
         robot.arm.setPositions(-1435, .38);
-        drive.navigationMonitorTicks(10, 10, 0, 10);
+        drive.navigationMonitorTicks(10, -8, 0, 10);
         sleep(1000);
         //drive.navigationMonitorTicks(10, 2, 15, 10, true);
-        drive.navigationLocalizeCarousel(10, 2, 15, 10);
+        drive.navigationLocalizeCarousel(10, -2, 15, 10);
         drive.ceaseMotion();
         drive.navigationMonitorTicks(10, 0, 0.1, 10);
         //drive.navigationMonitorTicks(.1, 0, .5,10, true);
-        //sleep(50);
         drive.ceaseMotion();
-        rightCarousel.setPower(-0.4);
+        leftCarousel.setPower(0.4);
         sleep(3000);
-        rightCarousel.setPower(0);
+        leftCarousel.setPower(0);
 
 
         drive.navigationMonitorTicks(20, -1, -29.5, 10);
 
         // Rotate 90deg (no movement)
-        drive.navigationMonitorTicksPhi(0, 10, 10, -92, 2.5);
+        drive.navigationMonitorTicksPhi(0, -10, 10, 92, 2.5);
         drive.ceaseMotion();
 
         switch (position) {
             case LEFT:
-                robot.arm.goToBackPosition(HubPosition.BOTTOM);
-                sleep(3000);
-                drive.navigationMonitorTicksPhi(10, 0, -18, -92, 10);
+                drive.navigationMonitorTicksPhi(10, 0, -18, 92, 10);
                 drive.ceaseMotion();
-                robot.arm.setCollectorMode(CollectorMode.Eject);
-                sleep(3000);
-                robot.arm.setCollectorMode(CollectorMode.Stop);
                 // 20 total
-                drive.navigationMonitorTicksPhi(10, 0, 6, -92, 10);
-                robot.arm.goToBackPosition(HubPosition.PARK);
-                drive.navigationMonitorTicksPhi(10, 0, 14, -92, 10);
-                drive.navigationMonitorTicksPhi(10, -16, 0, -92, 10);
+                drive.navigationMonitorTicksPhi(10, 0, 6, 92, 10);
+                drive.navigationMonitorTicksPhi(10, 0, 14, 92, 10);
+                drive.navigationMonitorTicksPhi(10, 16, 0, 92, 10);
                 drive.ceaseMotion();
                 break;
             case CENTER:
-                robot.arm.goToBackPosition(HubPosition.MIDDLE);
+                robot.arm.goToBackPosition(Arm.HubPosition.MIDDLE);
                 sleep(3000);
-                drive.navigationMonitorTicksPhi(10, 0, -17, -92, 10);
+                drive.navigationMonitorTicksPhi(10, 0, -19, 92, 10);
                 drive.ceaseMotion();
-                robot.arm.setCollectorMode(CollectorMode.Eject);
+                robot.arm.setCollectorMode(Arm.CollectorMode.Eject);
                 sleep(3000);
-                robot.arm.setCollectorMode(CollectorMode.Stop);
+                robot.arm.setCollectorMode(Arm.CollectorMode.Stop);
 
-                drive.navigationMonitorTicksPhi(10, 0, 6, -92, 10);
-                robot.arm.goToBackPosition(HubPosition.PARK);
-                drive.navigationMonitorTicksPhi(10, 0, 14, -92, 10);
-                drive.navigationMonitorTicksPhi(10, -17, 0, -92, 10);
+                drive.navigationMonitorTicksPhi(10, 0, 6, 92, 10);
+                robot.arm.goToBackPosition(Arm.HubPosition.PARK);
+                drive.navigationMonitorTicksPhi(10, 0, 14, 92, 10);
+                drive.navigationMonitorTicksPhi(10, 17, 0, 92, 10);
                 drive.ceaseMotion();
                 break;
             case RIGHT:
-                robot.arm.goToBackPosition(HubPosition.TOP);
+                robot.arm.goToBackPosition(Arm.HubPosition.TOP);
                 sleep(3000);
-                drive.navigationMonitorTicksPhi(10, 0, -21, -92, 10);
+                drive.navigationMonitorTicksPhi(10, 0, -21, 92, 10);
                 drive.ceaseMotion();
-                robot.arm.setCollectorMode(CollectorMode.Eject);
+                robot.arm.setCollectorMode(Arm.CollectorMode.Eject);
                 sleep(3000);
-                robot.arm.setCollectorMode(CollectorMode.Stop);
+                robot.arm.setCollectorMode(Arm.CollectorMode.Stop);
 
-                drive.navigationMonitorTicksPhi(10, 0, 6, -92, 10);
-                robot.arm.goToBackPosition(HubPosition.PARK);
-                drive.navigationMonitorTicksPhi(10, 0, 16, -92, 10);
-                drive.navigationMonitorTicksPhi(10, -17, 0, -92, 10);
+                drive.navigationMonitorTicksPhi(10, 0, 6, 92, 10);
+                robot.arm.goToBackPosition(Arm.HubPosition.PARK);
+                drive.navigationMonitorTicksPhi(10, 0, 16, 92, 10);
+                drive.navigationMonitorTicksPhi(10, 16, 0, 92, 10);
                 drive.ceaseMotion();
                 break;
         }
 
-        drive.navigationMonitorTicksPhi(10, 0, 4, -92, 10);
+        drive.navigationMonitorTicksPhi(10, 0, 4, 92, 10);
         drive.ceaseMotion();
 
-        lights.setPattern(BlinkinPattern.RED);
+        lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.BLUE);
 
         while (opModeIsActive()) {
             sleep(50);
         }
     }
 }
+
