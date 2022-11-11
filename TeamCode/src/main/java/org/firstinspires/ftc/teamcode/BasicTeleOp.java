@@ -38,8 +38,15 @@ public class BasicTeleOp extends LinearOpMode {
             Drive leftBackDrive = robot.drives.get(Robot.DrivePos.BACK_LEFT);
             Drive rightBackDrive = robot.drives.get(Robot.DrivePos.BACK_RIGHT);
 
+            leftFrontDrive.setPower(gamepad1.right_trigger-gamepad1.left_trigger+gamepad1.left_stick_x-gamepad1.right_stick_x);
+            rightFrontDrive.setPower(gamepad1.right_trigger-gamepad1.left_trigger-gamepad1.left_stick_x+gamepad1.right_stick_x);
+            leftBackDrive.setPower(gamepad1.right_trigger-gamepad1.left_trigger+gamepad1.left_stick_x+gamepad1.right_stick_x);
+            rightBackDrive.setPower(gamepad1.right_trigger-gamepad1.left_trigger-gamepad1.left_stick_x-gamepad1.right_stick_x);
+
+
+
             // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
-            double frontRightPowerFactor, frontLeftPowerFactor, backRightPowerFactor, backLeftPowerFactor;
+           /* double frontRightPowerFactor, frontLeftPowerFactor, backRightPowerFactor, backLeftPowerFactor;
             double magRight = Math.hypot(gamepad1.right_stick_x, gamepad1.right_stick_y);
             double thetaRight = Math.atan2(-gamepad1.right_stick_y, gamepad1.right_stick_x);
             double magLeft = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
@@ -107,7 +114,7 @@ public class BasicTeleOp extends LinearOpMode {
             leftFrontDrive.setPower(((ExMath.square_with_sign(frontLeftPowerFactor) * magLeft)));
             rightFrontDrive.setPower((ExMath.square_with_sign(frontRightPowerFactor) * magRight));
             leftBackDrive.setPower(((ExMath.square_with_sign(backLeftPowerFactor) * magLeft)));
-            rightBackDrive.setPower((ExMath.square_with_sign(backRightPowerFactor) * magRight));
+            rightBackDrive.setPower((ExMath.square_with_sign(backRightPowerFactor) * magRight)); */
             
             // ARM CODE
 
