@@ -39,10 +39,10 @@ public class BasicTeleOp extends LinearOpMode {
 
         while(!isStopRequested()) {
             // BEGIN DRIVE
-            robot.drives.get(Robot.DrivePos.FRONT_LEFT).setPower(gamepad1.right_trigger-gamepad1.left_trigger+gamepad1.left_stick_x+gamepad1.right_stick_x);
-            robot.drives.get(Robot.DrivePos.FRONT_RIGHT).setPower(gamepad1.right_trigger-gamepad1.left_trigger-gamepad1.left_stick_x-gamepad1.right_stick_x);
-            robot.drives.get(Robot.DrivePos.BACK_LEFT).setPower(gamepad1.right_trigger-gamepad1.left_trigger+gamepad1.left_stick_x-gamepad1.right_stick_x);
-            robot.drives.get(Robot.DrivePos.BACK_RIGHT).setPower(gamepad1.right_trigger-gamepad1.left_trigger-gamepad1.left_stick_x+gamepad1.right_stick_x);
+            robot.drives.get(Robot.DrivePos.FRONT_LEFT).setPower(gamepad1.right_trigger-gamepad1.left_trigger+Math.pow(gamepad1.left_stick_x, 3)+gamepad1.right_stick_x);
+            robot.drives.get(Robot.DrivePos.FRONT_RIGHT).setPower(gamepad1.right_trigger-gamepad1.left_trigger-Math.pow(gamepad1.left_stick_x, 3)-gamepad1.right_stick_x);
+            robot.drives.get(Robot.DrivePos.BACK_LEFT).setPower(gamepad1.right_trigger-gamepad1.left_trigger+Math.pow(gamepad1.left_stick_x, 3)-gamepad1.right_stick_x);
+            robot.drives.get(Robot.DrivePos.BACK_RIGHT).setPower(gamepad1.right_trigger-gamepad1.left_trigger-Math.pow(gamepad1.left_stick_x, 3)+gamepad1.right_stick_x);
             // END DRIVE
 
             // BEGIN ARM (and misc related controls)
