@@ -18,8 +18,6 @@ public class BasicTeleOp extends LinearOpMode {
     Logger logger = new Logger(telemetry);
     double wrist = 1;
     int slide = 0;
-    boolean pinch = false;
-    boolean pinchButtonState = false;
     int pitch = 0;
     Telemetry.Line errorLine;
 
@@ -113,19 +111,11 @@ public class BasicTeleOp extends LinearOpMode {
             
             // ARM CODE
 
-            // This special code is so that when the button is held, we don't keep opening and closing
-            // Instead, we only change the servo state on the first time through and don't change it again until the button is released and pressed again
             if (gamepad1.a) {
-                if (!pinchButtonState) {
-                    pinch = !pinch;
-                    robot.grabber.hand.setPinchPosition(pinch ? 0.45 : 0);
-                }
-                pinchButtonState = true;
-            } else {
-                pinchButtonState = false;
+                robot.grabber.hand.setPinchPosition(0.45);
+            } else if (gamepad1.b) {
+                robot.grabber.hand.setPinchPosition(0);
             }
-
-            telemetry.addData("Pinch", pinch);
 
             if (gamepad1.dpad_up) {
                 wrist += 0.002;
