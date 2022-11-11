@@ -171,6 +171,7 @@ public class TensorflowStandardSleeve {
                 }
             }
         }
+        return TfodSleeve.ONE;
     }
 
     /**
