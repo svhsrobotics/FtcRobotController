@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.Shared.Drive2;
 import org.firstinspires.ftc.teamcode.robot.TestRobot;
 import org.firstinspires.ftc.teamcode.util.Logger;
+import org.firstinspires.ftc.teamcode.vision.TensorflowStandardSleeve;
 import org.firstinspires.ftc.teamcode.vision.TfodSleeve;
 
 @Autonomous(name = "Autonomous")
@@ -22,10 +23,11 @@ public class Redwithredcorner extends LinearOpMode {
         waitForStart();
 
         //state the case when testing
+        TensorflowStandardSleeve tensor = new TensorflowStandardSleeve(this);
+        TfodSleeve detected = tensor.scanStandardSleeve();
 
-        TfodSleeve test = TfodSleeve.ONE;
-        logger.info("sleeveresults " + test);
-        switch(test) {
+        logger.info("Sleeve Detected: " + detected);
+        switch(detected) {
             case ONE:
                 drive.navigationMonitorTicks(100, -100, 0, 10);
                 drive.navigationMonitorTicks(100, 0, 145, 10);
