@@ -117,9 +117,9 @@ public class BasicTeleOp extends LinearOpMode {
                 robot.grabber.hand.setPinchPosition(0);
             }
 
-            if (gamepad1.dpad_up) {
+            if (gamepad1.dpad_right) {
                 wrist += 0.002;
-            } else if (gamepad1.dpad_down) {
+            } else if (gamepad1.dpad_left) {
                 wrist -= 0.002;
             }
 
