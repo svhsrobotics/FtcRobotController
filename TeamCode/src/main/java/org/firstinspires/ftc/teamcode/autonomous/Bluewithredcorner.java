@@ -1,12 +1,14 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Shared.Drive2;
 import org.firstinspires.ftc.teamcode.robot.TestRobot;
 import org.firstinspires.ftc.teamcode.util.Logger;
 
+@Disabled
 @Autonomous
 public class Bluewithredcorner extends LinearOpMode {
     private final Logger logger = new Logger(telemetry, true);
