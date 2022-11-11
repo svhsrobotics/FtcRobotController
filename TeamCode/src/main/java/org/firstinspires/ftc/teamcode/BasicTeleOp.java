@@ -13,39 +13,44 @@ import org.firstinspires.ftc.teamcode.robot.hardware.Drive;
 import org.firstinspires.ftc.teamcode.util.ExMath;
 import org.firstinspires.ftc.teamcode.util.Logger;
 
-@TeleOp
+@TeleOp(name = "Basic TeleOp", group = "TeleOp")
 public class BasicTeleOp extends LinearOpMode {
     Logger logger = new Logger(telemetry);
+
     double wrist = 1;
     int slide = 0;
     int pitch = 0;
-    Telemetry.Line errorLine;
 
     @Override
     public void runOpMode() {
         PowerPlayBot robot = new PowerPlayBot(hardwareMap, logger);
         robot.initHardware();
-        //robot.grabber.lift.reset();
+
+        //robot.grabber.lift.reset(); // Uncomment to reset the encoders on startup
+
         robot.grabber.hand.setPinchPosition(0);
-        robot.grabber.lift.slide.setDirection(DcMotorSimple.Direction.REVERSE);
-        robot.grabber.lift.pitch.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.grabber.lift.slide.setDirection(DcMotorSimple.Direction.REVERSE); // Slide is inverted
+
         waitForStart();
 
         while(!isStopRequested()) {
-            // DRIVE CODE
+            // BEGIN DRIVE
             robot.drives.get(Robot.DrivePos.FRONT_LEFT).setPower(gamepad1.right_trigger-gamepad1.left_trigger+gamepad1.left_stick_x+gamepad1.right_stick_x);
             robot.drives.get(Robot.DrivePos.FRONT_RIGHT).setPower(gamepad1.right_trigger-gamepad1.left_trigger-gamepad1.left_stick_x-gamepad1.right_stick_x);
             robot.drives.get(Robot.DrivePos.BACK_LEFT).setPower(gamepad1.right_trigger-gamepad1.left_trigger+gamepad1.left_stick_x-gamepad1.right_stick_x);
             robot.drives.get(Robot.DrivePos.BACK_RIGHT).setPower(gamepad1.right_trigger-gamepad1.left_trigger-gamepad1.left_stick_x+gamepad1.right_stick_x);
+            // END DRIVE
 
-            // ARM CODE
-
+            // BEGIN ARM (and misc related controls)
+            // Begin Pincher
             if (gamepad1.a) {
                 robot.grabber.hand.setPinchPosition(0.45);
             } else if (gamepad1.b) {
                 robot.grabber.hand.setPinchPosition(0);
             }
+            // End Pincher
 
+            // Begin Wrist
             if (gamepad1.dpad_right) {
                 wrist += 0.002;
             } else if (gamepad1.dpad_left) {
@@ -60,13 +65,14 @@ public class BasicTeleOp extends LinearOpMode {
 
             telemetry.addData("Wrist", wrist);
             robot.grabber.hand.setWristPosition(wrist);
+            // End Wrist
 
+            // Begin Slide
             if (gamepad1.left_bumper) {
                 slide -= 10;
             } else if (gamepad1.right_bumper) {
                 slide += 10;
             }
-
 
             // Limit the slide to range 0 to 5600
             if (slide > 5690) {
@@ -80,8 +86,9 @@ public class BasicTeleOp extends LinearOpMode {
             robot.grabber.lift.slide.setPower(1);
 
             telemetry.addData("Slide", slide);
+            // End Slide
 
-
+            // Begin Pitch
             if (gamepad1.dpad_up) {
                 pitch += 10;
             } else if (gamepad1.dpad_down) {
@@ -99,8 +106,10 @@ public class BasicTeleOp extends LinearOpMode {
             robot.grabber.lift.pitch.setPower(1);
 
             telemetry.addData("Pitch", pitch);
+            // End Pitch
+            // END ARM
 
-            telemetry.update();
+            telemetry.update(); // Update telemetry
 
         }
 
