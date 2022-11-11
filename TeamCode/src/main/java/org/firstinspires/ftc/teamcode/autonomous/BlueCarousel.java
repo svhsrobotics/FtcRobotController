@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.autonomous;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver.BlinkinPattern;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -19,6 +20,7 @@ import org.firstinspires.ftc.teamcode.vision.TeamElementDetector;
 
 import java.util.concurrent.CompletionException;
 
+@Disabled
 @Autonomous(name = "Blue Carousel", group = "Competition")
 public class BlueCarousel extends LinearOpMode {
     @Override

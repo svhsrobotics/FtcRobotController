@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -11,6 +12,7 @@ import org.firstinspires.ftc.teamcode.robot.hardware.Grabber;
 import org.firstinspires.ftc.teamcode.robot.hardware.Hand;
 import org.firstinspires.ftc.teamcode.util.Logger;
 
+@Disabled
 @TeleOp
 public class ArmCalibration extends LinearOpMode {
     Logger logger = new Logger(telemetry);

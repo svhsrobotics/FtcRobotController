@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.robot.hardware.Drive;
 import org.firstinspires.ftc.teamcode.util.ExMath;
 import org.firstinspires.ftc.teamcode.util.Logger;
 
-@TeleOp(name = "Basic TeleOp", group = "TeleOp")
+@TeleOp(name = "TeleOp", group = "TeleOp")
 public class BasicTeleOp extends LinearOpMode {
     Logger logger = new Logger(telemetry);
 
