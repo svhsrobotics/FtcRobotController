@@ -33,89 +33,11 @@ public class BasicTeleOp extends LinearOpMode {
 
         while(!isStopRequested()) {
             // DRIVE CODE
-            Drive leftFrontDrive = robot.drives.get(Robot.DrivePos.FRONT_LEFT);
-            Drive rightFrontDrive = robot.drives.get(Robot.DrivePos.FRONT_RIGHT);
-            Drive leftBackDrive = robot.drives.get(Robot.DrivePos.BACK_LEFT);
-            Drive rightBackDrive = robot.drives.get(Robot.DrivePos.BACK_RIGHT);
+            robot.drives.get(Robot.DrivePos.FRONT_LEFT).setPower(gamepad1.right_trigger-gamepad1.left_trigger+gamepad1.left_stick_x+gamepad1.right_stick_x);
+            robot.drives.get(Robot.DrivePos.FRONT_RIGHT).setPower(gamepad1.right_trigger-gamepad1.left_trigger-gamepad1.left_stick_x-gamepad1.right_stick_x);
+            robot.drives.get(Robot.DrivePos.BACK_LEFT).setPower(gamepad1.right_trigger-gamepad1.left_trigger+gamepad1.left_stick_x-gamepad1.right_stick_x);
+            robot.drives.get(Robot.DrivePos.BACK_RIGHT).setPower(gamepad1.right_trigger-gamepad1.left_trigger-gamepad1.left_stick_x+gamepad1.right_stick_x);
 
-            leftFrontDrive.setPower(gamepad1.right_trigger-gamepad1.left_trigger+gamepad1.left_stick_x+gamepad1.right_stick_x);
-            rightFrontDrive.setPower(gamepad1.right_trigger-gamepad1.left_trigger-gamepad1.left_stick_x-gamepad1.right_stick_x);
-            leftBackDrive.setPower(gamepad1.right_trigger-gamepad1.left_trigger+gamepad1.left_stick_x-gamepad1.right_stick_x);
-            rightBackDrive.setPower(gamepad1.right_trigger-gamepad1.left_trigger-gamepad1.left_stick_x+gamepad1.right_stick_x);
-
-
-
-            // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
-           /* double frontRightPowerFactor, frontLeftPowerFactor, backRightPowerFactor, backLeftPowerFactor;
-            double magRight = Math.hypot(gamepad1.right_stick_x, gamepad1.right_stick_y);
-            double thetaRight = Math.atan2(-gamepad1.right_stick_y, gamepad1.right_stick_x);
-            double magLeft = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
-            double thetaLeft = Math.atan2(-gamepad1.left_stick_y, gamepad1.left_stick_x);
-            double pi = Math.PI;
-            int leftSign = 1;
-            int rightSign = 1;
-
-            if (gamepad1.left_bumper) { // Changed from left trigger as it's used for arm
-                magRight = ExMath.square_with_sign(magRight) / 2;
-                magLeft = ExMath.square_with_sign(magLeft) / 2;
-            }
-
-            if (thetaRight > 0 && thetaRight < pi / 2) {
-                frontRightPowerFactor = -Math.cos(2 * thetaRight);
-            } else if (thetaRight >= -pi && thetaRight < -pi / 2) {
-                frontRightPowerFactor = Math.cos(2 * thetaRight);
-            } else if (thetaRight >= pi / 2 && thetaRight <= pi) {
-                frontRightPowerFactor = 1;
-            } else {
-                frontRightPowerFactor = -1;
-            }
-
-            if (thetaLeft > 0 && thetaLeft < pi / 2) {
-                backLeftPowerFactor = -Math.cos(2 * thetaLeft);
-            } else if (thetaLeft >= -pi && thetaLeft < -pi / 2) {
-                backLeftPowerFactor = Math.cos(2 * thetaLeft);
-            } else if (thetaLeft >= pi / 2 && thetaLeft <= pi) {
-                backLeftPowerFactor = 1;
-            } else {
-                backLeftPowerFactor = -1;
-            }
-
-            if (thetaRight > -pi / 2 && thetaRight < 0) {
-                backRightPowerFactor = Math.cos(2 * thetaRight);
-            } else if (thetaRight > pi / 2 && thetaRight < pi) {
-                backRightPowerFactor = -Math.cos(2 * thetaRight);
-            } else if (thetaRight >= 0 && thetaRight <= pi / 2) {
-                backRightPowerFactor = 1;
-            } else {
-                backRightPowerFactor = -1;
-            }
-
-            if (thetaLeft > -pi / 2 && thetaLeft < 0) {
-                frontLeftPowerFactor = Math.cos(2 * thetaLeft);
-            } else if (thetaLeft > pi / 2 && thetaLeft < pi) {
-                frontLeftPowerFactor = -Math.cos(2 * thetaLeft);
-            } else if (thetaLeft >= 0 && thetaLeft <= pi / 2) {
-                frontLeftPowerFactor = 1;
-            } else {
-                frontLeftPowerFactor = -1;
-            }
-
-            // Redundant assignment removed, defaults to positive
-            if (frontLeftPowerFactor < 0){
-                leftSign=-1;
-            } else if (frontRightPowerFactor<0) {
-                rightSign=-1;
-            }
-            // leftFrontDrive.setPower((frontLeftPowerFactor * magLeft)*(frontLeftPowerFactor * magLeft));
-            // rightFrontDrive.setPower(-(frontRightPowerFactor * magRight)*(frontRightPowerFactor * magRight));
-            //leftBackDrive.setPower((backLeftPowerFactor * magLeft)*(backLeftPowerFactor * magLeft));
-            //rightBackDrive.setPower(-(backRightPowerFactor * magRight)*(backRightPowerFactor * magRight));
-
-            leftFrontDrive.setPower(((ExMath.square_with_sign(frontLeftPowerFactor) * magLeft)));
-            rightFrontDrive.setPower((ExMath.square_with_sign(frontRightPowerFactor) * magRight));
-            leftBackDrive.setPower(((ExMath.square_with_sign(backLeftPowerFactor) * magLeft)));
-            rightBackDrive.setPower((ExMath.square_with_sign(backRightPowerFactor) * magRight)); */
-            
             // ARM CODE
 
             if (gamepad1.a) {
