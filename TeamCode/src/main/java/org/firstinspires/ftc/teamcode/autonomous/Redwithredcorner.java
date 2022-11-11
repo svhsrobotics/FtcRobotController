@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.Shared.Drive2;
 import org.firstinspires.ftc.teamcode.robot.TestRobot;
 import org.firstinspires.ftc.teamcode.util.Logger;
 
-@Autonomous
+@Autonomous(name = "Autonomous")
 public class Redwithredcorner extends LinearOpMode {
     private final Logger logger = new Logger(telemetry, true);
     enum SleeveImage {ONE, TWO, THREE}
