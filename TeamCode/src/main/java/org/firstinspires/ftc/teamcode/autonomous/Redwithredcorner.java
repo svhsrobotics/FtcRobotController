@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.robot.TestRobot;
 import org.firstinspires.ftc.teamcode.util.Logger;
 import org.firstinspires.ftc.teamcode.vision.TfodSleeve;
 
-@Autonomous
+@Autonomous(name = "Autonomous")
 public class Redwithredcorner extends LinearOpMode {
     private final Logger logger = new Logger(telemetry, true);
 
