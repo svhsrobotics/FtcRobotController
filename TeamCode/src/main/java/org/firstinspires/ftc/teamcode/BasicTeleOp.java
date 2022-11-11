@@ -132,14 +132,10 @@ public class BasicTeleOp extends LinearOpMode {
             telemetry.addData("Wrist", wrist);
             robot.grabber.hand.setWristPosition(wrist);
 
-            if (gamepad1.dpad_left) {
+            if (gamepad1.left_bumper) {
                 slide -= 10;
-            } else if (gamepad1.dpad_right) {
+            } else if (gamepad1.right_bumper) {
                 slide += 10;
-            }
-
-            if (gamepad1.b) {
-                slide = 5690;
             }
 
 
