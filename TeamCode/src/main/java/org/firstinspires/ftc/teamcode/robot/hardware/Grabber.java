@@ -1,61 +1,14 @@
 package org.firstinspires.ftc.teamcode.robot.hardware;
 
-import androidx.annotation.NonNull;
-
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.CRServo;
-
-class Lift {
-    private DcMotor slide;
-    private DcMotor pitch;
-
-    public Lift(DcMotor slide, DcMotor pitch) {
-        this.slide = slide;
-        this.pitch = pitch;
-        reset();
-    }
-
-    public void reset() {
-        this.slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        this.pitch.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        this.slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        this.pitch.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-    }
-
-    public void setPositions(int slide, int pitch) {
-        this.slide.setTargetPosition(slide);
-        this.pitch.setTargetPosition(pitch);
-    }
-
-    public boolean done() {
-        return (this.slide.getCurrentPosition() == this.slide.getTargetPosition()) &&
-                (this.pitch.getCurrentPosition() == this.pitch.getTargetPosition());
-    }
-}
-
-class Hand {
-    private Servo wrist;
-    private Servo pinch;
-
-    public Hand(Servo wrist, Servo pinch){
-        this.wrist = wrist;
-        this.pinch = pinch;
-    }
-    public void setWristPosition(double wrist) {
-        this.wrist.setPosition(wrist);
-    }
-    public void setPinchPosition(double pinch){
-        this.pinch.setPosition(pinch);
-    }
-}
 
 public class Grabber {
-    private Hand hand;
-    private Lift lift;
+    public Hand hand;
+    public Lift lift;
 
-    public Grabber(DcMotor slide, DcMotor pitch,
+    public Grabber(DcMotor slide, DcMotorEx pitch,
                    Servo wrist, Servo pinch) {
         this.hand = new Hand(wrist, pinch);
         this.lift = new Lift(slide, pitch);
@@ -88,7 +41,7 @@ public class Grabber {
             case START:
                 lift.setPositions(100,100);
                 hand.setPinchPosition(0);
-                hand.setWristPosition(1000);
+                hand.setWristPosition(1);
                 break;
 
             case SETONECONE:
@@ -123,7 +76,7 @@ public class Grabber {
 
             case SETFOURCONE:
                 lift.setPositions(100,100);
-                hand.setWristPosition(1000);
+                hand.setWristPosition(0.25);
                 break;
 
             case INTOFOURCONE:
@@ -132,7 +85,7 @@ public class Grabber {
                 break;
 
             case COLLECT:
-                hand.setPinchPosition(10);
+                hand.setPinchPosition(1);
                 break;
 
             case GROUND:
