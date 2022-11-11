@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
@@ -25,6 +26,9 @@ public class BasicTeleOp extends LinearOpMode {
     public void runOpMode() {
         PowerPlayBot robot = new PowerPlayBot(hardwareMap, logger);
         robot.initHardware();
+
+        // TODO: Move this to the robot class
+        Servo flipper = hardwareMap.get(Servo.class, "flip");
 
         //robot.grabber.lift.reset(); // Uncomment to reset the encoders on startup
 
@@ -107,6 +111,13 @@ public class BasicTeleOp extends LinearOpMode {
 
             telemetry.addData("Pitch", pitch);
             // End Pitch
+
+            // Begin Flipper
+            if (gamepad1.x) {
+                flipper.setPosition(1);
+            } else if (gamepad1.y) {
+                flipper.setPosition(0);
+            }
             // END ARM
 
             telemetry.update(); // Update telemetry
