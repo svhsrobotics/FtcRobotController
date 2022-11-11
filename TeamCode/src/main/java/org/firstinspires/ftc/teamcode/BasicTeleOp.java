@@ -153,31 +153,23 @@ public class BasicTeleOp extends LinearOpMode {
             telemetry.addData("Slide", slide);
 
 
-            if (gamepad1.right_trigger > 0.2) {
-                //if (robot.grabber.lift.pitch.getCurrentPosition() < 5320) {
-                if (robot.grabber.lift.pitch.getCurrent(CurrentUnit.AMPS) < 4.5) {
-                    telemetry.removeLine(errorLine);
-                    robot.grabber.lift.pitch.setPower(Math.pow(gamepad1.right_trigger, 2));
-                } else {
-                    //logger.error("Pitch motor current too high");
-                    errorLine = telemetry.addLine(Logger.formatColor("Pitch motor current too high", "#F44336"));
-                    robot.grabber.lift.pitch.setPower(0);
-                }
-            } else if (gamepad1.left_trigger > 0.2) {
-                //if (robot.grabber.lift.pitch.getCurrentPosition() > 400) {
-                if (robot.grabber.lift.pitch.getCurrent(CurrentUnit.AMPS) < 4.5) {
-                    telemetry.removeLine(errorLine);
-                    robot.grabber.lift.pitch.setPower(-Math.pow(gamepad1.left_trigger, 2));
-                } else {
-                    //logger.error("Pitch motor current too high");
-                    errorLine = telemetry.addLine(Logger.formatColor("Pitch motor current too high", "#F44336"));
-                    robot.grabber.lift.pitch.setPower(0);
-                }
-            } else {
-                robot.grabber.lift.pitch.setPower(0);
+            if (gamepad1.dpad_up) {
+                pitch += 10;
+            } else if (gamepad1.dpad_down) {
+                pitch -= 10;
             }
 
-            telemetry.addData("Pitch", robot.grabber.lift.pitch.getCurrentPosition());
+            if (pitch > 5320) {
+                pitch = 5320;
+            } else if (pitch < 0) {
+                pitch = 0;
+            }
+
+            robot.grabber.lift.pitch.setTargetPosition(pitch);
+            robot.grabber.lift.pitch.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.grabber.lift.pitch.setPower(1);
+
+            telemetry.addData("Pitch", pitch);
 
             telemetry.update();
 
