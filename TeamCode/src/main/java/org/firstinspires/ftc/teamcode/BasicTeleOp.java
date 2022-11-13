@@ -108,9 +108,9 @@ public class BasicTeleOp extends LinearOpMode {
             }
 
             if (pitch > 5320) {
-                pitch = 5320;
+                //pitch = 5320;
             } else if (pitch < 0) {
-                pitch = 0;
+                //pitch = 0;
             }
 
             robot.grabber.lift.pitch.setTargetPosition(pitch);
