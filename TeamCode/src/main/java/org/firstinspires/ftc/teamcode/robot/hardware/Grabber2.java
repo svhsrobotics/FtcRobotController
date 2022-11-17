@@ -102,7 +102,7 @@ class slides{
                     break;
 
                 case HIGHPOLE:
-                    slides.setSlidePositions(100,100);
+                    slides.setSlidePositions(101,100);
                     pincher.setPincher(1000);
                     break;
 
