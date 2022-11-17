@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Shared.Drive2;
+import org.firstinspires.ftc.teamcode.robot.PowerPlayBot;
 import org.firstinspires.ftc.teamcode.robot.TestRobot;
 import org.firstinspires.ftc.teamcode.util.Logger;
 import org.firstinspires.ftc.teamcode.vision.TensorflowStandardSleeve;
@@ -15,7 +16,7 @@ public class Redwithredcorner extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        TestRobot robot = new TestRobot(hardwareMap, logger);
+        PowerPlayBot robot = new PowerPlayBot(hardwareMap, logger);
         robot.initHardware();
 //140 cm of working space
         Drive2 drive = new Drive2(robot, this);
