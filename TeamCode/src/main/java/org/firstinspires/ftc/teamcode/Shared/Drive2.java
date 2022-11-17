@@ -581,7 +581,21 @@ public class Drive2 {
         pGain = Math.max(-0.05*Math.abs(angleError) + 0.1, .05)/3;  //Varies from .2 around zero to .05 for errors above 10 degrees
         pGain = 0.06 / 8.0;
         iGain = 0.04 / 8.0;
+
+        // If the angleError is really big, go open-loop for a bit to speed up the turn
+        if (Math.abs(angleError) > 20) {
+            pGain += 1000;
+        }
+
         powerCorrection = angleError * pGain + mTargetAngleErrorSum * iGain;
+
+        android.util.Log.d("angleError", String.valueOf(angleError));
+        android.util.Log.d("mTargetAngleErrorSum", String.valueOf(mTargetAngleErrorSum));
+        android.util.Log.d("mTargetAngle", String.valueOf(mTargetAngle));
+
+        /*telemetry.addData("angleError", angleError);
+        telemetry.addData("mTargetAngleErrorSum", mTargetAngleErrorSum);
+        telemetry.addData("mTargetAngle", mTargetAngle);*/
 
         return powerCorrection;
     }

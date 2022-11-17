@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -12,6 +13,7 @@ import org.firstinspires.ftc.teamcode.robot.hardware.Arm.HubPosition;
 import org.firstinspires.ftc.teamcode.util.ExMath;
 import org.firstinspires.ftc.teamcode.robot.Robot;
 
+@Disabled
 @TeleOp(name = "Competition TeleOp", group = "Competition")
 public class CompetitionTeleOp extends LinearOpMode {
     //private final String TAG = getClass().getName();
