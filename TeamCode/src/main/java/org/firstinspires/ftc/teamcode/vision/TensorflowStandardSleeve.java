@@ -152,7 +152,7 @@ public class TensorflowStandardSleeve {
                                 opmode.telemetry.addData("tfodSees","TWO");
                                 return TfodSleeve.TWO;
                             }
-                            if (recognition.getLabel().equals(LABELS[3])){
+                            if (recognition.getLabel().equals(LABELS[2])){
                                 opmode.telemetry.addData("tfodSees","THREE");
                                 return TfodSleeve.THREE;
                             }
