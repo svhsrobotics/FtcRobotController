@@ -4,37 +4,43 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 class slides{
-        public DcMotor leftslide;
-        public DcMotor rightslide;
+        public DcMotor bottommotor;
+        public DcMotor middlemotor;
+        public DcMotor topmotor;
         public DcMotor hslide;
 
-        public slides(DcMotor leftslide, DcMotor rightslide, DcMotor hslide) {
-            this.leftslide = leftslide;
-            this.rightslide = rightslide;
+        public slides(DcMotor bottommotor, DcMotor middlemotor, DcMotor topmotor, DcMotor hslide) {
+            this.bottommotor = bottommotor;
+            this.middlemotor = middlemotor;
+            this.topmotor = topmotor;
             this.hslide = hslide;
             reset();
         }
 
         public void reset() {
-            this.leftslide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            this.rightslide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            this.bottommotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            this.middlemotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            this.topmotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             this.hslide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-            this.leftslide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            this.rightslide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            this.bottommotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            this.middlemotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            this.topmotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             this.hslide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
 
-        public void setSlidePositions(int leftslide, int hslide) {
-            this.leftslide.setTargetPosition(leftslide);
-            this.rightslide.setTargetPosition(leftslide);
-            this.hslide.setTargetPosition(hslide);
+        public void setSlidePositions(int y, int x) {
+            this.bottommotor.setTargetPosition(y);
+            this.middlemotor.setTargetPosition(y);
+            this.topmotor.setTargetPosition(y);
+            this.hslide.setTargetPosition(x);
         }
 
         public boolean done() {
-            return (this.leftslide.getCurrentPosition() == this.leftslide.getTargetPosition()) &&
-                    (this.rightslide.getCurrentPosition() == this.rightslide.getTargetPosition()) &&
-                    (this.hslide.getCurrentPosition() == this.hslide.getTargetPosition());
+            return (this.topmotor.getCurrentPosition() == this.topmotor.getTargetPosition()) &&
+                    (this.middlemotor.getCurrentPosition() == this.middlemotor.getTargetPosition()) &&
+                    (this.hslide.getCurrentPosition() == this.hslide.getTargetPosition()) &&
+                    (this.bottommotor.getCurrentPosition() == this.bottommotor.getTargetPosition());
         }
     }
 
@@ -53,9 +59,9 @@ class slides{
         private pincher pincher ;
         private slides slides;
 
-        public Grabber2(DcMotor leftslide, DcMotor rightslide, DcMotor hslide, Servo pinch) {
+        public Grabber2(DcMotor topmotor, DcMotor middlemotor, DcMotor bottommotor, DcMotor hslide, Servo pinch) {
             this.pincher = new pincher(pinch);
-            this.slides = new slides(leftslide, rightslide, hslide);
+            this.slides = new slides(topmotor, middlemotor, bottommotor, hslide);
         }
 
         public enum Positions{
