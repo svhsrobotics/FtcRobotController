@@ -203,15 +203,18 @@ public class DoubleThresholdPipeline extends OpenCvPipeline {
 
     /* TUNING VARIABLES */
     // The simulator will automatically set these variables to the values you set in the UI
-    public double minHue = 0;
-    public double maxHue = 255;
+    public double minHue = 18.4;
+    public double maxHue = 32.6;
 
-    public double minBlue = 0;
-    public double maxBlue = 255;
+    public double minBlue = 171.4;
+    public double maxBlue = 205.4;
 
     public boolean showContours = false;
 
-    public int blockSize = 20;
+    public double minHeight = 20;
+    public double maxWidth = 30;
+
+    //public int blockSize = 20;
 
     @Override
     public Mat processFrame(Mat input) {
@@ -235,11 +238,14 @@ public class DoubleThresholdPipeline extends OpenCvPipeline {
         telemetry.addData("Contours", contours.size());
 
         Imgproc.drawContours(input, contours, -1, new Scalar(255, 0, 0), 2);
-        contourSmooth(contours);
+        //contourSmooth(contours);
         for (MatOfPoint contour : contours) {
             Rect rect = Imgproc.boundingRect(contour);
-            if (rect.width < 30 && rect.height > 20) {
+            if (rect.width < maxWidth && rect.height > minHeight) {
                 Imgproc.rectangle(input, rect, new Scalar(0, 255, 0), 2);
+                Point bottomMiddle = new Point(rect.x + (rect.width / 2.0), rect.y + rect.height);
+                Imgproc.drawMarker(input, bottomMiddle, new Scalar(0, 0, 255), Imgproc.MARKER_CROSS, 20, 2);
+
             }
 
         }
