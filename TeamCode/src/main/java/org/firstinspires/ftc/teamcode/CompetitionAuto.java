@@ -7,8 +7,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.Shared.Drive2;
-import org.firstinspires.ftc.teamcode.robot.CompetitionRobot;
-import org.firstinspires.ftc.teamcode.robot.Robot;
+import org.firstinspires.ftc.teamcode.robot.FreightFrenzyRobot;
 import org.firstinspires.ftc.teamcode.robot.hardware.Arm;
 import org.firstinspires.ftc.teamcode.util.Configuration;
 import org.firstinspires.ftc.teamcode.util.Configurator;
@@ -40,7 +39,7 @@ public class CompetitionAuto extends LinearOpMode {
         // Tell the camera to start using the pipeline
         webcam.setPipeline(detector);
         // Create the robot from the hardware map
-        CompetitionRobot robot = new CompetitionRobot(hardwareMap);
+        FreightFrenzyRobot robot = new FreightFrenzyRobot(hardwareMap);
         rightCarousel = hardwareMap.get(CRServo.class, "rightCarousel");
         // Initialize the hardware
         robot.initHardware();

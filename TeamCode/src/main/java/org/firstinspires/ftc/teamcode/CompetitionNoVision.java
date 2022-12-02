@@ -5,8 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Shared.Drive2;
-import org.firstinspires.ftc.teamcode.robot.CompetitionRobot;
-import org.firstinspires.ftc.teamcode.robot.Robot;
+import org.firstinspires.ftc.teamcode.robot.FreightFrenzyRobot;
 import org.firstinspires.ftc.teamcode.robot.hardware.Arm;
 import org.firstinspires.ftc.teamcode.util.Configuration;
 import org.firstinspires.ftc.teamcode.vision.HSVColor;
@@ -18,7 +17,7 @@ public class CompetitionNoVision extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        CompetitionRobot robot = new CompetitionRobot(hardwareMap);
+        FreightFrenzyRobot robot = new FreightFrenzyRobot(hardwareMap);
         robot.initHardware();
 
         Drive2 drive = new Drive2(robot,this);

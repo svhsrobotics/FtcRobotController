@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.robot.hardware.Drive;
 import org.firstinspires.ftc.teamcode.util.Logger;
 
-public class PowerPlayBot extends Robot {
+public class PowerPlayBotV2 extends Robot {
 
     static final double REV_COUNTS = 28;
     static final double GEAR_REDUCTION = 40;
@@ -17,11 +17,11 @@ public class PowerPlayBot extends Robot {
 
     public Grabber grabber;
 
-    public PowerPlayBot(HardwareMap hardwareMap, Logger logger) {
+    public PowerPlayBotV2(HardwareMap hardwareMap, Logger logger) {
         super(hardwareMap, logger);
     }
 
-    public PowerPlayBot(HardwareMap hardwareMap) {
+    public PowerPlayBotV2(HardwareMap hardwareMap) {
         super(hardwareMap);
     }
 

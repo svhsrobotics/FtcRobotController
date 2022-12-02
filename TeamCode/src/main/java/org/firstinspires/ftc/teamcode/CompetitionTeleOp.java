@@ -8,16 +8,15 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.Shared.Drive2;
-import org.firstinspires.ftc.teamcode.robot.CompetitionRobot;
+import org.firstinspires.ftc.teamcode.robot.FreightFrenzyRobot;
 import org.firstinspires.ftc.teamcode.robot.hardware.Arm.HubPosition;
 import org.firstinspires.ftc.teamcode.util.ExMath;
-import org.firstinspires.ftc.teamcode.robot.Robot;
 
 @Disabled
 @TeleOp(name = "Competition TeleOp", group = "Competition")
 public class CompetitionTeleOp extends LinearOpMode {
     //private final String TAG = getClass().getName();
-    CompetitionRobot robot;
+    FreightFrenzyRobot robot;
     DcMotor Arm = null;
     Servo Wrist = null;
     CRServo Collector = null;
@@ -55,7 +54,7 @@ public class CompetitionTeleOp extends LinearOpMode {
         rightCarousel = hardwareMap.get(CRServo.class, "rightCarousel");
         leftCarousel = hardwareMap.get(CRServo.class, "leftCarousel");
         cap = hardwareMap.get(Servo.class, "cap");
-        robot = new CompetitionRobot(hardwareMap);
+        robot = new FreightFrenzyRobot(hardwareMap);
         robot.initHardware();
         drive = new Drive2(robot, this);
         cap.setPosition(.5);

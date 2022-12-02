@@ -5,8 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Shared.Drive2;
-import org.firstinspires.ftc.teamcode.robot.CompetitionRobot;
-import org.firstinspires.ftc.teamcode.robot.Robot;
+import org.firstinspires.ftc.teamcode.robot.FreightFrenzyRobot;
 
 @Disabled
 @Autonomous(name = "SpeedChangeTest", group = "Calibration")
@@ -15,7 +14,7 @@ public class SpeedChangeTest extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         // Create the robot from the hardware map
-        CompetitionRobot robot = new CompetitionRobot(hardwareMap);
+        FreightFrenzyRobot robot = new FreightFrenzyRobot(hardwareMap);
         // Initialize the hardware
         robot.initDrives();
         robot.initIMU();

@@ -6,10 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-import org.firstinspires.ftc.teamcode.robot.CompetitionRobot;
 import org.firstinspires.ftc.teamcode.robot.PowerPlayBot;
-import org.firstinspires.ftc.teamcode.robot.hardware.Grabber;
-import org.firstinspires.ftc.teamcode.robot.hardware.Hand;
 import org.firstinspires.ftc.teamcode.util.Logger;
 
 @Disabled
