@@ -16,26 +16,35 @@ public class Arm {
     public Pincher pincher;
 
     public static class Lift {
-        public Lift(DcMotor motor1, DcMotor motor2, DcMotor motor3) {
+        private final DcMotor motor1;
+        private final DcMotor motor2;
+        private final DcMotor motor3;
 
+        public Lift(DcMotor motor1, DcMotor motor2, DcMotor motor3) {
+            this.motor1 = motor1;
+            this.motor2 = motor2;
+            this.motor3 = motor3;
+
+            this.motor1.setDirection(DcMotor.Direction.REVERSE);
+            this.motor3.setDirection(DcMotor.Direction.REVERSE);
         }
 
-        // This is just one possible implementation, "target" based
-
         public void setTargetPosition(int position) {
-
+            motor1.setTargetPosition(position);
+            motor2.setTargetPosition(position);
+            motor3.setTargetPosition(position);
         }
 
         public int getTargetPosition() {
-            return 0;
+            return motor3.getTargetPosition();
         }
 
         public int getCurrentPosition() {
-            return 0;
+            return motor3.getCurrentPosition();
         }
 
         public boolean isBusy() {
-            return false;
+            return motor1.isBusy() || motor2.isBusy() || motor3.isBusy();
         }
     }
 
