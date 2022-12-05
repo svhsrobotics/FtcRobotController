@@ -16,13 +16,13 @@ public class RecordingPipeline extends OpenCvPipeline {
 
     @Override
     public void init(Mat firstFrame) {
-        android.util.Log.i("RecordingPipeline", "Creating new VideoWriter");
+        //android.util.Log.i("RecordingPipeline", "Creating new VideoWriter");
         videoWriter = new VideoWriter("/sdcard/%02d.jpg", 0, FPS, firstFrame.size());
     }
 
     @Override
     public Mat processFrame(Mat input) {
-        android.util.Log.d("RecordingPipeline", "Writing frame");
+        //android.util.Log.d("RecordingPipeline", "Writing frame");
         Mat bgr = new Mat();
         Imgproc.cvtColor(input, bgr, Imgproc.COLOR_RGB2BGR);
         videoWriter.write(bgr);
