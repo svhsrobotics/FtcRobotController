@@ -15,7 +15,7 @@ public class PowerPlayBot extends Robot {
     static final double GEAR_REDUCTION = 40;
     static final double WHEEL_DIAMETER = 3;
 
-    public Grabber grabber;
+    //public Grabber grabber;
 
     public PowerPlayBot(HardwareMap hardwareMap, Logger logger) {
         super(hardwareMap, logger);
@@ -32,12 +32,12 @@ public class PowerPlayBot extends Robot {
     }
 
     protected void initGrabber() {
-        grabber = new Grabber(
+        /*grabber = new Grabber(
                 hardwareMap.get(DcMotor.class, "reach"),
                 hardwareMap.get(DcMotorEx.class, "pivot"),
                 hardwareMap.get(Servo.class, "wrist"),
                 hardwareMap.get(Servo.class, "grab")
-        );
+        );*/
     }
 
     @Override
