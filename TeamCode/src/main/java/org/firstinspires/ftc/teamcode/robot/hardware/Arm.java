@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.robot.hardware;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
+
 /**
  * Arm Component. Currently uses hard-coded calibration data.
  * The Arm consists of 3 major components:
@@ -13,7 +16,7 @@ public class Arm {
     public Pincher pincher;
 
     public static class Lift {
-        public Lift() {
+        public Lift(DcMotor motor1, DcMotor motor2, DcMotor motor3) {
 
         }
 
@@ -37,7 +40,7 @@ public class Arm {
     }
 
     public static class Reacher {
-        public Reacher() {
+        public Reacher(DcMotor motor) {
 
         }
 
@@ -61,7 +64,7 @@ public class Arm {
     }
 
     public static class Pincher {
-        public Pincher() {
+        public Pincher(Servo servo) {
 
         }
 
