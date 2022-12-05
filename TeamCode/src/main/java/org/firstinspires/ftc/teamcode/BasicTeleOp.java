@@ -25,7 +25,7 @@ public class BasicTeleOp extends LinearOpMode {
         robot.initHardware();
 
         // TODO: Move this to the robot class
-        Servo flipper = hardwareMap.get(Servo.class, "flip");
+        //Servo flipper = hardwareMap.get(Servo.class, "flip");
 
         //robot.grabber.lift.reset(); // Uncomment to reset the encoders on startup
 
@@ -150,11 +150,11 @@ public class BasicTeleOp extends LinearOpMode {
             // End Pitch
 
             // Begin Flipper
-            if (gamepad1.x || gamepad2.x) {
+            /*if (gamepad1.x || gamepad2.x) {
                 flipper.setPosition(1);
             } else if (gamepad1.y || gamepad2.y) {
                 flipper.setPosition(0);
-            }
+            }*/
             // END ARM
 
             telemetry.update(); // Update telemetry

@@ -97,7 +97,16 @@ public class Arm {
     }
 
     public enum Preset {
+        LOW_POLE (0, 0),
+        MEDIUM_POLE (0, 0),
+        HIGH_POLE (0, 0);
 
+        final int height;
+        final int reach;
+        Preset(int height, int reach) {
+            this.height = height;
+            this.reach = reach;
+        }
     }
 
     public void goToPreset(Preset preset) {
