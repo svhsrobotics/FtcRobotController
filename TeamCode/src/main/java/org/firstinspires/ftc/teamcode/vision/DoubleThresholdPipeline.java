@@ -14,6 +14,7 @@ import org.openftc.easyopencv.OpenCvPipeline;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 
 public class DoubleThresholdPipeline extends OpenCvPipeline {
     // This constructor is used by the simulator to pass a Telemetry object
@@ -136,7 +137,10 @@ public class DoubleThresholdPipeline extends OpenCvPipeline {
         ArrayList<MatOfPoint> filteredContours = new ArrayList<>();
         for (MatOfPoint contour : contours) {
             if (Imgproc.contourArea(contour) > 100 && Imgproc.contourArea(contour) < 10000) {
-                filteredContours.add(contour);
+                Rect rect = Imgproc.boundingRect(contour);
+                if (rect.width < maxWidth && rect.height > minHeight) {
+                    filteredContours.add(contour);
+                }
             }
         }
         return filteredContours;
@@ -216,6 +220,8 @@ public class DoubleThresholdPipeline extends OpenCvPipeline {
     public double minHeight = 20;
     public double maxWidth = 30;
 
+    public int targetX = 170;
+
     //public int blockSize = 20;
 
     @Override
@@ -241,19 +247,29 @@ public class DoubleThresholdPipeline extends OpenCvPipeline {
 
         Imgproc.drawContours(input, contours, -1, new Scalar(255, 0, 0), 2);
         //contourSmooth(contours);
+
+        // Draw the contours on the input image for debugging
         for (MatOfPoint contour : contours) {
             Rect rect = Imgproc.boundingRect(contour);
-            if (rect.width < maxWidth && rect.height > minHeight) {
-                Imgproc.rectangle(input, rect, new Scalar(0, 255, 0), 2);
-                Point bottomMiddle = new Point(rect.x + (rect.width / 2.0), rect.y + rect.height);
-                Imgproc.drawMarker(input, bottomMiddle, new Scalar(0, 0, 255), Imgproc.MARKER_CROSS, 20, 2);
-
-            }
-
+            Imgproc.rectangle(input, rect, new Scalar(0, 255, 0), 2);
+            Point bottomMiddle = new Point(rect.x + (rect.width / 2.0), rect.y + rect.height);
+            Imgproc.drawMarker(input, bottomMiddle, new Scalar(0, 0, 255), Imgproc.MARKER_CROSS, 20, 2);
         }
+
+        Imgproc.line(input, new Point(targetX, 0), new Point(targetX, input.height()), new Scalar(0, 0, 255), 2);
+
+        // Find the contour with the largest area
+        contours.stream().max(Comparator.comparingDouble(Imgproc::contourArea)).ifPresent(max -> {
+            Rect rect = Imgproc.boundingRect(max);
+
+            Point bottomMiddle = new Point(rect.x + (rect.width / 2.0), rect.y + rect.height);
+            Imgproc.drawMarker(input, bottomMiddle, new Scalar(0, 255, 0), Imgproc.MARKER_CROSS, 20, 2);
+            poleX = (int) Math.floor(bottomMiddle.x);
+        });
 
         GlobalMatPool.returnAll(telemetry);
 
+        telemetry.addData("Correction", necessaryCorrection());
         // Update the telemetry once per frame
         telemetry.update();
 
@@ -261,6 +277,20 @@ public class DoubleThresholdPipeline extends OpenCvPipeline {
             return input;
         } else {
             return visualize;
+        }
+    }
+
+    /* PUBLIC INTERFACE */
+    private int poleX = -1;
+    public int getPoleX() {
+        return poleX;
+    }
+
+    public int necessaryCorrection() {
+        if (poleX == -1) { // We haven't ran yet, no correction is necessary
+            return 0;
+        } else {
+            return poleX - targetX;
         }
     }
 }
