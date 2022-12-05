@@ -1,12 +1,9 @@
 package org.firstinspires.ftc.teamcode.robot;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.robot.hardware.Arm;
 import org.firstinspires.ftc.teamcode.robot.hardware.Drive;
@@ -16,7 +13,7 @@ import org.firstinspires.ftc.teamcode.util.Timeout;
 
 import java.util.EnumMap;
 
-public class CompetitionRobot extends Robot {
+public class FreightFrenzyRobot extends Robot {
 
     // Hardware definitions
     static final private class Hardware {
@@ -55,13 +52,13 @@ public class CompetitionRobot extends Robot {
 
     private final Logger logger;
 
-    public CompetitionRobot(HardwareMap hardwareMap, Logger logger) {
+    public FreightFrenzyRobot(HardwareMap hardwareMap, Logger logger) {
         super(hardwareMap);
         this.hardwareMap = hardwareMap;
         this.logger = logger;
     }
 
-    public CompetitionRobot(HardwareMap hardwareMap) {
+    public FreightFrenzyRobot(HardwareMap hardwareMap) {
         super(hardwareMap);
         this.hardwareMap = hardwareMap;
         this.logger = new Logger();
@@ -70,7 +67,7 @@ public class CompetitionRobot extends Robot {
     public void initHardware() throws IllegalArgumentException {
         try {
             initDrives();
-            initArm();
+            //initArm();
             initIMU();
         } catch (IllegalArgumentException e) {
             throw new HardwareNotFoundException(e);
@@ -102,13 +99,13 @@ public class CompetitionRobot extends Robot {
         }
     }
 
-    public void initArm() {
+    /*public void initArm() {
         this.arm = new Arm(
                 this.hardwareMap.get(DcMotor.class, "Arm"), // EXM0
                 this.hardwareMap.get(Servo.class, "pivotCollector"), // CHS3
                 this.hardwareMap.get(CRServo.class, "spinCollector") // CHS2
         );
-    }
+    }*/
 
 
     public void initDrives() {
