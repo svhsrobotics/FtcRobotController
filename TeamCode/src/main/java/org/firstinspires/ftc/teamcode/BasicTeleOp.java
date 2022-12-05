@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.robot.PowerPlayBot;
+import org.firstinspires.ftc.teamcode.robot.PowerPlayBotV2;
 import org.firstinspires.ftc.teamcode.robot.Robot;
 import org.firstinspires.ftc.teamcode.robot.hardware.Drive;
 import org.firstinspires.ftc.teamcode.util.ExMath;
@@ -24,7 +25,7 @@ public class BasicTeleOp extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        PowerPlayBot robot = new PowerPlayBot(hardwareMap, logger);
+        PowerPlayBotV2 robot = new PowerPlayBotV2(hardwareMap, logger);
         robot.initHardware();
 
         // TODO: Move this to the robot class
@@ -32,8 +33,7 @@ public class BasicTeleOp extends LinearOpMode {
 
         //robot.grabber.lift.reset(); // Uncomment to reset the encoders on startup
 
-        robot.grabber.pinch.setPinchPosition(0);
-        robot.grabber.lift.slide.setDirection(DcMotorSimple.Direction.REVERSE); // Slide is inverted
+        robot.arm.pincher.expand();
 
         waitForStart();
 
@@ -58,9 +58,9 @@ public class BasicTeleOp extends LinearOpMode {
 
             // Begin Pincher
             if (gamepad1.a || gamepad2.a) {
-                robot.grabber.hand.setPinchPosition(0.45);
+                robot.arm.pincher.contract();
             } else if (gamepad1.b || gamepad2.b) {
-                robot.grabber.hand.setPinchPosition(0);
+                robot.arm.pincher.expand();
             }
 
             // End Pincher
@@ -96,9 +96,7 @@ public class BasicTeleOp extends LinearOpMode {
                 slide = 0;
             }
 
-            robot.grabber.lift.slide.setTargetPosition(slide);
-            robot.grabber.lift.slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.grabber.lift.slide.setPower(1);
+            robot.arm.reacher.setTargetPosition(slide);
 
             telemetry.addData("Slide", slide);
             // End Slide
@@ -116,9 +114,7 @@ public class BasicTeleOp extends LinearOpMode {
                 //pitch = 0;
             }
 
-            robot.grabber.lift.pitch.setTargetPosition(pitch);
-            robot.grabber.lift.pitch.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.grabber.lift.pitch.setPower(1);
+            robot.arm.lift.setTargetPosition(pitch);
 
             telemetry.addData("Pitch", pitch);
             // End Pitch

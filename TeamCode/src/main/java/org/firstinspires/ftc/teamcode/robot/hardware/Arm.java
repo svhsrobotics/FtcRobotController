@@ -55,10 +55,10 @@ public class Arm {
             this.motor = motor;
         }
 
-        // This is just one possible implementation, "target" based
-
         public void setTargetPosition(int position) {
             motor.setTargetPosition(position);
+            motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            motor.setPower(1); // TODO: Don't hardcode motor power
         }
 
         public int getTargetPosition() {
@@ -70,7 +70,7 @@ public class Arm {
         }
 
         public boolean isBusy() {
-            return false;
+            return motor.isBusy();
         }
     }
 
@@ -82,11 +82,11 @@ public class Arm {
         }
 
         public void expand() {
-            servo.setPosition(0.45);
+            servo.setPosition(0); // TODO: Verify that this value corresponds to the expanded position
         }
 
         public void contract() {
-            servo.setPosition(0);
+            servo.setPosition(0.45);
         }
     }
 
