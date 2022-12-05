@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.robot.hardware.Arm;
 import org.firstinspires.ftc.teamcode.robot.hardware.Drive;
 import org.firstinspires.ftc.teamcode.util.Logger;
 
@@ -15,7 +16,7 @@ public class PowerPlayBotV2 extends Robot {
     static final double GEAR_REDUCTION = 40;
     static final double WHEEL_DIAMETER = 3;
 
-    public Grabber grabber;
+    public Arm arm;
 
     public PowerPlayBotV2(HardwareMap hardwareMap, Logger logger) {
         super(hardwareMap, logger);
@@ -28,16 +29,24 @@ public class PowerPlayBotV2 extends Robot {
     @Override
     public void initHardware() {
         super.initHardware();
-        initGrabber();
+        initArm();
     }
 
-    protected void initGrabber() {
-        grabber = new Grabber(
-                hardwareMap.get(DcMotor.class, "reach"),
-                hardwareMap.get(DcMotorEx.class, "pivot"),
-                hardwareMap.get(Servo.class, "wrist"),
-                hardwareMap.get(Servo.class, "grab")
+    protected void initArm() {
+        arm = new Arm(
+               new Arm.Lift(
+                       hardwareMap.get(DcMotor.class, "Top"),
+                       hardwareMap.get(DcMotor.class, "Middle"),
+                       hardwareMap.get(DcMotor.class, "Bottom")
+               ),
+                new Arm.Reacher(
+                        hardwareMap.get(DcMotor.class, "Reach")
+                ),
+                new Arm.Pincher(
+                        hardwareMap.get(Servo.class, "Grab")
+                )
         );
+
     }
 
     @Override

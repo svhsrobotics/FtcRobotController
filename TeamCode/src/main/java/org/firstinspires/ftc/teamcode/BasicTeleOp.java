@@ -32,7 +32,7 @@ public class BasicTeleOp extends LinearOpMode {
 
         //robot.grabber.lift.reset(); // Uncomment to reset the encoders on startup
 
-        robot.grabber.hand.setPinchPosition(0);
+        robot.grabber.pinch.setPinchPosition(0);
         robot.grabber.lift.slide.setDirection(DcMotorSimple.Direction.REVERSE); // Slide is inverted
 
         waitForStart();
@@ -40,30 +40,33 @@ public class BasicTeleOp extends LinearOpMode {
         while(!isStopRequested()) {
             // BEGIN DRIVE
             robot.drives.get(Robot.DrivePos.FRONT_LEFT).setPower(
-                    (gamepad1.right_trigger-gamepad1.left_trigger+Math.pow(gamepad1.left_stick_x, 3)+gamepad1.right_stick_x)
-                    + (gamepad2.right_trigger-gamepad2.left_trigger+Math.pow(gamepad2.left_stick_x, 3)+gamepad2.right_stick_x));
+                    (gamepad1.right_trigger-gamepad1.left_trigger+Math.pow(gamepad1.left_stick_x, 1.5)+gamepad1.right_stick_x)
+                    + (gamepad2.right_trigger-gamepad2.left_trigger+Math.pow(gamepad2.left_stick_x, 1.5)+gamepad2.right_stick_x));
             robot.drives.get(Robot.DrivePos.FRONT_RIGHT).setPower(
-                    (gamepad1.right_trigger-gamepad1.left_trigger-Math.pow(gamepad1.left_stick_x, 3)-gamepad1.right_stick_x)
-                    + (gamepad2.right_trigger-gamepad2.left_trigger-Math.pow(gamepad2.left_stick_x, 3)-gamepad2.right_stick_x));
+                    (gamepad1.right_trigger-gamepad1.left_trigger-Math.pow(gamepad1.left_stick_x, 1.5)-gamepad1.right_stick_x)
+                    + (gamepad2.right_trigger-gamepad2.left_trigger-Math.pow(gamepad2.left_stick_x, 1.5)-gamepad2.right_stick_x));
             robot.drives.get(Robot.DrivePos.BACK_LEFT).setPower(
-                    (gamepad1.right_trigger-gamepad1.left_trigger+Math.pow(gamepad1.left_stick_x, 3)-gamepad1.right_stick_x)
-                    + (gamepad2.right_trigger-gamepad2.left_trigger+Math.pow(gamepad2.left_stick_x, 3)-gamepad2.right_stick_x));
+                    (gamepad1.right_trigger-gamepad1.left_trigger+Math.pow(gamepad1.left_stick_x, 1.5)-gamepad1.right_stick_x)
+                    + (gamepad2.right_trigger-gamepad2.left_trigger+Math.pow(gamepad2.left_stick_x, 1.5)-gamepad2.right_stick_x));
             robot.drives.get(Robot.DrivePos.BACK_RIGHT).setPower(
-                    (gamepad1.right_trigger-gamepad1.left_trigger-Math.pow(gamepad1.left_stick_x, 3)+gamepad1.right_stick_x)
-                    + (gamepad2.right_trigger-gamepad2.left_trigger-Math.pow(gamepad2.left_stick_x, 3)+gamepad2.right_stick_x));
+                    (gamepad1.right_trigger-gamepad1.left_trigger-Math.pow(gamepad1.left_stick_x, 1.5)+gamepad1.right_stick_x)
+                    + (gamepad2.right_trigger-gamepad2.left_trigger-Math.pow(gamepad2.left_stick_x, 1.5)+gamepad2.right_stick_x));
             // END DRIVE
 
             // BEGIN ARM (and misc related controls)
+
+
             // Begin Pincher
             if (gamepad1.a || gamepad2.a) {
                 robot.grabber.hand.setPinchPosition(0.45);
             } else if (gamepad1.b || gamepad2.b) {
                 robot.grabber.hand.setPinchPosition(0);
             }
+
             // End Pincher
 
             // Begin Wrist
-            if (gamepad1.dpad_right || gamepad2.dpad_right) {
+            /*if (gamepad1.dpad_right || gamepad2.dpad_right) {
                 wrist += 0.002;
             } else if (gamepad1.dpad_left || gamepad2.dpad_left) {
                 wrist -= 0.002;
@@ -77,7 +80,7 @@ public class BasicTeleOp extends LinearOpMode {
 
             telemetry.addData("Wrist", wrist);
             robot.grabber.hand.setWristPosition(wrist);
-            // End Wrist
+            // End Wrist */
 
             // Begin Slide
             if (gamepad1.left_bumper || gamepad2.left_bumper) {
