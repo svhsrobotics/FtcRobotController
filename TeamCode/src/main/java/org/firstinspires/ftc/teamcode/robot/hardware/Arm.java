@@ -49,22 +49,24 @@ public class Arm {
     }
 
     public static class Reacher {
-        public Reacher(DcMotor motor) {
+        private final DcMotor motor;
 
+        public Reacher(DcMotor motor) {
+            this.motor = motor;
         }
 
         // This is just one possible implementation, "target" based
 
         public void setTargetPosition(int position) {
-
+            motor.setTargetPosition(position);
         }
 
         public int getTargetPosition() {
-            return 0;
+            return motor.getTargetPosition();
         }
 
         public int getCurrentPosition() {
-            return 0;
+            return motor.getCurrentPosition();
         }
 
         public boolean isBusy() {
@@ -73,16 +75,18 @@ public class Arm {
     }
 
     public static class Pincher {
-        public Pincher(Servo servo) {
+        private final Servo servo;
 
+        public Pincher(Servo servo) {
+            this.servo = servo;
         }
 
         public void expand() {
-
+            servo.setPosition(0.45);
         }
 
         public void contract() {
-
+            servo.setPosition(0);
         }
     }
 
