@@ -5,15 +5,14 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Shared.Drive2;
-import org.firstinspires.ftc.teamcode.robot.CompetitionRobot;
-import org.firstinspires.ftc.teamcode.robot.Robot;
+import org.firstinspires.ftc.teamcode.robot.FreightFrenzyRobot;
 
 @Disabled
 @TeleOp
 public class CurrentTest extends LinearOpMode {
 
     public void runOpMode() {
-        CompetitionRobot robot1 = new CompetitionRobot(hardwareMap);
+        FreightFrenzyRobot robot1 = new FreightFrenzyRobot(hardwareMap);
         robot1.initHardware();
 
         Drive2 drive = new Drive2(robot1, this);

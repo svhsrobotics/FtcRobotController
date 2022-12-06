@@ -1,161 +1,139 @@
 package org.firstinspires.ftc.teamcode.robot.hardware;
 
-import androidx.annotation.NonNull;
-
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 /**
  * Arm Component. Currently uses hard-coded calibration data.
+ * The Arm consists of 3 major components:
+ * 1. The Lift, which is 3 motors attached to a vertical linear slide
+ * 2. The Reacher, which is a motor attached to a horizontal linear slide
+ * 3. The Pincher, which is a servo attached to a custom mechanism that lowers into the cone and expands
  */
 public class Arm {
-    public final DcMotor arm;
-    public final Servo wrist;
-    public final CRServo collector;
+    public Lift lift;
+    public Reacher reacher;
+    public Pincher pincher;
 
-    private static final int MAX_ARM = 1000;
-    public static final int ARM_OFFSET = 0;
+    public static class Lift {
+        private final DcMotor motor1;
+        private final DcMotor motor2;
+        private final DcMotor motor3;
 
-    public Arm(DcMotor arm, Servo wrist, CRServo collector) {
-        this.arm = arm;
-        this.wrist = wrist;
-        this.collector = collector;
-    }
+        public Lift(DcMotor motor1, DcMotor motor2, DcMotor motor3) {
+            this.motor1 = motor1;
+            this.motor2 = motor2;
+            this.motor3 = motor3;
 
+            this.motor1.setDirection(DcMotor.Direction.REVERSE);
+            this.motor3.setDirection(DcMotor.Direction.REVERSE);
+        }
 
-    public enum HubPosition {
-        // TODO: Implement capping
-        TOP,
-        MIDDLE,
-        BOTTOM,
-        COLLECT,
-        PARK,
+        public void setPower(double power) {
+            // TODO: Enforce limits
+            motor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            motor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            motor3.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+            motor1.setPower(power);
+            motor2.setPower(power);
+            motor3.setPower(power);
+        }
 
+        public void setTargetPosition(int position) {
+            motor1.setTargetPosition(position);
+            motor2.setTargetPosition(position);
+            motor3.setTargetPosition(position);
 
-        START
-    }
+            motor1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            motor2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            motor3.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-    // Reset the encoder when the arm is in the initial position
-    public void reset() {
-        this.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-    }
+            motor1.setPower(1); // TODO: Don't hardcode motor power
+            motor2.setPower(1);
+            motor3.setPower(1);
+        }
 
-    // Go to the position, check done for status
-    public void goToBackPosition(HubPosition position) {
-        switch (position) {
-            case TOP:
-                setPositions(-4710, 0.49);
-                break;
+        public int getTargetPosition() {
+            return motor3.getTargetPosition();
+        }
 
-            case MIDDLE:
-                setPositions(-5355, 0.52);
-                break;
+        public int getCurrentPosition() {
+            return motor3.getCurrentPosition();
+        }
 
-            case BOTTOM:
-                setPositions(-6239, 0.60);
-                break;
-
-            case PARK: // Straight up
-                setPositions(-3204, 0.59);
-
+        public boolean isBusy() {
+            return motor1.isBusy() || motor2.isBusy() || motor3.isBusy();
         }
     }
 
-    // Go to the position, check done for status
-    public void goToPosition(HubPosition position) {
-        switch (position) {
-            case START:
-                setPositions(0, -1.0);
-                break;
+    public static class Reacher {
+        private final DcMotor motor;
 
-            case TOP:
-                setPositions(-2030, 0.70);
-                break;
+        public Reacher(DcMotor motor) {
+            this.motor = motor;
+        }
 
-            case MIDDLE:
-                setPositions(-1321, 0.67);
-                break;
+        public void setPower(double power) {
+            motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            motor.setPower(power);
+        }
 
-            case BOTTOM:
-                setPositions(0, 0.51);
-                break;
+        public void setTargetPosition(int position) {
+            motor.setTargetPosition(position);
+            motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            motor.setPower(1); // TODO: Don't hardcode motor power
+        }
 
-            case PARK:
-                setPositions(0, 0.38);
-                break;
+        public int getTargetPosition() {
+            return motor.getTargetPosition();
+        }
 
-            case COLLECT:
-                setPositions(-302, 0.65);
-                break;
+        public int getCurrentPosition() {
+            return motor.getCurrentPosition();
+        }
+
+        public boolean isBusy() {
+            return motor.isBusy();
         }
     }
 
-    // Are we done moving to the position yet? (Only arm, not wrist)
-    public boolean done() {
-        return this.arm.getCurrentPosition() == this.arm.getTargetPosition();
-        // should we allow for some difference??
-    }
+    public static class Pincher {
+        private final Servo servo;
 
-    // Helper for goToPosition
-    public void setPositions(int arm, double wrist) {
-        this.wrist.setPosition(wrist);
-        setPosition(this.arm, arm + ARM_OFFSET, MAX_ARM);
-
-    }
-
-    public void setArmPosition(int arm) {
-        setPosition(this.arm, arm, MAX_ARM);
-    }
-
-    public void setWristPosition(double wrist) {
-        this.wrist.setPosition(wrist);
-    }
-
-    // DcMotor as Servo helpers
-
-    private void setPosition(DcMotor motor, int position, int max) {
-        setPosition(motor, position, 1.0, max);
-    }
-
-    private void setPosition(DcMotor motor, int position, double power, int max) {
-        motor.setTargetPosition(position);
-        motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motor.setPower(power);
-        motor.getCurrentPosition();
-    }
-
-
-
-
-    // COLLECTOR
-
-    public enum CollectorMode {
-        Eject,
-        SuperEject,
-        Collect,
-        Stop,
-    }
-
-    /**
-     * Sets the collector mode.
-     * @param mode collector mode to activate
-     */
-    public void setCollectorMode(@NonNull CollectorMode mode) {
-        switch (mode) {
-            case SuperEject:
-                collector.setPower(-0.50);
-            case Eject:
-                // TODO: Figure out which one of these should be negative
-                collector.setPower(-0.15);
-                break;
-            case Collect:
-                collector.setPower(0.15);
-                break;
-            case Stop:
-                collector.setPower(0);
-                break;
+        public Pincher(Servo servo) {
+            this.servo = servo;
         }
+
+        public void expand() {
+            servo.setPosition(0); // TODO: Verify that this value corresponds to the expanded position
+        }
+
+        public void contract() {
+            servo.setPosition(0.45);
+        }
+    }
+
+    public Arm(Lift lift, Reacher reacher, Pincher pincher) {
+        this.lift = lift;
+        this.reacher = reacher;
+        this.pincher = pincher;
+    }
+
+    public enum Preset {
+        LOW_POLE (0, 0),
+        MEDIUM_POLE (0, 0),
+        HIGH_POLE (0, 0);
+
+        final int height;
+        final int reach;
+        Preset(int height, int reach) {
+            this.height = height;
+            this.reach = reach;
+        }
+    }
+
+    public void goToPreset(Preset preset) {
+
     }
 }
