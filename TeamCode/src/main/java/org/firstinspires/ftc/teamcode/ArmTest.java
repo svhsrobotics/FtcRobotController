@@ -110,7 +110,7 @@ public class ArmTest extends LinearOpMode {
                     robot.arm.lift.setPreset(Arm.Lift.Preset.MEDIUM_POLE);
                 } else if (gamepad1.b) {
                     robot.arm.lift.setPreset(Arm.Lift.Preset.HIGH_POLE);
-                } else if (gamepad1.left_bumper && gamepad1.a) {
+                } else if (gamepad1.left_bumper) {
                     robot.arm.pincher.contract();
                 }
             }
