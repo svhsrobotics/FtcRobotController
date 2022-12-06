@@ -16,7 +16,7 @@ import org.opencv.core.Scalar;
 @Disabled
 public class CompetitionNoVision extends LinearOpMode {
     @Override
-    public void runOpMode() throws InterruptedException {
+    public void runOpMode() {
 
         CompetitionRobot robot = new CompetitionRobot(hardwareMap);
         robot.initHardware();

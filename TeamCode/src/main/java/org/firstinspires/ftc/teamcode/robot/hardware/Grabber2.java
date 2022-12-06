@@ -1,9 +1,10 @@
 package org.firstinspires.ftc.teamcode.robot.hardware;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
-class slides{
+public class slides{
         public DcMotor bottommotor;
         public DcMotor middlemotor;
         public DcMotor topmotor;
@@ -17,16 +18,17 @@ class slides{
             reset();
         }
 
+
         public void reset() {
             this.bottommotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             this.middlemotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             this.topmotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             this.hslide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
             this.bottommotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             this.middlemotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             this.topmotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             this.hslide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            middlemotor.setDirection(DcMotorSimple.Direction.REVERSE);
         }
 
         public void setSlidePositions(int y, int x) {
@@ -44,20 +46,21 @@ class slides{
         }
     }
 
-    class pincher {
-        public Servo pinch;
+class pincher {
+    public Servo pinch;
 
-        public pincher(Servo pinch){
-            this.pinch = pinch;
-        }
-        public void setPincher(double pinch){
-            this.pinch.setPosition(pinch);
-        }
+    public pincher(Servo pinch){
+        this.pinch = pinch;
     }
+    public void setPincher(double pinch){
+        this.pinch.setPosition(pinch);
+    }
+}
+
 
     public class Grabber2 {
-        private pincher pincher ;
-        private slides slides;
+        public pincher pincher ;
+        public slides slides;
 
         public Grabber2(DcMotor topmotor, DcMotor middlemotor, DcMotor bottommotor, DcMotor hslide, Servo pinch) {
             this.pincher = new pincher(pinch);
