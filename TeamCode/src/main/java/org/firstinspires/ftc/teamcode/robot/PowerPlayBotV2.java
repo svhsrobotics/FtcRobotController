@@ -35,15 +35,15 @@ public class PowerPlayBotV2 extends Robot {
     protected void initArm() {
         arm = new Arm(
                new Arm.Lift(
-                       hardwareMap.get(DcMotor.class, "Top"),
-                       hardwareMap.get(DcMotor.class, "Middle"),
-                       hardwareMap.get(DcMotor.class, "Bottom")
+                       hardwareMap.get(DcMotor.class, "lift_low"),
+                       hardwareMap.get(DcMotor.class, "lift_mid"),
+                       hardwareMap.get(DcMotor.class, "lift_high")
                ),
                 new Arm.Reacher(
-                        hardwareMap.get(DcMotor.class, "Reach")
+                        hardwareMap.get(DcMotor.class, "reach")
                 ),
                 new Arm.Pincher(
-                        hardwareMap.get(Servo.class, "Grab")
+                        hardwareMap.get(Servo.class, "pinch")
                 )
         );
 
