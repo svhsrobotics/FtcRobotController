@@ -65,6 +65,24 @@ public class Arm {
         public boolean isBusy() {
             return motor1.isBusy() || motor2.isBusy() || motor3.isBusy();
         }
+
+        public enum Preset {
+            GRAB (40),
+            GROUND (60),
+            DRIVING (400),
+            LOW_POLE (1130),
+            MEDIUM_POLE (1910),
+            HIGH_POLE (2635);
+
+            final int height;
+            Preset(int height) {
+                this.height = height;
+            }
+        }
+
+        public void setPreset(Preset preset) {
+            setTargetPosition(preset.height);
+        }
     }
 
     public static class Reacher {
@@ -72,6 +90,7 @@ public class Arm {
 
         public Reacher(DcMotor motor) {
             this.motor = motor;
+            this.motor.setDirection(DcMotor.Direction.REVERSE);
         }
 
         public void setPower(double power) {
@@ -106,11 +125,11 @@ public class Arm {
         }
 
         public void expand() {
-            servo.setPosition(0); // TODO: Verify that this value corresponds to the expanded position
+            servo.setPosition(0.45);
         }
 
         public void contract() {
-            servo.setPosition(0.45);
+            servo.setPosition(0);
         }
     }
 
@@ -118,22 +137,5 @@ public class Arm {
         this.lift = lift;
         this.reacher = reacher;
         this.pincher = pincher;
-    }
-
-    public enum Preset {
-        LOW_POLE (0, 0),
-        MEDIUM_POLE (0, 0),
-        HIGH_POLE (0, 0);
-
-        final int height;
-        final int reach;
-        Preset(int height, int reach) {
-            this.height = height;
-            this.reach = reach;
-        }
-    }
-
-    public void goToPreset(Preset preset) {
-
     }
 }
