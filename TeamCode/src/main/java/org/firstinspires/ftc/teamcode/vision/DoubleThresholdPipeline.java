@@ -209,16 +209,16 @@ public class DoubleThresholdPipeline extends OpenCvPipeline {
 
     /* TUNING VARIABLES */
     // The simulator will automatically set these variables to the values you set in the UI
-    public double minHue = 18.4;
-    public double maxHue = 32.6;
+    public double minHue = 16.4;
+    public double maxHue = 36.6;
 
-    public double minBlue = 171.4;
-    public double maxBlue = 205.4;
+    public double minBlue = 167.4;
+    public double maxBlue = 208.4;
 
-    public boolean showContours = false;
+    public boolean showContours = true;
 
     public double minHeight = 20;
-    public double maxWidth = 30;
+    public double maxWidth = 60;
 
     public int targetX = 170;
 
