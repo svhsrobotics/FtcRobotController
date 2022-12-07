@@ -31,8 +31,8 @@ public class TestPipeline extends LinearOpMode {
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         OpenCvCamera webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
 
-        //DoubleThresholdPipeline pipeline = new DoubleThresholdPipeline(telemetry);
-        RecordingPipeline pipeline = new RecordingPipeline();
+        DoubleThresholdPipeline pipeline = new DoubleThresholdPipeline(telemetry);
+        //RecordingPipeline pipeline = new RecordingPipeline();
         webcam.setPipeline(pipeline);
 
         webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
@@ -68,29 +68,12 @@ public class TestPipeline extends LinearOpMode {
             }
         });
 
-        /*webcam.startRecordingPipeline(
-                new PipelineRecordingParameters.Builder()
-                        .setBitrate(4, PipelineRecordingParameters.BitrateUnits.Mbps)
-                        .setEncoder(PipelineRecordingParameters.Encoder.H264)
-                        .setOutputFormat(PipelineRecordingParameters.OutputFormat.MPEG_4)
-                        .setFrameRate(30)
-                        .setPath("/sdcard/test.mp4")
-                        .build());*/
-
-
-        //Configurator.save(new Configuration(), "config.json");
-
-        while (!isStarted()) {
-            if (gamepad1.a) {
-                android.util.Log.i("INIT", "A pressed" );
-
-            }
-        }
-
-        pipeline.videoWriter.release();
+        waitForStart();
 
 
         while (opModeIsActive()) {
+            telemetry.addData("Correction", pipeline.necessaryCorrection());
+            telemetry.update();
             // Wait for stop to be pressed
         }
 
