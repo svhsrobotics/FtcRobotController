@@ -1,15 +1,18 @@
 package org.firstinspires.ftc.teamcode.vision;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import java.util.List;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+import java.util.List;
 
 
-public class TensorflowStandardSleeveWITHIFSTATEMENTS {
+public class TensorflowStandardSleeveWithIFStatements {
 
 /* Copyright (c) 2019 FIRST. All rights reserved.
  *
@@ -41,7 +44,7 @@ public class TensorflowStandardSleeveWITHIFSTATEMENTS {
  */
 
     LinearOpMode opmode;
-    public TensorflowStandardSleeveWITHIFSTATEMENTS(LinearOpMode opMode){
+    public TensorflowStandardSleeveWithIFStatements (LinearOpMode opMode){
         opmode = opMode;
     }
 
@@ -149,7 +152,7 @@ public class TensorflowStandardSleeveWITHIFSTATEMENTS {
                                 opmode.telemetry.addData("tfodSees","TWO");
                                 return TfodSleeve.TWO;
                             }
-                            if (recognition.getLabel().equals(LABELS[3])){
+                            if (recognition.getLabel().equals(LABELS[2])){
                                 opmode.telemetry.addData("tfodSees","THREE");
                                 return TfodSleeve.THREE;
                             }
@@ -168,7 +171,7 @@ public class TensorflowStandardSleeveWITHIFSTATEMENTS {
                 }
             }
         }
-        return TfodSleeve.THREE;
+        return TfodSleeve.ONE;
     }
 
     /**

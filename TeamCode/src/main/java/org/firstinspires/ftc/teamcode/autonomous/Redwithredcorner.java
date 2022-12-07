@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.Shared.Drive2;
 import org.firstinspires.ftc.teamcode.robot.PowerPlayBot;
 import org.firstinspires.ftc.teamcode.robot.TestRobot;
 import org.firstinspires.ftc.teamcode.util.Logger;
-import org.firstinspires.ftc.teamcode.vision.TensorflowStandardSleeve;
+import org.firstinspires.ftc.teamcode.vision.TensorflowStandardSleeveWithIFStatements;
 import org.firstinspires.ftc.teamcode.vision.TfodSleeve;
 
 @Autonomous(name = "Autonomous")
@@ -24,7 +24,7 @@ public class Redwithredcorner extends LinearOpMode {
         waitForStart();
 
         //state the case when testing
-        TensorflowStandardSleeve tensor = new TensorflowStandardSleeve(this);
+        TensorflowStandardSleeveWithIFStatements tensor = new TensorflowStandardSleeveWithIFStatements(this);
         TfodSleeve detected = tensor.scanStandardSleeve();
 
         logger.info("Sleeve Detected: " + detected);

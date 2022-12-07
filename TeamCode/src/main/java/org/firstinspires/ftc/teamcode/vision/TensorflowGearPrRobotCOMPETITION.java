@@ -1,18 +1,18 @@
 package org.firstinspires.ftc.teamcode.vision;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import java.util.List;
+
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection;
-import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
+import org.firstinspires.ftc.teamcode.util.Timeout;
+
 import java.util.List;
 
 
-public class TensorflowStandardSleeve {
+public class TensorflowGearPrRobotCOMPETITION {
 
 /* Copyright (c) 2019 FIRST. All rights reserved.
  *
@@ -44,7 +44,7 @@ public class TensorflowStandardSleeve {
  */
 
     LinearOpMode opmode;
-    public TensorflowStandardSleeve (LinearOpMode opMode){
+    public TensorflowGearPrRobotCOMPETITION(LinearOpMode opMode){
         opmode = opMode;
     }
 
@@ -68,13 +68,16 @@ public class TensorflowStandardSleeve {
      * has been downloaded to the Robot Controller's SD FLASH memory, it must to be loaded using loadModelFromFile()
      * Here we assume it's an Asset.    Also see method initTfod() below .
      */
-    private static final String TFOD_MODEL_ASSET = "PowerPlay.tflite";
+    //private static final String TFOD_MODEL_ASSET = "PowerPlay.tflite";
     // private static final String TFOD_MODEL_FILE  = "/sdcard/FIRST/tflitemodels/CustomTeamModel.tflite";
+    private static final String TFOD_MODEL_ASSET = "model_20221207_142258.tflite";
+
+
 
     private static final String[] LABELS = {
-            "1 Bolt",
-            "2 Bulb",
-            "3 Panel"
+            "gear",
+            "pr",
+            "robot"
     };
 
     /*
@@ -133,6 +136,8 @@ public class TensorflowStandardSleeve {
 
 
         if (opmode.opModeIsActive()) {
+                    Timeout timer = new Timeout (3000);
+
             while (opmode.opModeIsActive()) {
                 if (tfod != null) {
                     // getUpdatedRecognitions() will return null if no new information is available since
@@ -156,6 +161,11 @@ public class TensorflowStandardSleeve {
                                 opmode.telemetry.addData("tfodSees","THREE");
                                 return TfodSleeve.THREE;
                             }
+                            if (timer.expired()) {
+                                opmode.telemetry.addData("tfodSees","THREE");
+                                return TfodSleeve.THREE;
+                            }
+
                             double col = (recognition.getLeft() + recognition.getRight()) / 2 ;
                             double row = (recognition.getTop()  + recognition.getBottom()) / 2 ;
                             double width  = Math.abs(recognition.getRight() - recognition.getLeft()) ;
@@ -184,7 +194,7 @@ public class TensorflowStandardSleeve {
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
 
         parameters.vuforiaLicenseKey = VUFORIA_KEY;
-        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+        parameters.cameraDirection = CameraDirection.BACK;
 
         //  Instantiate the Vuforia engine
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
