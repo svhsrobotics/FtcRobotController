@@ -3,19 +3,14 @@ package org.firstinspires.ftc.teamcode.autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.robotcore.internal.android.dx.util.TwoColumnOutput;
 import org.firstinspires.ftc.teamcode.Shared.Drive2;
-import org.firstinspires.ftc.teamcode.robot.PowerPlayBot;
 import org.firstinspires.ftc.teamcode.robot.PowerPlayBotV2;
-import org.firstinspires.ftc.teamcode.robot.TestRobot;
-import org.firstinspires.ftc.teamcode.robot.hardware.Arm;
 import org.firstinspires.ftc.teamcode.util.Logger;
 import org.firstinspires.ftc.teamcode.vision.TensorflowStandardSleeve;
 import org.firstinspires.ftc.teamcode.vision.TfodSleeve;
-import org.jetbrains.annotations.Contract;
 
 @Autonomous(name = "Autonomous")
-public class Redwithredcorner extends LinearOpMode {
+public class AllAutomovement extends LinearOpMode {
     private final Logger logger = new Logger(telemetry, true);
 
     @Override
