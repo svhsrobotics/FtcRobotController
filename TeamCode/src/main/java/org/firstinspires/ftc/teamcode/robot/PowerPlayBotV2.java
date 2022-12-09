@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.robot.hardware.Arm;
 import org.firstinspires.ftc.teamcode.robot.hardware.Drive;
+import org.firstinspires.ftc.teamcode.robot.hardware.Webcam;
 import org.firstinspires.ftc.teamcode.util.Logger;
 
 public class PowerPlayBotV2 extends Robot {
@@ -17,6 +18,8 @@ public class PowerPlayBotV2 extends Robot {
     static final double WHEEL_DIAMETER = 3;
 
     public Arm arm;
+
+    public Webcam camera;
 
     public PowerPlayBotV2(HardwareMap hardwareMap, Logger logger) {
         super(hardwareMap, logger);
@@ -29,7 +32,12 @@ public class PowerPlayBotV2 extends Robot {
     @Override
     public void initHardware() {
         super.initHardware();
+        initCamera();
         initArm();
+    }
+
+    protected void initCamera() {
+        camera = new Webcam("Webcam 1", hardwareMap);
     }
 
     protected void initArm() {

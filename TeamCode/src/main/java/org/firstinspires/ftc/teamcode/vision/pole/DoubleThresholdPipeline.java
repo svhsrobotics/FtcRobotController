@@ -1,20 +1,22 @@
-package org.firstinspires.ftc.teamcode.vision;
+package org.firstinspires.ftc.teamcode.vision.pole;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
+import org.opencv.core.MatOfPoint2f;
 import org.opencv.core.Point;
 import org.opencv.core.Rect;
+import org.opencv.core.RotatedRect;
 import org.opencv.core.Scalar;
-import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
-import org.opencv.videoio.VideoWriter;
 import org.openftc.easyopencv.OpenCvPipeline;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class DoubleThresholdPipeline extends OpenCvPipeline {
     // This constructor is used by the simulator to pass a Telemetry object
@@ -136,7 +138,7 @@ public class DoubleThresholdPipeline extends OpenCvPipeline {
     private ArrayList<MatOfPoint> filterContours(ArrayList<MatOfPoint> contours) {
         ArrayList<MatOfPoint> filteredContours = new ArrayList<>();
         for (MatOfPoint contour : contours) {
-            if (Imgproc.contourArea(contour) > 100 && Imgproc.contourArea(contour) < 10000) {
+            if (Imgproc.contourArea(contour) > 100 && Imgproc.contourArea(contour) < 100000) {
                 Rect rect = Imgproc.boundingRect(contour);
                 if (rect.width < maxWidth && rect.height > minHeight) {
                     filteredContours.add(contour);
@@ -205,6 +207,45 @@ public class DoubleThresholdPipeline extends OpenCvPipeline {
         }
     }
 
+    private Point[] fitRotatedRect(MatOfPoint contour) {
+        // Convert the contour into a MatOfPoint2f
+        MatOfPoint2f contour2f = new MatOfPoint2f(contour.toArray());
+        // Fit a rotated rectangle to the contour
+        RotatedRect rect = Imgproc.minAreaRect(contour2f);
+        // Temporary Mat to hold the points of the rotated rectangle
+        Mat tempOutput = new Mat();
+        // Save the points of the rotated rectangle into the temp Mat
+        Imgproc.boxPoints(rect, tempOutput);
+        // Convert the points in the temp Mat into an array of points
+        Point[] points = new Point[tempOutput.rows()];
+        for (int i = 0; i < tempOutput.rows(); i++) {
+            points[i] = new Point(tempOutput.get(i, 0)[0], tempOutput.get(i, 1)[0]);
+        }
+        // Release the temporary Mat and MatOfPoint2f
+        tempOutput.release();
+        contour2f.release();
+
+        return points;
+    }
+
+    private Point[] getTopCorners(Point[] points) {
+        Point[] outPoints = Arrays.stream(points).sorted(Comparator.comparingDouble((Point p) -> p.y)).limit(2).toArray(Point[]::new);
+        outPoints = Arrays.stream(outPoints).sorted(Comparator.comparingDouble((Point p) -> p.x)).toArray(Point[]::new);
+        // Top Left, Top Right
+        return outPoints;
+    }
+
+    private Point getTopMiddle(Point[] points) {
+        Point[] topPoints = getTopCorners(points);
+        return new Point((topPoints[0].x + topPoints[1].x) / 2, (topPoints[0].y + topPoints[1].y) / 2);
+    }
+
+    private double getPoleWidth(MatOfPoint contour) {
+        Point[] points = fitRotatedRect(contour);
+        Point[] topPoints = getTopCorners(points);
+        return Math.abs(topPoints[0].x - topPoints[1].x);
+    }
+
 
 
     /* TUNING VARIABLES */
@@ -224,8 +265,12 @@ public class DoubleThresholdPipeline extends OpenCvPipeline {
 
     //public int blockSize = 20;
 
+    public long lastNanoTime = 0;
+
     @Override
     public Mat processFrame(Mat input) {
+        telemetry.addData("Loop time" , ((System.nanoTime() - lastNanoTime) / 1000 / 1000));
+        lastNanoTime = System.nanoTime();
         //Mat luma = luma(input);
         // This is the luma correction mat
         //Mat lumaCorrection = neighborhoodMean(luma, blockSize);
@@ -246,26 +291,36 @@ public class DoubleThresholdPipeline extends OpenCvPipeline {
         telemetry.addData("Contours", contours.size());
 
         Imgproc.drawContours(input, contours, -1, new Scalar(255, 0, 0), 2);
-        //contourSmooth(contours);
 
         // Draw the contours on the input image for debugging
         for (MatOfPoint contour : contours) {
-            Rect rect = Imgproc.boundingRect(contour);
-            Imgproc.rectangle(input, rect, new Scalar(0, 255, 0), 2);
-            Point bottomMiddle = new Point(rect.x + (rect.width / 2.0), rect.y + rect.height);
-            Imgproc.drawMarker(input, bottomMiddle, new Scalar(0, 0, 255), Imgproc.MARKER_CROSS, 20, 2);
+            Point[] points = fitRotatedRect(contour);
+            // Draw the rotated rectangle
+            Imgproc.drawContours(input, Arrays.asList(new MatOfPoint(points)), -1, new Scalar(0, 255, 0), 2);
+
+            Imgproc.drawMarker(input, getTopMiddle(points), new Scalar(0, 0, 255), Imgproc.MARKER_CROSS, 10, 2);
         }
 
         Imgproc.line(input, new Point(targetX, 0), new Point(targetX, input.height()), new Scalar(0, 0, 255), 2);
-
+        // Atomic because it's accessed in a lambda? and -1 so we know nothing was detected
+        AtomicInteger somePoleX = new AtomicInteger(-1);
         // Find the contour with the largest area
-        contours.stream().max(Comparator.comparingDouble(Imgproc::contourArea)).ifPresent(max -> {
-            Rect rect = Imgproc.boundingRect(max);
+        contours.stream().max(Comparator.comparingDouble(this::getPoleWidth)).ifPresent(max -> {
+            Point[] points = fitRotatedRect(max);
 
-            Point bottomMiddle = new Point(rect.x + (rect.width / 2.0), rect.y + rect.height);
-            Imgproc.drawMarker(input, bottomMiddle, new Scalar(0, 255, 0), Imgproc.MARKER_CROSS, 20, 2);
-            poleX = (int) Math.floor(bottomMiddle.x);
+            //Rect rect = Imgproc.boundingRect(max);
+
+            //Point bottomMiddle = new Point(rect.x + (rect.width / 2.0), rect.y + rect.height);
+            //Imgproc.drawMarker(input, bottomMiddle, new Scalar(0, 255, 0), Imgproc.MARKER_CROSS, 20, 2);
+            Point topMiddle = getTopMiddle(points);
+            Imgproc.drawMarker(input, topMiddle, new Scalar(0, 255, 255), Imgproc.MARKER_CROSS, 10, 2);
+            somePoleX.set((int) Math.floor(topMiddle.x));
         });
+
+        poleX = somePoleX.get();
+
+        Imgproc.putText(input, String.format("%d", necessaryCorrection()), new Point(0, 20), Imgproc.FONT_HERSHEY_PLAIN, 1.5, new Scalar(0, 255, 0), 2);
+        //Imgproc.putText(input, String.valueOf(poleX), new Point(0,0), 0);
 
         GlobalMatPool.returnAll(telemetry);
 
