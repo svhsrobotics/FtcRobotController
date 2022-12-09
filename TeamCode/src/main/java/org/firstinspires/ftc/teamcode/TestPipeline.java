@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Shared.Drive2;
 import org.firstinspires.ftc.teamcode.robot.PowerPlayBotV2;
+import org.firstinspires.ftc.teamcode.robot.Robot;
 import org.firstinspires.ftc.teamcode.vision.pole.DoubleThresholdPipeline;
 
 @TeleOp(name = "Test Pipeline")
@@ -27,13 +28,25 @@ public class TestPipeline extends LinearOpMode {
 
             if (pipeline.necessaryCorrection() > 5) {
                 // Right
-                drive.navigationMonitorTicksPhi(5, 1, 0, drive.getAdjustedAngle(), 1);
+                robot.drives.get(Robot.DrivePos.FRONT_LEFT).setPower(.1);
+                robot.drives.get(Robot.DrivePos.FRONT_RIGHT).setPower(-.1);
+                robot.drives.get(Robot.DrivePos.BACK_LEFT).setPower(-.1);
+                robot.drives.get(Robot.DrivePos.BACK_RIGHT).setPower(.1);
+                //drive.navigationMonitorTicksPhi(5, 1, 0, drive.getAdjustedAngle(), 1);
             } else if (pipeline.necessaryCorrection() < -5) {
                 // Left
-                drive.navigationMonitorTicksPhi(5, -1, 0, drive.getAdjustedAngle(), 1);
+                robot.drives.get(Robot.DrivePos.FRONT_LEFT).setPower(-.1);
+                robot.drives.get(Robot.DrivePos.FRONT_RIGHT).setPower(.1);
+                robot.drives.get(Robot.DrivePos.BACK_LEFT).setPower(.1);
+                robot.drives.get(Robot.DrivePos.BACK_RIGHT).setPower(-.1);
+                //drive.navigationMonitorTicksPhi(5, -1, 0, drive.getAdjustedAngle(), 1);
             } else {
+                robot.drives.get(Robot.DrivePos.FRONT_LEFT).setPower(0);
+                robot.drives.get(Robot.DrivePos.FRONT_RIGHT).setPower(0);
+                robot.drives.get(Robot.DrivePos.BACK_LEFT).setPower(0);
+                robot.drives.get(Robot.DrivePos.BACK_RIGHT).setPower(0);
                 //drive.navigationMonitorTicks(0, 9999, 99999, 1);
-                drive.ceaseMotion();
+                //drive.ceaseMotion();
             }
         }
         /*waitForStart();
