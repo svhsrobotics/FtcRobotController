@@ -103,7 +103,13 @@ public class BasicTeleOp extends LinearOpMode {
                 } else if (aButton.update(gamepad1.a)) {
                     robot.arm.pincher.contract();
                     robot.arm.lift.setPreset(Arm.Lift.Preset.GRAB);
+                    while (robot.arm.lift.isBusy()) {
+                        telemetry.addData("Lift", robot.arm.lift.getCurrentPosition());
+                        telemetry.update();
+                    }
                     robot.arm.pincher.expand();
+                    sleep(1000);
+                    robot.arm.lift.setPreset(Arm.Lift.Preset.DRIVING);
                 } else if (gamepad1.x) {
                     robot.arm.lift.setPreset(Arm.Lift.Preset.LOW_POLE);
                 } else if (gamepad1.y) {
