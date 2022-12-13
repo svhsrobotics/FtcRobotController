@@ -6,7 +6,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.Shared.Drive2;
 import org.firstinspires.ftc.teamcode.robot.PowerPlayBotV2;
 import org.firstinspires.ftc.teamcode.util.Logger;
-import org.firstinspires.ftc.teamcode.vision.TensorflowStandardSleeve;
+//import org.firstinspires.ftc.teamcode.vision.TensorflowStandardSleeve;
+import org.firstinspires.ftc.teamcode.vision.TensorflowGearPrRobotCOMPETITION;
 import org.firstinspires.ftc.teamcode.vision.TfodSleeve;
 
 @Autonomous(name = "Autonomous")
@@ -20,7 +21,6 @@ public class AllAutomovement extends LinearOpMode {
 //140 cm of working space
         Drive2 drive = new Drive2(robot, this);
 
-        waitForStart();
 //        drive.navigationMonitorTicks(100.0, 5.0, 0.0, 10);//5
 //        drive.navigationMonitorTicks(95.0, 5.0, 0.0, 10);//10
 //        drive.navigationMonitorTicks(90.0, 5.0, 0.0, 10);//15
@@ -30,10 +30,12 @@ public class AllAutomovement extends LinearOpMode {
 //        drive.navigationMonitorTicks(50.0, 5.0, 0.0, 10);//35
 //        drive.navigationMonitorTicks(40.0, 5.0, 0.0, 10);//40
 //        drive.navigationMonitorTicks(30.0, 5.0, 0.0, 10);//45
-robot.arm.pincher.expand();
         //state the case when testing
-        TensorflowStandardSleeve tensor = new TensorflowStandardSleeve(this);
+        TensorflowGearPrRobotCOMPETITION tensor = new TensorflowGearPrRobotCOMPETITION(this);
         TfodSleeve detected = tensor.scanStandardSleeve();
+
+        waitForStart();
+        robot.arm.pincher.expand();
 
         logger.info("Sleeve Detected: " + detected);
         switch(detected) {
