@@ -21,11 +21,12 @@ public class Redwithredcorner extends LinearOpMode {
 //140 cm of working space
         Drive2 drive = new Drive2(robot, this);
 
-        waitForStart();
 
         //state the case when testing
-        TensorflowStandardSleeveWithIFStatements tensor = new TensorflowStandardSleeveWithIFStatements(this);
+        TensorflowGearPrRobotCOMPETITION tensor = new TensorflowGearPrRobotCOMPETITION(this);
         TfodSleeve detected = tensor.scanStandardSleeve();
+
+        waitForStart();
 
         logger.info("Sleeve Detected: " + detected);
         switch(detected) {
