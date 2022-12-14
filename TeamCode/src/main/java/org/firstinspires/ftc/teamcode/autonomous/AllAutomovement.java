@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Shared.Drive2;
 import org.firstinspires.ftc.teamcode.robot.PowerPlayBotV2;
+import org.firstinspires.ftc.teamcode.robot.hardware.Arm;
 import org.firstinspires.ftc.teamcode.util.Logger;
 //import org.firstinspires.ftc.teamcode.vision.TensorflowStandardSleeve;
 import org.firstinspires.ftc.teamcode.vision.TensorflowGearPrRobotCOMPETITION;
@@ -36,6 +37,7 @@ public class AllAutomovement extends LinearOpMode {
 
         waitForStart();
         robot.arm.pincher.expand();
+        robot.arm.lift.setPreset(Arm.Lift.Preset.DRIVING);
 
         logger.info("Sleeve Detected: " + detected);
         switch(detected) {
@@ -49,11 +51,13 @@ public class AllAutomovement extends LinearOpMode {
                 drive.navigationMonitorTicks(13, 0, 25.5, 10);
                 drive.ceaseMotion();
                 drive.navigationMonitorTicks(20, 30.5, 0, 10);
+                robot.arm.lift.setPreset(Arm.Lift.Preset.HIGH_POLE);
                 robot.arm.pincher.contract();
                 drive.ceaseMotion();
                 drive.navigationMonitorTicks(20,-1,0,10);
-                drive.navigationMonitorTicks(20, 60.5, 0, 10);
+                drive.navigationMonitorTicks(20, 70.5, 0, 10);
                 drive.ceaseMotion();
+                robot.arm.lift.setPreset(Arm.Lift.Preset.DRIVING);
                 break;
             case TWO:
                 drive.navigationMonitorTicks(12,0,3.5,10);
@@ -65,12 +69,14 @@ public class AllAutomovement extends LinearOpMode {
                 drive.navigationMonitorTicks(13, 0, 25.5, 10);
                 drive.ceaseMotion();
                 drive.navigationMonitorTicks(20, 30.5, 0, 10);
+                robot.arm.lift.setPreset(Arm.Lift.Preset.HIGH_POLE);
                 robot.arm.pincher.contract();
                 drive.ceaseMotion();
                 drive.navigationMonitorTicks(20,-1,0,10);
                 drive.ceaseMotion();
-                drive.navigationMonitorTicks(20, 35.5, 0, 10);
+                drive.navigationMonitorTicks(20, 30.5, 0, 10);
                 drive.ceaseMotion();
+                robot.arm.lift.setPreset(Arm.Lift.Preset.DRIVING);
 
                 //this part is for moar cones laterrrrrrr
 //                drive.navigationMonitorTicksPhi(1, 0, 34.5, -90, 10);
@@ -95,10 +101,12 @@ public class AllAutomovement extends LinearOpMode {
                 drive.navigationMonitorTicks(13, 0, 25.5, 10);
                 drive.ceaseMotion();
                 drive.navigationMonitorTicks(20, 30.5, 0, 10);
+                robot.arm.lift.setPreset(Arm.Lift.Preset.HIGH_POLE);
                 robot.arm.pincher.contract();
                 drive.ceaseMotion();
-                drive.navigationMonitorTicks(20, -28.5, 0, 10);
+                drive.navigationMonitorTicks(20, -27.5, 0, 10);
                 drive.ceaseMotion();
+                robot.arm.lift.setPreset(Arm.Lift.Preset.DRIVING);
                 break;
         }
     }
