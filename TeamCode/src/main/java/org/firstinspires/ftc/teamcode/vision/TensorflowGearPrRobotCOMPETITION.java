@@ -136,7 +136,7 @@ public class TensorflowGearPrRobotCOMPETITION {
 
 
         if (opmode.opModeIsActive()) {
-                    Timeout timer = new Timeout (3000);
+                    Timeout timer = new Timeout (3);
 
             while (opmode.opModeIsActive()) {
                 if (tfod != null) {
@@ -162,7 +162,7 @@ public class TensorflowGearPrRobotCOMPETITION {
                                 return TfodSleeve.THREE;
                             }
                             if (timer.expired()) {
-                                opmode.telemetry.addData("tfodSees","THREE");
+                                opmode.telemetry.addData("tfodSees","THREE - Time Up");
                                 return TfodSleeve.THREE;
                             }
 
@@ -181,7 +181,7 @@ public class TensorflowGearPrRobotCOMPETITION {
                 }
             }
         }
-        return TfodSleeve.ONE;
+        return TfodSleeve.THREE;
     }
 
     /**
