@@ -10,8 +10,8 @@ import org.firstinspires.ftc.teamcode.util.Debouncer;
 import org.firstinspires.ftc.teamcode.util.Logger;
 import org.firstinspires.ftc.teamcode.util.Toggle;
 
-@TeleOp(name = "TeleOpN", group = "TeleOp")
-public class BasicTeleOpN extends LinearOpMode {
+@TeleOp(name = "FieldCenTeleOp", group = "TeleOp")
+public class FieldCenTeleOp extends LinearOpMode {
     Logger logger = new Logger(telemetry);
 
     Toggle manualOverride = new Toggle();
