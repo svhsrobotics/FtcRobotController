@@ -44,7 +44,8 @@ public class PowerPlayBotV2 extends Robot {
                 ),
                 new Arm.Pincher(
                         hardwareMap.get(Servo.class, "pinch")
-                )
+                ),
+                logger
         );
 
     }

@@ -110,10 +110,16 @@ public class BasicTeleOp extends LinearOpMode {
                     robot.arm.lift.setPreset(Arm.Lift.Preset.MEDIUM_POLE);
                 } else if (gamepad1.b) {
                     robot.arm.lift.setPreset(Arm.Lift.Preset.HIGH_POLE);
+                    robot.arm.lift.retrim();
+
                 } else if (gamepad1.left_bumper) {
                     robot.arm.pincher.contract();
                 }
             }
+
+            telemetry.addData("trim1", robot.arm.lift.motor1_trim);
+            telemetry.addData("trim2", robot.arm.lift.motor2_trim);
+            telemetry.addData("trim3", robot.arm.lift.motor3_trim);
 
             // Begin Pincher
             if (gamepad2.left_bumper) {
