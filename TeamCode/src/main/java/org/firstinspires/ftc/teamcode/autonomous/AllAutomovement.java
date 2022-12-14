@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Shared.Drive2;
 import org.firstinspires.ftc.teamcode.robot.PowerPlayBotV2;
+import org.firstinspires.ftc.teamcode.robot.hardware.Arm;
 import org.firstinspires.ftc.teamcode.util.Logger;
 import org.firstinspires.ftc.teamcode.vision.TensorflowStandardSleeve;
 import org.firstinspires.ftc.teamcode.vision.TfodSleeve;
@@ -21,6 +22,7 @@ public class AllAutomovement extends LinearOpMode {
         Drive2 drive = new Drive2(robot, this);
 
         waitForStart();
+        robot.arm.lift.setPreset(Arm.Lift.Preset.DRIVING);
 //        drive.navigationMonitorTicks(100.0, 5.0, 0.0, 10);//5
 //        drive.navigationMonitorTicks(95.0, 5.0, 0.0, 10);//10
 //        drive.navigationMonitorTicks(90.0, 5.0, 0.0, 10);//15
@@ -47,11 +49,13 @@ robot.arm.pincher.expand();
                 drive.navigationMonitorTicks(13, 0, 25.5, 10);
                 drive.ceaseMotion();
                 drive.navigationMonitorTicks(20, 30.5, 0, 10);
+                robot.arm.lift.setPreset(Arm.Lift.Preset.HIGH_POLE);
                 robot.arm.pincher.contract();
                 drive.ceaseMotion();
                 drive.navigationMonitorTicks(20,-1,0,10);
-                drive.navigationMonitorTicks(20, 60.5, 0, 10);
+                drive.navigationMonitorTicks(20, 70.5, 0, 10);
                 drive.ceaseMotion();
+                robot.arm.lift.setPreset(Arm.Lift.Preset.DRIVING);
                 break;
             case TWO:
                 drive.navigationMonitorTicks(12,0,3.5,10);
@@ -63,12 +67,14 @@ robot.arm.pincher.expand();
                 drive.navigationMonitorTicks(13, 0, 25.5, 10);
                 drive.ceaseMotion();
                 drive.navigationMonitorTicks(20, 30.5, 0, 10);
+                robot.arm.lift.setPreset(Arm.Lift.Preset.HIGH_POLE);
                 robot.arm.pincher.contract();
                 drive.ceaseMotion();
                 drive.navigationMonitorTicks(20,-1,0,10);
                 drive.ceaseMotion();
-                drive.navigationMonitorTicks(20, 35.5, 0, 10);
+                drive.navigationMonitorTicks(20, 30.5, 0, 10);
                 drive.ceaseMotion();
+                robot.arm.lift.setPreset(Arm.Lift.Preset.DRIVING);
 
                 //this part is for moar cones laterrrrrrr
 //                drive.navigationMonitorTicksPhi(1, 0, 34.5, -90, 10);
@@ -93,10 +99,12 @@ robot.arm.pincher.expand();
                 drive.navigationMonitorTicks(13, 0, 25.5, 10);
                 drive.ceaseMotion();
                 drive.navigationMonitorTicks(20, 30.5, 0, 10);
+                robot.arm.lift.setPreset(Arm.Lift.Preset.HIGH_POLE);
                 robot.arm.pincher.contract();
                 drive.ceaseMotion();
-                drive.navigationMonitorTicks(20, -28.5, 0, 10);
+                drive.navigationMonitorTicks(20, -27.5, 0, 10);
                 drive.ceaseMotion();
+                robot.arm.lift.setPreset(Arm.Lift.Preset.DRIVING);
                 break;
         }
     }
