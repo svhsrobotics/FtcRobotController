@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.robot.PowerPlayBotV2;
 import org.firstinspires.ftc.teamcode.robot.hardware.Arm;
 import org.firstinspires.ftc.teamcode.util.Logger;
 //import org.firstinspires.ftc.teamcode.vision.TensorflowStandardSleeve;
+import org.firstinspires.ftc.teamcode.util.Timeout;
 import org.firstinspires.ftc.teamcode.vision.TensorflowGearPrRobotCOMPETITION;
 import org.firstinspires.ftc.teamcode.vision.TfodSleeve;
 
@@ -39,6 +40,7 @@ public class AllAutomovement extends LinearOpMode {
         robot.arm.pincher.expand();
         robot.arm.lift.setPreset(Arm.Lift.Preset.DRIVING);
 
+
         logger.info("Sleeve Detected: " + detected);
         switch(detected) {
             case THREE:
@@ -55,6 +57,8 @@ public class AllAutomovement extends LinearOpMode {
                 robot.arm.pincher.contract();
                 drive.ceaseMotion();
                 drive.navigationMonitorTicks(20,-1,0,10);
+                Timeout timer = new Timeout(10);
+                while (!timer.expired() && !isStopRequested()){}
                 drive.navigationMonitorTicks(20, 70.5, 0, 10);
                 drive.ceaseMotion();
                 robot.arm.lift.setPreset(Arm.Lift.Preset.DRIVING);
@@ -74,7 +78,9 @@ public class AllAutomovement extends LinearOpMode {
                 drive.ceaseMotion();
                 drive.navigationMonitorTicks(20,-1,0,10);
                 drive.ceaseMotion();
-                drive.navigationMonitorTicks(20, 30.5, 0, 10);
+                timer = new Timeout(10);
+                while (!timer.expired() && !isStopRequested()){}
+                drive.navigationMonitorTicks(20, 28.5, 0, 10);
                 drive.ceaseMotion();
                 robot.arm.lift.setPreset(Arm.Lift.Preset.DRIVING);
 
@@ -104,6 +110,8 @@ public class AllAutomovement extends LinearOpMode {
                 robot.arm.lift.setPreset(Arm.Lift.Preset.HIGH_POLE);
                 robot.arm.pincher.contract();
                 drive.ceaseMotion();
+                timer = new Timeout(10);
+                while (!timer.expired() && !isStopRequested()){}
                 drive.navigationMonitorTicks(20, -27.5, 0, 10);
                 drive.ceaseMotion();
                 robot.arm.lift.setPreset(Arm.Lift.Preset.DRIVING);
