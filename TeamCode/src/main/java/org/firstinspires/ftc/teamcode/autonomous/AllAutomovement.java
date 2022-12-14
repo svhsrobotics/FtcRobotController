@@ -5,20 +5,33 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Shared.Drive2;
 import org.firstinspires.ftc.teamcode.robot.PowerPlayBotV2;
+import org.firstinspires.ftc.teamcode.robot.Robot;
+import org.firstinspires.ftc.teamcode.robot.TestRobot;
 import org.firstinspires.ftc.teamcode.util.Logger;
 import org.firstinspires.ftc.teamcode.vision.TensorflowStandardSleeve;
 import org.firstinspires.ftc.teamcode.vision.TfodSleeve;
+import org.firstinspires.ftc.teamcode.vision.pole.DoubleThresholdPipeline;
 
 @Autonomous(name = "Autonomous")
 public class AllAutomovement extends LinearOpMode {
     private final Logger logger = new Logger(telemetry, true);
 
+    TestRobot robot;
+    Drive2 drive;
+    DoubleThresholdPipeline pipeline;
+
     @Override
     public void runOpMode() throws InterruptedException {
-        PowerPlayBotV2 robot = new PowerPlayBotV2(hardwareMap, logger);
+        robot = new TestRobot(hardwareMap, logger);
         robot.initHardware();
 //140 cm of working space
-        Drive2 drive = new Drive2(robot, this);
+        drive = new Drive2(robot, this);
+
+        pipeline = new DoubleThresholdPipeline(telemetry);
+
+        robot.camera.setPipeline(pipeline);
+
+        robot.camera.open();
 
         waitForStart();
 //        drive.navigationMonitorTicks(100.0, 5.0, 0.0, 10);//5
@@ -30,13 +43,14 @@ public class AllAutomovement extends LinearOpMode {
 //        drive.navigationMonitorTicks(50.0, 5.0, 0.0, 10);//35
 //        drive.navigationMonitorTicks(40.0, 5.0, 0.0, 10);//40
 //        drive.navigationMonitorTicks(30.0, 5.0, 0.0, 10);//45
-robot.arm.pincher.expand();
+        //robot.arm.pincher.expand();
         //state the case when testing
         TensorflowStandardSleeve tensor = new TensorflowStandardSleeve(this);
         TfodSleeve detected = tensor.scanStandardSleeve();
 
         logger.info("Sleeve Detected: " + detected);
-        switch(detected) {
+        localizeOnPole();
+        /*switch(detected) {
             case ONE:
                 drive.navigationMonitorTicks(12,0,3.5,10);
                 drive.ceaseMotion();
@@ -96,7 +110,29 @@ robot.arm.pincher.expand();
                 drive.navigationMonitorTicks(20, -30.5, 0, 10);
                 drive.ceaseMotion();
                 break;
+        }*/
+    }
+
+    void localizeOnPole() {
+        while (Math.abs(pipeline.necessaryCorrection()) >5) {
+            if (pipeline.necessaryCorrection() > 5) {
+                // Right
+                /*robot.drives.get(Robot.DrivePos.FRONT_LEFT).setPower(.1);
+                robot.drives.get(Robot.DrivePos.FRONT_RIGHT).setPower(-.1);
+                robot.drives.get(Robot.DrivePos.BACK_LEFT).setPower(-.1);
+                robot.drives.get(Robot.DrivePos.BACK_RIGHT).setPower(.1);*/
+                drive.navigationMonitorTicksPhi(5, 1, 0, drive.getAdjustedAngle(), 1);
+            } else if (pipeline.necessaryCorrection() < -5) {
+                // Left
+                /*robot.drives.get(Robot.DrivePos.FRONT_LEFT).setPower(-.1);
+                robot.drives.get(Robot.DrivePos.FRONT_RIGHT).setPower(.1);
+                robot.drives.get(Robot.DrivePos.BACK_LEFT).setPower(.1);
+                robot.drives.get(Robot.DrivePos.BACK_RIGHT).setPower(-.1);*/
+                drive.navigationMonitorTicksPhi(5, -1, 0, drive.getAdjustedAngle(), 1);
+            }
         }
+
+        drive.ceaseMotion();
     }
 }
 

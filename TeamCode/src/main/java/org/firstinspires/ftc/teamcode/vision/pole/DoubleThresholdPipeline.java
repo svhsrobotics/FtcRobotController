@@ -259,7 +259,7 @@ public class DoubleThresholdPipeline extends OpenCvPipeline {
     public boolean showContours = true;
 
     public double minHeight = 20;
-    public double maxWidth = 60;
+    public double maxWidth = 255;
 
     public int targetX = 170;
 
