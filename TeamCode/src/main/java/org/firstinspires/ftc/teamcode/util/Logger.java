@@ -3,6 +3,12 @@ package org.firstinspires.ftc.teamcode.util;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Logger {
+    /*
+    Ideas for improvement:
+    Self-managed logging to telemetry (no limit of 10 lines), use whole screen
+    Error message toggle (display error, then clear it)
+    Variable read-outs (including highlighting (true green etc.))
+     */
     private final Telemetry telemetry;
     private final boolean debug;
 
@@ -71,11 +77,11 @@ public class Logger {
         return msg;
     }
 
-    private static String prefix(String msg, String prefix) {
+    public static String prefix(String msg, String prefix) {
         return String.format("<b>[%s]</b> %s", prefix, msg);
     }
 
-    private static String formatColor(String msg, String color) {
+    public static String formatColor(String msg, String color) {
         return String.format("<span style=\"color:%s\">%s</span>", color, msg);
     }
 
