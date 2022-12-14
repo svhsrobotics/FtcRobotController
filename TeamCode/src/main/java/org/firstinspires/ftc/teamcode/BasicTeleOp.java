@@ -90,25 +90,29 @@ public class BasicTeleOp extends LinearOpMode {
 
             // Begin Lift
             telemetry.addData("Lift", robot.arm.lift.getCurrentPosition());
-            if (gamepad1.right_bumper) {
-                robot.arm.lift.setPreset(Arm.Lift.Preset.DRIVING);
-            } else if (aButton.update(gamepad1.a)) {
-                robot.arm.pincher.contract();
-                robot.arm.lift.setPreset(Arm.Lift.Preset.GRAB);
-                while (robot.arm.lift.isBusy()) {
-                    telemetry.addData("Lift", robot.arm.lift.getCurrentPosition());
-                    telemetry.update();
+            if (!(gamepad2.right_trigger > 0)) {
+                if (gamepad1.right_bumper) {
+                    robot.arm.lift.setPreset(Arm.Lift.Preset.DRIVING);
+                } else if (aButton.update(gamepad1.a)) {
+                    robot.arm.pincher.contract();
+                    robot.arm.lift.setPreset(Arm.Lift.Preset.GRAB);
+                    while (robot.arm.lift.isBusy()) {
+                        telemetry.addData("Lift", robot.arm.lift.getCurrentPosition());
+                        telemetry.update();
+                    }
+                    robot.arm.pincher.expand();
+                    sleep(1000);
+                    robot.arm.lift.setPreset(Arm.Lift.Preset.DRIVING);
+                } else if (gamepad1.x) {
+                    robot.arm.lift.setPreset(Arm.Lift.Preset.LOW_POLE);
+                } else if (gamepad1.y) {
+                    robot.arm.lift.setPreset(Arm.Lift.Preset.MEDIUM_POLE);
+                } else if (gamepad1.b) {
+                    robot.arm.lift.setPreset(Arm.Lift.Preset.HIGH_POLE);
                 }
-                robot.arm.pincher.expand();
-                sleep(1000);
-                robot.arm.lift.setPreset(Arm.Lift.Preset.DRIVING);
-            } else if (gamepad1.x) {
-                robot.arm.lift.setPreset(Arm.Lift.Preset.LOW_POLE);
-            } else if (gamepad1.y) {
-                robot.arm.lift.setPreset(Arm.Lift.Preset.MEDIUM_POLE);
-            } else if (gamepad1.b) {
-                robot.arm.lift.setPreset(Arm.Lift.Preset.HIGH_POLE);
-            } else if (gamepad1.left_bumper) {
+            }
+
+            if (gamepad1.left_bumper) {
                 robot.arm.pincher.contract();
             }
 
