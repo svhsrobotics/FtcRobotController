@@ -71,7 +71,7 @@ public class TensorflowGearPrRobotCOMPETITION {
     //private static final String TFOD_MODEL_ASSET = "PowerPlay.tflite";
     // private static final String TFOD_MODEL_FILE  = "/sdcard/FIRST/tflitemodels/CustomTeamModel.tflite";
     private static final String TFOD_MODEL_ASSET = "model_20221207_142258.tflite";
-
+    //correct model name
 
 
     private static final String[] LABELS = {
@@ -134,7 +134,7 @@ public class TensorflowGearPrRobotCOMPETITION {
         opmode.telemetry.addData(">", "Press Play to start op mode");
         opmode.telemetry.update();
 
-
+        //start a timer
         if (opmode.opModeIsActive()) {
                     Timeout timer = new Timeout (3);
 
@@ -149,18 +149,22 @@ public class TensorflowGearPrRobotCOMPETITION {
                         // step through the list of recognitions and display image position/size information for each one
                         // Note: "Image number" refers to the randomized image orientation/number
                         for (Recognition recognition : updatedRecognitions) {
+                            //if it sees one, return that
                             if (recognition.getLabel().equals(LABELS[0])){
                                 opmode.telemetry.addData("tfodSees","ONE");
                                 return TfodSleeve.ONE;
                             }
+                            //if it sees two, return that
                             if (recognition.getLabel().equals(LABELS[1])){
                                 opmode.telemetry.addData("tfodSees","TWO");
                                 return TfodSleeve.TWO;
                             }
+                            //if it sees three, return that
                             if (recognition.getLabel().equals(LABELS[2])){
                                 opmode.telemetry.addData("tfodSees","THREE");
                                 return TfodSleeve.THREE;
                             }
+                            //if the timer expires then it defualts to three, meaning after three seconds it goes to three
                             if (timer.expired()) {
                                 opmode.telemetry.addData("tfodSees","THREE - Time Up");
                                 return TfodSleeve.THREE;
@@ -181,6 +185,7 @@ public class TensorflowGearPrRobotCOMPETITION {
                 }
             }
         }
+        //this isn't used but it won't run if its not there
         return TfodSleeve.THREE;
     }
 
