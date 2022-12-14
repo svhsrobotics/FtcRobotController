@@ -39,7 +39,7 @@ public class AllAutomovement extends LinearOpMode {
 
         logger.info("Sleeve Detected: " + detected);
         switch(detected) {
-            case ONE:
+            case THREE:
                 drive.navigationMonitorTicks(12,0,3.5,10);
                 drive.ceaseMotion();
                 drive.navigationMonitorTicks(15,-47,0,10);
@@ -52,7 +52,7 @@ public class AllAutomovement extends LinearOpMode {
                 robot.arm.pincher.contract();
                 drive.ceaseMotion();
                 drive.navigationMonitorTicks(20,-1,0,10);
-                drive.navigationMonitorTicks(20, 65.5, 0, 10);
+                drive.navigationMonitorTicks(20, 60.5, 0, 10);
                 drive.ceaseMotion();
                 break;
             case TWO:
@@ -69,8 +69,10 @@ public class AllAutomovement extends LinearOpMode {
                 drive.ceaseMotion();
                 drive.navigationMonitorTicks(20,-1,0,10);
                 drive.ceaseMotion();
-                drive.navigationMonitorTicks(20, 38.5, 0, 10);
+                drive.navigationMonitorTicks(20, 35.5, 0, 10);
                 drive.ceaseMotion();
+
+                //this part is for moar cones laterrrrrrr
 //                drive.navigationMonitorTicksPhi(1, 0, 34.5, -90, 10);
 //                robot.arm.pincher.expand();
 //                drive.ceaseMotion();
@@ -83,7 +85,7 @@ public class AllAutomovement extends LinearOpMode {
                 //drive.navigationMonitorTicks(10, 25, 0, 10);
                // drive.navigationMonitorTicksPhi(10, 47, 0, -90, 10);
                 break;
-            case THREE:
+            case ONE:
                 drive.navigationMonitorTicks(12,0,3.5,10);
                 drive.ceaseMotion();
                 drive.navigationMonitorTicks(15,-47,0,10);
@@ -95,7 +97,7 @@ public class AllAutomovement extends LinearOpMode {
                 drive.navigationMonitorTicks(20, 30.5, 0, 10);
                 robot.arm.pincher.contract();
                 drive.ceaseMotion();
-                drive.navigationMonitorTicks(20, -30.5, 0, 10);
+                drive.navigationMonitorTicks(20, -28.5, 0, 10);
                 drive.ceaseMotion();
                 break;
         }
