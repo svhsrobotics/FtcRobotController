@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.util.Logger;
 //import org.firstinspires.ftc.teamcode.vision.TensorflowStandardSleeve;
 import org.firstinspires.ftc.teamcode.util.Timeout;
 import org.firstinspires.ftc.teamcode.vision.TensorflowGearPrRobotCOMPETITION;
+import org.firstinspires.ftc.teamcode.vision.TensorflowStandardSleeveWithIFStatements;
 import org.firstinspires.ftc.teamcode.vision.TfodSleeve;
 
 @Autonomous(name = "Autonomous")
@@ -22,22 +23,21 @@ public class AllAutomovement extends LinearOpMode {
         robot.initHardware();
         Drive2 drive = new Drive2(robot, this);
 
-//        drive.navigationMonitorTicks(100.0, 5.0, 0.0, 10);//5
-//        drive.navigationMonitorTicks(95.0, 5.0, 0.0, 10);//10
-//        drive.navigationMonitorTicks(90.0, 5.0, 0.0, 10);//15
-//        drive.navigationMonitorTicks(80.0, 5.0, 0.0, 10);//20
-//        drive.navigationMonitorTicks(70.0, 5.0, 0.0, 10);//25
-//        drive.navigationMonitorTicks(60.0, 5.0, 0.0, 10);//30
-//        drive.navigationMonitorTicks(50.0, 5.0, 0.0, 10);//35
-//        drive.navigationMonitorTicks(40.0, 5.0, 0.0, 10);//40
-//        drive.navigationMonitorTicks(30.0, 5.0, 0.0, 10);//45
-        //state the case when testing
+        // Initialize TensorFlow before init because it takes awhile
+        logger.info("Instantiating a new Tensor object");
         TensorflowGearPrRobotCOMPETITION tensor = new TensorflowGearPrRobotCOMPETITION(this);
-        TfodSleeve detected = tensor.scanStandardSleeve();
+        logger.info("Calling init");
+        tensor.init();
 
+        logger.info("Wating for start");
         waitForStart();
-        robot.arm.pincher.expand();
-        robot.arm.lift.setPreset(Arm.Lift.Preset.DRIVING);
+        // Request the result after init b/c it should have been randomized
+        logger.info("Asking for result");
+        TfodSleeve detected = tensor.scanStandardSleeve();
+        logger.info("Got result");
+
+        // If we're just testing, you can comment out the above code and uncomment this
+        //TfodSleeve detected = TfodSleeve.THREE;
 
 
         logger.info("Sleeve Detected: " + detected);

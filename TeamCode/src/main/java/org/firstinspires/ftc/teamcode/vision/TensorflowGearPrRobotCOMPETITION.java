@@ -68,17 +68,23 @@ public class TensorflowGearPrRobotCOMPETITION {
      * has been downloaded to the Robot Controller's SD FLASH memory, it must to be loaded using loadModelFromFile()
      * Here we assume it's an Asset.    Also see method initTfod() below .
      */
-    //private static final String TFOD_MODEL_ASSET = "PowerPlay.tflite";
+    private static final String TFOD_MODEL_ASSET = "PowerPlay.tflite";
     // private static final String TFOD_MODEL_FILE  = "/sdcard/FIRST/tflitemodels/CustomTeamModel.tflite";
-    private static final String TFOD_MODEL_ASSET = "model_20221207_142258.tflite";
+    //private static final String TFOD_MODEL_ASSET = "model_20221215_180834.tflite";
     //correct model name
 
 
-    private static final String[] LABELS = {
+    /*private static final String[] LABELS = {
             "gear",
             "pr",
             "robot"
+    };*/
+    private static final String[] LABELS = {
+            "1 Bolt",
+            "2 Bulb",
+            "3 Panel"
     };
+
 
     /*
      * IMPORTANT: You need to obtain your own license key to use Vuforia. The string below with which
@@ -107,8 +113,7 @@ public class TensorflowGearPrRobotCOMPETITION {
      */
     private TFObjectDetector tfod;
 
-
-    public TfodSleeve scanStandardSleeve() {
+    public void init() {
         // The TFObjectDetector uses the camera frames from the VuforiaLocalizer, so we create that
         // first.
         initVuforia();
@@ -133,12 +138,14 @@ public class TensorflowGearPrRobotCOMPETITION {
         /** Wait for the game to begin */
         opmode.telemetry.addData(">", "Press Play to start op mode");
         opmode.telemetry.update();
+    }
 
+    public TfodSleeve scanStandardSleeve() {
         //start a timer
         if (opmode.opModeIsActive()) {
-                    Timeout timer = new Timeout (3);
+            Timeout timer = new Timeout (3);
 
-            while (opmode.opModeIsActive()) {
+            while (opmode.opModeIsActive() && !timer.expired()) {
                 if (tfod != null) {
                     // getUpdatedRecognitions() will return null if no new information is available since
                     // the last time that call was made.
