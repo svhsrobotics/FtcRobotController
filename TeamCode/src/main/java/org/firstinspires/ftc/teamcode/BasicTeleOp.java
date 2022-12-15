@@ -26,7 +26,7 @@ public class BasicTeleOp extends LinearOpMode {
         robot.initHardware();
 
         robot.arm.lift.setPreset(Arm.Lift.Preset.DRIVING);
-        robot.arm.reacher.setTargetPosition(30);
+        robot.arm.reacher.setTargetPosition(0);
 
         waitForStart();
 
@@ -77,8 +77,8 @@ public class BasicTeleOp extends LinearOpMode {
             // Begin Reacher
             telemetry.addData("Reach", robot.arm.reacher.getCurrentPosition());
 
-            if (gamepad2.left_stick_button) {
-                robot.arm.reacher.setTargetPosition(45);
+            if (gamepad2.x) {
+                robot.arm.reacher.setTargetPosition(0);
             } else if (gamepad2.dpad_left || gamepad2.dpad_right) {
                 if (gamepad2.dpad_left && robot.arm.reacher.getCurrentPosition() > 0) {
                     robot.arm.reacher.setPower(-.1);
