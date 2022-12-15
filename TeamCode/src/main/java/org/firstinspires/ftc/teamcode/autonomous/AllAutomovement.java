@@ -20,7 +20,6 @@ public class AllAutomovement extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         PowerPlayBotV2 robot = new PowerPlayBotV2(hardwareMap, logger);
         robot.initHardware();
-//140 cm of working space
         Drive2 drive = new Drive2(robot, this);
 
 //        drive.navigationMonitorTicks(100.0, 5.0, 0.0, 10);//5
@@ -42,79 +41,34 @@ public class AllAutomovement extends LinearOpMode {
 
 
         logger.info("Sleeve Detected: " + detected);
+
+        // Move up to the pole
+        drive.navigationMonitorTicks(12,0,3.5,10);
+        drive.ceaseMotion();
+        drive.navigationMonitorTicks(15,-32 - 10,0,10);
+        drive.ceaseMotion();
+        drive.navigationMonitorTicks(25, 0, 66.5, 10);
+        drive.ceaseMotion();
+        drive.navigationMonitorTicks(13, 0, 25.5, 10);
+        drive.ceaseMotion();
+        drive.navigationMonitorTicks(20, 32, 0, 10);
+        drive.ceaseMotion();
+
+        // This is where the pole would be dropped
+
+
         switch(detected) {
-            case THREE:
-                drive.navigationMonitorTicks(12,0,3.5,10);
-                drive.ceaseMotion();
-                drive.navigationMonitorTicks(15,-47,0,10);
-                drive.ceaseMotion();
-                drive.navigationMonitorTicks(25, 0, 66.5, 10);
-                drive.ceaseMotion();
-                drive.navigationMonitorTicks(13, 0, 25.5, 10);
-                drive.ceaseMotion();
-                drive.navigationMonitorTicks(20, 30.5, 0, 10);
-                robot.arm.lift.setPreset(Arm.Lift.Preset.HIGH_POLE);
-                robot.arm.pincher.contract();
-                drive.ceaseMotion();
-                drive.navigationMonitorTicks(20,-1,0,10);
-                Timeout timer = new Timeout(10);
-                while (!timer.expired() && !isStopRequested()){}
+            case THREE: // This is the rightmost slot
                 drive.navigationMonitorTicks(20, 70.5, 0, 10);
                 drive.ceaseMotion();
-                robot.arm.lift.setPreset(Arm.Lift.Preset.DRIVING);
                 break;
-            case TWO:
-                drive.navigationMonitorTicks(12,0,3.5,10);
+            case TWO: // This is the center slot
+                drive.navigationMonitorTicks(20, 20, 0, 10);
                 drive.ceaseMotion();
-                drive.navigationMonitorTicks(15,-47,0,10);
-                drive.ceaseMotion();
-                drive.navigationMonitorTicks(25, 0, 66.5, 10);
-                drive.ceaseMotion();
-                drive.navigationMonitorTicks(13, 0, 25.5, 10);
-                drive.ceaseMotion();
-                drive.navigationMonitorTicks(20, 30.5, 0, 10);
-                robot.arm.lift.setPreset(Arm.Lift.Preset.HIGH_POLE);
-                robot.arm.pincher.contract();
-                drive.ceaseMotion();
-                drive.navigationMonitorTicks(20,-1,0,10);
-                drive.ceaseMotion();
-                timer = new Timeout(10);
-                while (!timer.expired() && !isStopRequested()){}
-                drive.navigationMonitorTicks(20, 28.5, 0, 10);
-                drive.ceaseMotion();
-                robot.arm.lift.setPreset(Arm.Lift.Preset.DRIVING);
-
-                //this part is for moar cones laterrrrrrr
-//                drive.navigationMonitorTicksPhi(1, 0, 34.5, -90, 10);
-//                robot.arm.pincher.expand();
-//                drive.ceaseMotion();
-//                robot.arm.pincher.contract();
-//                drive.ceaseMotion();
-//                drive.navigationMonitorTicksPhi(1, 0, 31.5, 90, 10);
-//                drive.ceaseMotion();
-
-
-                //drive.navigationMonitorTicks(10, 25, 0, 10);
-               // drive.navigationMonitorTicksPhi(10, 47, 0, -90, 10);
                 break;
-            case ONE:
-                drive.navigationMonitorTicks(12,0,3.5,10);
+            case ONE: // This is the leftmost slot
+                drive.navigationMonitorTicks(20, -32, 0, 10);
                 drive.ceaseMotion();
-                drive.navigationMonitorTicks(15,-47,0,10);
-                drive.ceaseMotion();
-                drive.navigationMonitorTicks(25, 0, 66.5, 10);
-                drive.ceaseMotion();
-                drive.navigationMonitorTicks(13, 0, 25.5, 10);
-                drive.ceaseMotion();
-                drive.navigationMonitorTicks(20, 30.5, 0, 10);
-                robot.arm.lift.setPreset(Arm.Lift.Preset.HIGH_POLE);
-                robot.arm.pincher.contract();
-                drive.ceaseMotion();
-                timer = new Timeout(10);
-                while (!timer.expired() && !isStopRequested()){}
-                drive.navigationMonitorTicks(20, -27.5, 0, 10);
-                drive.ceaseMotion();
-                robot.arm.lift.setPreset(Arm.Lift.Preset.DRIVING);
                 break;
         }
     }
