@@ -62,12 +62,6 @@ public class BasicTeleOp extends LinearOpMode {
                 robot.drives.get(Robot.DrivePos.FRONT_RIGHT).setPower((gamepad1.right_trigger - gamepad1.left_trigger - (Math.signum(gamepad1.left_stick_x) * Math.pow(Math.abs(gamepad1.left_stick_x), 1.5)) - gamepad1.right_stick_x));
                 robot.drives.get(Robot.DrivePos.BACK_LEFT).setPower((gamepad1.right_trigger - gamepad1.left_trigger + (Math.signum(gamepad1.left_stick_x) * Math.pow(Math.abs(gamepad1.left_stick_x), 1.5)) - gamepad1.right_stick_x));
                 robot.drives.get(Robot.DrivePos.BACK_RIGHT).setPower((gamepad1.right_trigger - gamepad1.left_trigger - (Math.signum(gamepad1.left_stick_x) * Math.pow(Math.abs(gamepad1.left_stick_x), 1.5)) + gamepad1.right_stick_x));
-                if (gamepad2.a) {
-                    robot.drives.get(Robot.DrivePos.FRONT_LEFT).setPower((gamepad2.right_trigger - gamepad2.left_trigger + (Math.signum(gamepad2.left_stick_x) * Math.pow(Math.abs(gamepad2.left_stick_x), 1.5)) + gamepad2.right_stick_x));
-                    robot.drives.get(Robot.DrivePos.FRONT_RIGHT).setPower((gamepad2.right_trigger - gamepad2.left_trigger - (Math.signum(gamepad2.left_stick_x) * Math.pow(Math.abs(gamepad2.left_stick_x), 1.5)) - gamepad2.right_stick_x));
-                    robot.drives.get(Robot.DrivePos.BACK_LEFT).setPower((gamepad2.right_trigger - gamepad2.left_trigger + (Math.signum(gamepad2.left_stick_x) * Math.pow(Math.abs(gamepad2.left_stick_x), 1.5)) - gamepad2.right_stick_x));
-                    robot.drives.get(Robot.DrivePos.BACK_RIGHT).setPower((gamepad2.right_trigger - gamepad2.left_trigger - (Math.signum(gamepad2.left_stick_x) * Math.pow(Math.abs(gamepad2.left_stick_x), 1.5)) + gamepad2.right_stick_x));
-                }
             }
             // END DRIVE
 
