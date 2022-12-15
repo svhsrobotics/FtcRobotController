@@ -112,16 +112,11 @@ public class BasicTeleOp extends LinearOpMode {
                 }
             }
 
-            if (gamepad1.left_bumper) {
-                robot.arm.pincher.contract();
-            }
-
-
             // Begin Pincher
-            if (gamepad2.left_bumper) {
-                robot.arm.pincher.expand();
-            } else if (gamepad2.right_bumper) {
+            if (gamepad2.left_bumper || gamepad1.left_bumper) {
                 robot.arm.pincher.contract();
+            } else if (gamepad2.right_bumper) {
+                robot.arm.pincher.expand();
             }
             // End Pincher
             // END ARM
