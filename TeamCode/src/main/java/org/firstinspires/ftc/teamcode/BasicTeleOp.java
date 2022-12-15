@@ -24,7 +24,8 @@ public class BasicTeleOp extends LinearOpMode {
         PowerPlayBotV2 robot = new PowerPlayBotV2(hardwareMap, logger);
         robot.initHardware();
 
-        robot.arm.pincher.expand();
+        robot.arm.lift.setPreset(Arm.Lift.Preset.DRIVING);
+        robot.arm.reacher.setTargetPosition(30);
 
         waitForStart();
 
@@ -75,8 +76,10 @@ public class BasicTeleOp extends LinearOpMode {
             // Begin Reacher
             telemetry.addData("Reach", robot.arm.reacher.getCurrentPosition());
 
-            if (gamepad2.dpad_left || gamepad2.dpad_right) {
-                if (gamepad2.dpad_left && robot.arm.reacher.getCurrentPosition() > 0.5) {
+            if (gamepad2.left_stick_button) {
+                robot.arm.reacher.setTargetPosition(45);
+            } else if (gamepad2.dpad_left || gamepad2.dpad_right) {
+                if (gamepad2.dpad_left && robot.arm.reacher.getCurrentPosition() > 0) {
                     robot.arm.reacher.setPower(-.1);
                 }
                 if (gamepad2.dpad_right) {
@@ -90,8 +93,10 @@ public class BasicTeleOp extends LinearOpMode {
 
             // Begin Lift
             telemetry.addData("Lift", robot.arm.lift.getCurrentPosition());
-            if (!(gamepad2.right_trigger > 0)) {
-                if (gamepad1.right_bumper) {
+            if (!(gamepad2.right_trigger > 0.5)) {
+                if (gamepad2.a) {
+                    robot.arm.lift.setPower(0);
+                } else if (gamepad1.right_bumper) {
                     robot.arm.lift.setPreset(Arm.Lift.Preset.DRIVING);
                 } else if (aButton.update(gamepad1.a)) {
                     robot.arm.pincher.contract();
