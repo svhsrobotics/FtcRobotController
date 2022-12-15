@@ -73,16 +73,14 @@ public class BasicTeleOp extends LinearOpMode {
 
             if (gamepad2.x) {
                 robot.arm.reacher.setTargetPosition(0);
-            } else if (gamepad2.dpad_left || gamepad2.dpad_right) {
-                if (gamepad2.dpad_left && robot.arm.reacher.getCurrentPosition() > 0) {
-                    robot.arm.reacher.setPower(-.1);
-                }
-                if (gamepad2.dpad_right) {
-                    robot.arm.reacher.setPower(.1);
-                }
+            } else if (gamepad2.y) {
+                robot.arm.reacher.setTargetPosition(2058);
+            } else if (gamepad2.dpad_left) {
+                robot.arm.reacher.setPower(-.1);
+            } else if (gamepad2.dpad_right) {
+                robot.arm.reacher.setPower(.1);
             } else {
-                telemetry.addData("Reach", robot.arm.reacher.getCurrentPosition());
-                robot.arm.reacher.setPower(gamepad2.right_stick_x);
+                robot.arm.reacher.setPower(0);
             }
             // End Reacher
 
