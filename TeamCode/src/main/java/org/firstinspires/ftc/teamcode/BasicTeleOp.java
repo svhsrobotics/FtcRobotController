@@ -76,7 +76,7 @@ public class BasicTeleOp extends LinearOpMode {
             telemetry.addData("Reach", robot.arm.reacher.getCurrentPosition());
 
             if (gamepad2.dpad_left || gamepad2.dpad_right) {
-                if (gamepad2.dpad_left && robot.arm.reacher.getCurrentPosition() > 0) {
+                if (gamepad2.dpad_left && robot.arm.reacher.getCurrentPosition() > 0.5) {
                     robot.arm.reacher.setPower(-.1);
                 }
                 if (gamepad2.dpad_right) {
@@ -84,7 +84,7 @@ public class BasicTeleOp extends LinearOpMode {
                 }
             } else {
                 telemetry.addData("Reach", robot.arm.reacher.getCurrentPosition());
-                robot.arm.reacher.setPower(gamepad2.left_stick_x);
+                robot.arm.reacher.setPower(gamepad2.right_stick_x);
             }
             // End Reacher
 
@@ -101,7 +101,7 @@ public class BasicTeleOp extends LinearOpMode {
                         telemetry.update();
                     }
                     robot.arm.pincher.expand();
-                    sleep(1000);
+                    sleep(100);
                     robot.arm.lift.setPreset(Arm.Lift.Preset.DRIVING);
                 } else if (gamepad1.x) {
                     robot.arm.lift.setPreset(Arm.Lift.Preset.LOW_POLE);
