@@ -5,12 +5,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Shared.Drive2;
 import org.firstinspires.ftc.teamcode.robot.PowerPlayBotV2;
-import org.firstinspires.ftc.teamcode.robot.hardware.Arm;
 import org.firstinspires.ftc.teamcode.util.Logger;
 //import org.firstinspires.ftc.teamcode.vision.TensorflowStandardSleeve;
-import org.firstinspires.ftc.teamcode.util.Timeout;
-import org.firstinspires.ftc.teamcode.vision.TensorflowGearPrRobotCOMPETITION;
-import org.firstinspires.ftc.teamcode.vision.TensorflowStandardSleeveWithIFStatements;
+import org.firstinspires.ftc.teamcode.vision.TensorflowStandardSleeve;
 import org.firstinspires.ftc.teamcode.vision.TfodSleeve;
 
 @Autonomous(name = "Autonomous")
@@ -24,21 +21,12 @@ public class AllAutomovement extends LinearOpMode {
         Drive2 drive = new Drive2(robot, this);
 
         // Initialize TensorFlow before init because it takes awhile
-        logger.info("Instantiating a new Tensor object");
-        TensorflowGearPrRobotCOMPETITION tensor = new TensorflowGearPrRobotCOMPETITION(this);
-        logger.info("Calling init");
+        TensorflowStandardSleeve tensor = new TensorflowStandardSleeve(this);
         tensor.init();
 
-        logger.info("Wating for start");
         waitForStart();
         // Request the result after init b/c it should have been randomized
-        logger.info("Asking for result");
         TfodSleeve detected = tensor.scanStandardSleeve();
-        logger.info("Got result");
-
-        // If we're just testing, you can comment out the above code and uncomment this
-        //TfodSleeve detected = TfodSleeve.THREE;
-
 
         logger.info("Sleeve Detected: " + detected);
 

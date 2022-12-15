@@ -1,58 +1,23 @@
-/* Copyright (c) 2019 FIRST. All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted (subject to the limitations in the disclaimer below) provided that
- * the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice, this list
- * of conditions and the following disclaimer.
- *
- * Redistributions in binary form must reproduce the above copyright notice, this
- * list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the distribution.
- *
- * Neither the name of FIRST nor the names of its contributors may be used to endorse or
- * promote products derived from this software without specific prior written permission.
- *
- * NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
- * LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
 package org.firstinspires.ftc.teamcode.vision;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
+import org.firstinspires.ftc.teamcode.util.Timeout;
 
 import java.util.List;
 
-/**
- * This 2022-2023 OpMode illustrates the basics of using the TensorFlow Object Detection API to
- * determine which image is being presented to the robot.
- *
- * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list.
- *
- * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
- * is explained below.
- */
-@TeleOp(name = "Concept: TensorFlow Object Detection Standard", group = "Concept")
-//@Disabled
-public class ConceptTensorFlowObjectDetectionWithStandardSleeve extends LinearOpMode {
+
+public class TensorflowStandardSleeve {
+
+    LinearOpMode opmode;
+    public TensorflowStandardSleeve(LinearOpMode opMode){
+        opmode = opMode;
+    }
 
     /*
      * Specify the source for the Tensor Flow Model.
@@ -62,17 +27,14 @@ public class ConceptTensorFlowObjectDetectionWithStandardSleeve extends LinearOp
      * Here we assume it's an Asset.    Also see method initTfod() below .
      */
     private static final String TFOD_MODEL_ASSET = "PowerPlay.tflite";
-    //private static final String TFOD_MODEL_ASSET = "model_20221111_143311.tflite";
-    // private static final String TFOD_MODEL_FILE  = "/sdcard/FIRST/tflitemodels/CustomTeamModel.tflite";
+
 
     private static final String[] LABELS = {
-      "1 Bolt",
-      "2 Bulb",
-      "3 Panel"
-           // "bluewaves",
-            //"greenhash",
-            //"redcircle"
+            "1 Bolt",
+            "2 Bulb",
+            "3 Panel"
     };
+
 
     /*
      * IMPORTANT: You need to obtain your own license key to use Vuforia. The string below with which
@@ -89,7 +51,6 @@ public class ConceptTensorFlowObjectDetectionWithStandardSleeve extends LinearOp
     private static final String VUFORIA_KEY =
             "AUmiib//////AAABmbrFAeBqbkd/hmTwBoU6jXFUjeYK8xAgeYu6r9ZuLmpgb4tqNl4oIhXkpbBXmCusnhPlxJ3DHEkExTnQKhvCU49Yu2jslI6vaQ+V5F21ZAbbBod6lm9zyBEpkujo7IOq2TdOaJSIdN5wW3zxrHTksfrzBuKZKRsArompruh7jrm/B4W3F/EunA8ymkVoi29W84q81XMwJyonWlS2sd3pebXvLW0YOKmA63QgdmtSpp9XVAccwiH8ND8rk7FXlIIucim1Ig5FmVPLIx88t7doptXh8uiXfHHMqXc1T1MrRvfemYaUqyg7I5lYLNjLhuRmBZO3BM/qoyjPhpMVtGNh6+z3VgaKhP7O6zI07W0mmMfO";
 
-
     /**
      * {@link #vuforia} is the variable we will use to store our instance of the Vuforia
      * localization engine.
@@ -102,8 +63,7 @@ public class ConceptTensorFlowObjectDetectionWithStandardSleeve extends LinearOp
      */
     private TFObjectDetector tfod;
 
-    @Override
-    public void runOpMode() {
+    public void init() {
         // The TFObjectDetector uses the camera frames from the VuforiaLocalizer, so we create that
         // first.
         initVuforia();
@@ -122,41 +82,64 @@ public class ConceptTensorFlowObjectDetectionWithStandardSleeve extends LinearOp
             // to artificially zoom in to the center of image.  For best results, the "aspectRatio" argument
             // should be set to the value of the images used to create the TensorFlow Object Detection model
             // (typically 16/9).
-            tfod.setZoom(1.5, 16.0/9.0);
+            tfod.setZoom(1.0, 16.0/9.0);
         }
 
         /** Wait for the game to begin */
-        telemetry.addData(">", "Press Play to start op mode");
-        telemetry.update();
-        waitForStart();
+        opmode.telemetry.addData(">", "Press Play to start op mode");
+        opmode.telemetry.update();
+    }
 
-        if (opModeIsActive()) {
-            while (opModeIsActive()) {
+    public TfodSleeve scanStandardSleeve() {
+        //start a timer
+        if (opmode.opModeIsActive()) {
+            Timeout timer = new Timeout (3);
+
+            while (opmode.opModeIsActive() && !timer.expired()) {
                 if (tfod != null) {
                     // getUpdatedRecognitions() will return null if no new information is available since
                     // the last time that call was made.
                     List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
                     if (updatedRecognitions != null) {
-                        telemetry.addData("# Objects Detected", updatedRecognitions.size());
+                        opmode.telemetry.addData("# Objects Detected", updatedRecognitions.size());
 
                         // step through the list of recognitions and display image position/size information for each one
                         // Note: "Image number" refers to the randomized image orientation/number
                         for (Recognition recognition : updatedRecognitions) {
+                            //if it sees one, return that
+                            if (recognition.getLabel().equals(LABELS[0])){
+                                opmode.telemetry.addData("tfodSees","ONE");
+                                return TfodSleeve.ONE;
+                            }
+                            //if it sees two, return that
+                            if (recognition.getLabel().equals(LABELS[1])){
+                                opmode.telemetry.addData("tfodSees","TWO");
+                                return TfodSleeve.TWO;
+                            }
+                            //if it sees three, return that
+                            if (recognition.getLabel().equals(LABELS[2])){
+                                opmode.telemetry.addData("tfodSees","THREE");
+                                return TfodSleeve.THREE;
+                            }
+
                             double col = (recognition.getLeft() + recognition.getRight()) / 2 ;
                             double row = (recognition.getTop()  + recognition.getBottom()) / 2 ;
                             double width  = Math.abs(recognition.getRight() - recognition.getLeft()) ;
                             double height = Math.abs(recognition.getTop()  - recognition.getBottom()) ;
 
-                            telemetry.addData(""," ");
-                            telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100 );
-                            telemetry.addData("- Position (Row/Col)","%.0f / %.0f", row, col);
-                            telemetry.addData("- Size (Width/Height)","%.0f / %.0f", width, height);
+                            opmode.telemetry.addData(""," ");
+                            opmode.telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100 );
+                            opmode.telemetry.addData("- Position (Row/Col)","%.0f / %.0f", row, col);
+                            opmode.telemetry.addData("- Size (Width/Height)","%.0f / %.0f", width, height);
                         }
-                        telemetry.update();
+                        opmode.telemetry.update();
                     }
                 }
             }
         }
+
+        opmode.telemetry.log().add("Unable to detect anything, falling back to THREE");
+        return TfodSleeve.THREE;
     }
 
     /**
@@ -179,8 +162,8 @@ public class ConceptTensorFlowObjectDetectionWithStandardSleeve extends LinearOp
      * Initialize the TensorFlow Object Detection engine.
      */
     private void initTfod() {
-        int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
-            "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        int tfodMonitorViewId = opmode.hardwareMap.appContext.getResources().getIdentifier(
+                "tfodMonitorViewId", "id", opmode.hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
         tfodParameters.minResultConfidence = 0.75f;
         tfodParameters.isModelTensorFlow2 = true;
