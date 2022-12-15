@@ -18,6 +18,7 @@ public class BasicTeleOp extends LinearOpMode {
     Toggle liftHold = new Toggle();
     int liftHoldValue = -500;
     Debouncer aButton = new Debouncer();
+    Debouncer bButton = new Debouncer();
 
     @Override
     public void runOpMode() {
@@ -25,7 +26,7 @@ public class BasicTeleOp extends LinearOpMode {
         robot.initHardware();
 
         robot.arm.lift.setPreset(Arm.Lift.Preset.DRIVING);
-        robot.arm.reacher.setTargetPosition(30);
+        robot.arm.reacher.setTargetPosition(0);
 
         waitForStart();
 
@@ -61,12 +62,6 @@ public class BasicTeleOp extends LinearOpMode {
                 robot.drives.get(Robot.DrivePos.FRONT_RIGHT).setPower((gamepad1.right_trigger - gamepad1.left_trigger - (Math.signum(gamepad1.left_stick_x) * Math.pow(Math.abs(gamepad1.left_stick_x), 1.5)) - gamepad1.right_stick_x));
                 robot.drives.get(Robot.DrivePos.BACK_LEFT).setPower((gamepad1.right_trigger - gamepad1.left_trigger + (Math.signum(gamepad1.left_stick_x) * Math.pow(Math.abs(gamepad1.left_stick_x), 1.5)) - gamepad1.right_stick_x));
                 robot.drives.get(Robot.DrivePos.BACK_RIGHT).setPower((gamepad1.right_trigger - gamepad1.left_trigger - (Math.signum(gamepad1.left_stick_x) * Math.pow(Math.abs(gamepad1.left_stick_x), 1.5)) + gamepad1.right_stick_x));
-                if (gamepad2.a) {
-                    robot.drives.get(Robot.DrivePos.FRONT_LEFT).setPower((gamepad2.right_trigger - gamepad2.left_trigger + (Math.signum(gamepad2.left_stick_x) * Math.pow(Math.abs(gamepad2.left_stick_x), 1.5)) + gamepad2.right_stick_x));
-                    robot.drives.get(Robot.DrivePos.FRONT_RIGHT).setPower((gamepad2.right_trigger - gamepad2.left_trigger - (Math.signum(gamepad2.left_stick_x) * Math.pow(Math.abs(gamepad2.left_stick_x), 1.5)) - gamepad2.right_stick_x));
-                    robot.drives.get(Robot.DrivePos.BACK_LEFT).setPower((gamepad2.right_trigger - gamepad2.left_trigger + (Math.signum(gamepad2.left_stick_x) * Math.pow(Math.abs(gamepad2.left_stick_x), 1.5)) - gamepad2.right_stick_x));
-                    robot.drives.get(Robot.DrivePos.BACK_RIGHT).setPower((gamepad2.right_trigger - gamepad2.left_trigger - (Math.signum(gamepad2.left_stick_x) * Math.pow(Math.abs(gamepad2.left_stick_x), 1.5)) + gamepad2.right_stick_x));
-                }
             }
             // END DRIVE
 
@@ -76,23 +71,26 @@ public class BasicTeleOp extends LinearOpMode {
             // Begin Reacher
             telemetry.addData("Reach", robot.arm.reacher.getCurrentPosition());
 
-            if (gamepad2.left_stick_button) {
-                robot.arm.reacher.setTargetPosition(45);
-            } else if (gamepad2.dpad_left || gamepad2.dpad_right) {
-                if (gamepad2.dpad_left && robot.arm.reacher.getCurrentPosition() > 0) {
-                    robot.arm.reacher.setPower(-.1);
-                }
-                if (gamepad2.dpad_right) {
-                    robot.arm.reacher.setPower(.1);
-                }
+            if (gamepad2.x) {
+                robot.arm.reacher.setTargetPosition(0);
+            } else if (gamepad2.y) {
+                robot.arm.reacher.setTargetPosition(2058);
+            } else if (gamepad2.dpad_left) {
+                robot.arm.reacher.setPower(-.1);
+            } else if (gamepad2.dpad_right) {
+                robot.arm.reacher.setPower(.1);
             } else {
-                telemetry.addData("Reach", robot.arm.reacher.getCurrentPosition());
-                robot.arm.reacher.setPower(gamepad2.right_stick_x);
+                robot.arm.reacher.setPower(0);
             }
             // End Reacher
 
             // Begin Lift
             telemetry.addData("Lift", robot.arm.lift.getCurrentPosition());
+
+            if (bButton.update(gamepad2.b)) {
+                robot.arm.lift.setTargetPosition(robot.arm.lift.getTargetPosition() + 100);
+            }
+
             if (!(gamepad2.right_trigger > 0.5)) {
                 if (gamepad2.a) {
                     robot.arm.lift.setPower(0);
