@@ -18,6 +18,7 @@ public class BasicTeleOp extends LinearOpMode {
     Toggle liftHold = new Toggle();
     int liftHoldValue = -500;
     Debouncer aButton = new Debouncer();
+    Debouncer bButton = new Debouncer();
 
     @Override
     public void runOpMode() {
@@ -93,6 +94,11 @@ public class BasicTeleOp extends LinearOpMode {
 
             // Begin Lift
             telemetry.addData("Lift", robot.arm.lift.getCurrentPosition());
+
+            if (bButton.update(gamepad2.b)) {
+                robot.arm.lift.setTargetPosition(robot.arm.lift.getTargetPosition() + 100);
+            }
+
             if (!(gamepad2.right_trigger > 0.5)) {
                 if (gamepad2.a) {
                     robot.arm.lift.setPower(0);
