@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.util.Debouncer;
 import org.firstinspires.ftc.teamcode.util.Logger;
 import org.firstinspires.ftc.teamcode.util.Toggle;
 
-@TeleOp(name = "TeleOp", group = "TeleOp")
+@TeleOp(name = "TeleOp")
 public class BasicTeleOp extends LinearOpMode {
     Logger logger = new Logger(telemetry);
 

@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.util.Logger;
 import org.firstinspires.ftc.teamcode.vision.TensorflowStandardSleeve;
 import org.firstinspires.ftc.teamcode.vision.TfodSleeve;
 
-@Autonomous(name = "Autonomous")
+@Autonomous(name = "Autonomous", preselectTeleOp = "TeleOp")
 public class AllAutomovement extends LinearOpMode {
     private final Logger logger = new Logger(telemetry, true);
 
