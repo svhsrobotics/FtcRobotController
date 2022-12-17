@@ -37,7 +37,7 @@ public class AllAutomovement extends LinearOpMode {
         drive.ceaseMotion();
         drive.navigationMonitorTicks(25, 0, 66.5, 10);
         drive.ceaseMotion();
-        drive.navigationMonitorTicks(13, 0, 25.5, 10);
+        drive.navigationMonitorTicks(13, 0, 18, 10);
         drive.ceaseMotion();
         drive.navigationMonitorTicks(20, 32, 0, 10);
         drive.ceaseMotion();
