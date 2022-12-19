@@ -28,19 +28,14 @@ public class Drive {
     private ElapsedTime runtime = new ElapsedTime();
 
     // These values should be replaced in the constructor
-    final double COUNTS_PER_MOTOR_REV;    // eg: TETRIX Motor Encoder
-    final double DRIVE_GEAR_REDUCTION;     // This is < 1.0 if geared UP //For competition robot
-    final double WHEEL_DIAMETER_INCHES;     // For figuring circumference  //For test robot
-    final double COUNTS_PER_INCH;
+    final double COUNTS_PER_MOTOR_REV;  /// Ticks output by the motor encoder for each revolution of the motor shaft
+    final double DRIVE_GEAR_REDUCTION;  /// Modifier, less than 1 if geared UP
+    final double WHEEL_DIAMETER_INCHES; /// Self-explanatory
+    final double COUNTS_PER_INCH;       /// Translates encoder ticks to inches
 
-    static final double     DRIVE_SPEED             = 1;
-    static final double     TURN_SPEED              = 0.5;
-
-    HashMap <org.firstinspires.ftc.teamcode.robot.hardware.Drive, Integer> motorInitialPositions, motorTargetPositions;
     HashMap <org.firstinspires.ftc.teamcode.robot.hardware.Drive, Double> motorPowerFactors;
 
     static double imuSecondOpModeAdjustment = 0;
-    Orientation lastAngles = new Orientation();
 
     Robot robot;
 
@@ -53,7 +48,6 @@ public class Drive {
     double actualSpeedX = 0;
     double actualSpeedY = 0;
     final double SPEEDSCALE = 50;//Speed in inches/second at speed=1
-    double speedScaled = 0;
 
     public Drive(Robot robot, LinearOpMode opMode){
         this.robot = robot;
@@ -74,69 +68,6 @@ public class Drive {
 
         motorPowerFactors = new HashMap<>();
         setTargetAngle(0);
-    }
-
-    public void check_and_set_drive(double magRight, double thetaRight, double magLeft, double thetaLeft) {
-        double rightFrontPowerFactor, leftFrontPowerFactor, rightBackPowerFactor, leftBackPowerFactor;
-        double pi = Math.PI;
-
-        // Send telemetry message to indicate successful Encoder reset
-        telemetry.addData("Path",  "Starting at %7d : %7d",
-                leftFrontDrive.getCurrentPosition(),
-                rightFrontDrive.getCurrentPosition());
-        telemetry.update();
-
-        // reset the timeout time and start motion.
-        runtime.reset();
-
-        if(thetaRight > 0 && thetaRight < pi/2){
-            rightFrontPowerFactor = -Math.cos(2 * thetaRight);
-        }else if(thetaRight >= -pi && thetaRight < -pi/2){
-            rightFrontPowerFactor = Math.cos(2 * thetaRight);
-        }else if(thetaRight >= pi/2 && thetaRight <= pi){
-            rightFrontPowerFactor = 1;
-        }else{
-            rightFrontPowerFactor = -1;
-        }
-
-        if(thetaLeft > 0 && thetaLeft < pi/2) {
-            leftBackPowerFactor = -Math.cos(2 * thetaLeft);
-        }else if(thetaLeft >= -pi && thetaLeft < -pi/2){
-            leftBackPowerFactor = Math.cos(2 * thetaLeft);
-        }else if(thetaLeft >= pi/2 && thetaLeft <= pi){
-            leftBackPowerFactor = 1;
-        }else{
-            leftBackPowerFactor = -1;
-        }
-
-        if(thetaRight > -pi/2 && thetaRight < 0) {
-            rightBackPowerFactor = Math.cos(2 * thetaRight);
-        }else if(thetaRight > pi/2 && thetaRight < pi){
-            rightBackPowerFactor = -Math.cos(2 * thetaRight);
-        }else if(thetaRight >= 0 && thetaRight <= pi/2){
-            rightBackPowerFactor = 1;
-        }else{
-            rightBackPowerFactor = -1;
-        }
-
-        if(thetaLeft > -pi/2 && thetaLeft < 0) {
-            leftFrontPowerFactor = Math.cos(2 * thetaLeft);
-        }else if(thetaLeft > pi/2 && thetaLeft < pi){
-            leftFrontPowerFactor = -Math.cos(2 * thetaLeft);
-        }else if(thetaLeft >= 0 && thetaLeft <= pi/2){
-            leftFrontPowerFactor = 1;
-        }else{
-            leftFrontPowerFactor = -1;
-        }
-
-        motorPowerFactors.put(leftFrontDrive, leftFrontPowerFactor);
-        motorPowerFactors.put(leftBackDrive, leftBackPowerFactor);
-        motorPowerFactors.put(rightFrontDrive, rightFrontPowerFactor);
-        motorPowerFactors.put(rightBackDrive, rightBackPowerFactor);
-
-        //Speeds speeds = getPhiSpeeds((magLeft + magRight)/2);
-        setMotorPowers(magLeft, magRight);
-
     }
 
     /**navigationByPhi
@@ -233,14 +164,6 @@ public class Drive {
      */
     public void navigationMonitorTicksPhi(double speed, double xInches, double yInches, double phi, double timout) {
         navigationMonitorExternal(speed, xInches, yInches, phi, timout, false);
-    }
-
-    /**
-     * This function is exclusively for localizing the carousel
-     */
-    public void navigationLocalizeCarousel(double speed, double xInches, double yInches, double timout) {
-        long start = System.currentTimeMillis();
-        navigationMonitorExternal(speed, xInches, yInches, 0, timout, true);
     }
 
     /**
@@ -397,31 +320,6 @@ public class Drive {
         }
     }
 
-    /**stopResetEncoder
-     * Performs "STOP_AND_RESET_ENCODER" on all drive motors
-     */
-    public void stopResetEncoder(){
-        leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-    }
-
-    /**runUsingEncoder
-     * Sets all drive motors to RUN_USING_ENCODER
-     * Sets zero power behavior to float, allowing for no active force resisting rotation
-     */
-    public void runUsingEncoder(){
-        leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-    }
-
     /**ceaseMotion
      *Stop all motion;
      */
@@ -437,15 +335,7 @@ public class Drive {
         rightFrontDrive.setPower(0);
         rightBackDrive.setPower(0);
     }
-    /**setMotorPowers
-     *Set power factors of all drive motors using magLeft and magRight
-     */
-    public void setMotorPowers(double magLeft, double magRight){
-        leftFrontDrive.setPower(motorPowerFactors.get(leftFrontDrive) * magLeft);
-        rightFrontDrive.setPower(motorPowerFactors.get(leftBackDrive) * magRight);
-        leftBackDrive.setPower(motorPowerFactors.get(rightFrontDrive) * magLeft);
-        rightBackDrive.setPower(motorPowerFactors.get(rightBackDrive) * magRight);
-    }
+
     /**setMotorPowersPhi
      *Set power factors of all drive motors using speedsPhi
      */
@@ -487,7 +377,6 @@ public class Drive {
     double mCurrentImuAngle, mPriorImuAngle, mTargetAngle, mAdjustedAngle, mPriorAdjustedAngle, mImuCalibrationAngle, mTargetAngleErrorSum;
 
     public void setTargetAngle(double targetAngle){
-        double adjustedTargetAngle = getEulerAngleDegrees(targetAngle);
         mPriorImuAngle = mTargetAngle = targetAngle + imuSecondOpModeAdjustment;
     }
 
@@ -500,33 +389,11 @@ public class Drive {
      */
     public double getImuAngle(){
         Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES);
-        double adjustedHeading = angles.firstAngle + imuSecondOpModeAdjustment;
         telemetry.addData("IMU Angles (X/Y/Z)", "%.1f / %.1f / %.1f", angles.secondAngle, angles.thirdAngle, angles.firstAngle);
         telemetry.update();
         Log.i(TAG, String.format("getImuAngle: IMU Angles (X/Y/Z): %.1f / %.1f / %.1f", angles.secondAngle, angles.thirdAngle, angles.firstAngle));
         return mCurrentImuAngle = angles.firstAngle;
 
-    }
-
-    /**
-     *
-     * @return Angle in degrees. + = left, - = right.
-     */
-    public double getImuDeltaAngle(){
-        // We experimentally determined the Z axis is the axis we want to use for heading angle.
-        // We have to process the angle because the imu works in euler angles so the Z axis is
-        // returned as 0 to +180 or 0 to -180 rolling back to -179 or +179 when rotation passes
-        // 180 degrees. We detect this transition and track the total cumulative angle of rotation.
-
-        //Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES);
-        double deltaAngle = (mCurrentImuAngle = getImuAngle()) - mPriorImuAngle;
-
-        if (deltaAngle < -180)
-            deltaAngle += 360;
-        else if (deltaAngle > 180)
-            deltaAngle -= 360;
-
-        return deltaAngle;
     }
 
     /**
@@ -605,33 +472,6 @@ public class Drive {
         return powerCorrection;
     }
 
-    /**
-     * See if we are moving in a straight line and if not return an angle correction value phiCorrection.
-     * @return Phi adjustment, + is rotate counter clockwise; - is rotate clockwise.
-     */
-    private double getPhiCorrection()
-    {
-        // The gain value determines how sensitive the correction is to direction changes.
-        // You will have to experiment with your robot to get small smooth direction changes
-        // to stay on a straight line.
-        double GAIN_HIGH_RANGE = 0.6, GAIN_LOW_RANGE = 2.0;
-        double angleError, phiCorrection, angle, gain;
-
-        angle = getAdjustedAngle();
-
-        angleError = mTargetAngle - angle;        // reverse sign of angle for correction.
-
-        gain = Math.max(-(GAIN_LOW_RANGE - GAIN_HIGH_RANGE)*Math.abs(angleError) + GAIN_LOW_RANGE,
-                GAIN_HIGH_RANGE);  //Varies from 2.0 around zero to .6 for errors above 10 degrees
-        phiCorrection = angleError * gain;
-
-        return phiCorrection;
-    }
-
-    private enum Side{
-        Left, Right
-    }
-
     private class Speeds{
         public double rightSpeed;
         public double leftSpeed;
@@ -652,33 +492,6 @@ public class Drive {
             rightFrontSpeed = rightFront;
             rightBackSpeed = rightBack;
         }
-    }
-
-    /**
-     * Get the adjusted speeds for each side of the robot to allow it to turn enough to stay on a straight line. Only call once per cycle.
-     * @param targetSpeed
-     * @return
-     */
-    private Speeds getSpeeds(double targetSpeed, double nowAngle){
-        int sign = nowAngle > 0 ? 1 : -1;
-        double powerCorrection = getPowerCorrection() * sign;
-        //double powerCorrection = 0;
-        double adjustedLeftSpeed, adjustedRightSpeed;
-        if(targetSpeed + powerCorrection > 1){
-            adjustedRightSpeed = 1;
-            adjustedLeftSpeed = 1 - 2 * powerCorrection; // power - (2 * powerCorrection - (1 - power))
-        } else if (targetSpeed - powerCorrection > 1){
-            adjustedRightSpeed = 1 + 2 * powerCorrection;
-            adjustedLeftSpeed = 1;
-        } else {
-            adjustedRightSpeed = targetSpeed + powerCorrection;
-            adjustedLeftSpeed = targetSpeed - powerCorrection;
-        }
-        mPriorImuAngle = mCurrentImuAngle;
-        mPriorAdjustedAngle = mAdjustedAngle;
-        Log.i(TAG, String.format("getSpeeds: targetSpeed: %.3f, powerCorrection: %.3f", targetSpeed, powerCorrection));
-        Log.i(TAG, String.format("getSpeeds: adjustedLeftSpeed: %.3f, adjustedRightSpeed: %.3f", adjustedLeftSpeed, adjustedRightSpeed));
-        return new Speeds(adjustedRightSpeed, adjustedLeftSpeed);
     }
 
     /**
