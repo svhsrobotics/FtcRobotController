@@ -2,10 +2,8 @@ package org.firstinspires.ftc.teamcode.Shared;
 
 import android.util.Log;
 
-import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -18,14 +16,20 @@ import org.firstinspires.ftc.teamcode.robot.Robot;
 import java.util.HashMap;
 
 public class Drive {
+    // Used to when calling Android's Log class
     String TAG = "Drive";
-    public final org.firstinspires.ftc.teamcode.robot.hardware.Drive leftFrontDrive, rightFrontDrive, leftBackDrive, rightBackDrive;
-    final BNO055IMU imu;
 
+    /// These are fetched from the Robot
+    // TODO: Use the Robot class directly (maybe refactor to be more concise)
+    public final org.firstinspires.ftc.teamcode.robot.hardware.Drive leftFrontDrive, rightFrontDrive, leftBackDrive, rightBackDrive;
+
+    /// This is only used in order to call isStopRequested() during the navigationMonitorTicks loop, and for the telemetry
     LinearOpMode opMode;
+    // TODO: This should replaced with a Logger
     Telemetry telemetry;
-    public HardwareMap hardwareMap; // will be set in OpModeManager.runActiveOpMode
-    private ElapsedTime runtime = new ElapsedTime();
+
+    // TODO: Replace this with a local timer variable
+    private final ElapsedTime runtime = new ElapsedTime();
 
     // These values should be replaced in the constructor
     final double COUNTS_PER_MOTOR_REV;  /// Ticks output by the motor encoder for each revolution of the motor shaft
@@ -33,27 +37,21 @@ public class Drive {
     final double WHEEL_DIAMETER_INCHES; /// Self-explanatory
     final double COUNTS_PER_INCH;       /// Translates encoder ticks to inches
 
+    /// These multipliers are used to scale the power of the motors based on the overall power
     HashMap <org.firstinspires.ftc.teamcode.robot.hardware.Drive, Double> motorPowerFactors;
 
-    static double imuSecondOpModeAdjustment = 0;
-
+    /// The robot class, contains all the hardware
     Robot robot;
 
-    double TotalMotorCurrent;
-
+    // This is used to stop the robot from a different thread, set in ceaseMotion and used in the navigationMonitorTicks loop
     boolean mIsStopped = false;
 
-    //For Speed Conservation
-    double timePassed = 0;
-    double actualSpeedX = 0;
-    double actualSpeedY = 0;
     final double SPEEDSCALE = 50;//Speed in inches/second at speed=1
 
     public Drive(Robot robot, LinearOpMode opMode){
         this.robot = robot;
         this.opMode = opMode;
         this.telemetry = opMode.telemetry;
-        this.imu = robot.imu;
 
         this.leftFrontDrive = robot.drives.get(Robot.DrivePos.FRONT_LEFT);
         this.rightFrontDrive = robot.drives.get(Robot.DrivePos.FRONT_RIGHT);
@@ -80,8 +78,6 @@ public class Drive {
     public void navigationByPhi(double targetSpeed, double targetTheta) {
         double rightFrontPowerFactor, leftFrontPowerFactor, rightBackPowerFactor, leftBackPowerFactor;
         double pi = Math.PI;
-        double thetaRight = targetTheta;
-        double thetaLeft = targetTheta;
 
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Path",  "Starting at %7d : %7d",
@@ -92,41 +88,41 @@ public class Drive {
         // reset the timeout time and start motion.
         runtime.reset();
 
-        if(thetaRight > 0 && thetaRight < pi/2){
-            rightFrontPowerFactor = -Math.cos(2 * thetaRight);
-        }else if(thetaRight >= -pi && thetaRight < -pi/2){
-            rightFrontPowerFactor = Math.cos(2 * thetaRight);
-        }else if(thetaRight >= pi/2 && thetaRight <= pi){
+        if(targetTheta > 0 && targetTheta < pi/2){
+            rightFrontPowerFactor = -Math.cos(2 * targetTheta);
+        }else if(targetTheta >= -pi && targetTheta < -pi/2){
+            rightFrontPowerFactor = Math.cos(2 * targetTheta);
+        }else if(targetTheta >= pi/2 && targetTheta <= pi){
             rightFrontPowerFactor = 1;
         }else{
             rightFrontPowerFactor = -1;
         }
 
-        if(thetaLeft > 0 && thetaLeft < pi/2) {
-            leftBackPowerFactor = -Math.cos(2 * thetaLeft);
-        }else if(thetaLeft >= -pi && thetaLeft < -pi/2){
-            leftBackPowerFactor = Math.cos(2 * thetaLeft);
-        }else if(thetaLeft >= pi/2 && thetaLeft <= pi){
+        if(targetTheta > 0 && targetTheta < pi/2) {
+            leftBackPowerFactor = -Math.cos(2 * targetTheta);
+        }else if(targetTheta >= -pi && targetTheta < -pi/2){
+            leftBackPowerFactor = Math.cos(2 * targetTheta);
+        }else if(targetTheta >= pi/2 && targetTheta <= pi){
             leftBackPowerFactor = 1;
         }else{
             leftBackPowerFactor = -1;
         }
 
-        if(thetaRight > -pi/2 && thetaRight < 0) {
-            rightBackPowerFactor = Math.cos(2 * thetaRight);
-        }else if(thetaRight > pi/2 && thetaRight < pi){
-            rightBackPowerFactor = -Math.cos(2 * thetaRight);
-        }else if(thetaRight >= 0 && thetaRight <= pi/2){
+        if(targetTheta > -pi/2 && targetTheta < 0) {
+            rightBackPowerFactor = Math.cos(2 * targetTheta);
+        }else if(targetTheta > pi/2 && targetTheta < pi){
+            rightBackPowerFactor = -Math.cos(2 * targetTheta);
+        }else if(targetTheta >= 0 && targetTheta <= pi/2){
             rightBackPowerFactor = 1;
         }else{
             rightBackPowerFactor = -1;
         }
 
-        if(thetaLeft > -pi/2 && thetaLeft < 0) {
-            leftFrontPowerFactor = Math.cos(2 * thetaLeft);
-        }else if(thetaLeft > pi/2 && thetaLeft < pi){
-            leftFrontPowerFactor = -Math.cos(2 * thetaLeft);
-        }else if(thetaLeft >= 0 && thetaLeft <= pi/2){
+        if(targetTheta > -pi/2 && targetTheta < 0) {
+            leftFrontPowerFactor = Math.cos(2 * targetTheta);
+        }else if(targetTheta > pi/2 && targetTheta < pi){
+            leftFrontPowerFactor = -Math.cos(2 * targetTheta);
+        }else if(targetTheta >= 0 && targetTheta <= pi/2){
             leftFrontPowerFactor = 1;
         }else{
             leftFrontPowerFactor = -1;
@@ -173,8 +169,8 @@ public class Drive {
      * @param xInches inches left/right
      * @param yInches inches forward/backwards
      * @param phi degrees heading (relative)
-     * @param timout seconds
-     * @param shouldMonitorAcceleration should we monitor the acceleration
+     * @param timeoutSec seconds
+     * @param isMonitorAcceleration should we monitor the acceleration
      */
     public void navigationMonitorExternal(double inchesPerSecond, double xInches, double yInches, double phi, double timeoutSec, boolean isMonitorAcceleration) {
         //Borrowed Holonomic robot navigation ideas from https://www.bridgefusion.com/blog/2019/4/10/robot-localization-dead-reckoning-in-f  irst-tech-challenge-ftc
@@ -186,7 +182,7 @@ public class Drive {
         int tickCountPriorRightFront = rightFrontDrive.getCurrentPosition(), tickCountPriorRightBack = rightBackDrive.getCurrentPosition();
         int ticksTraveledLeftFront = 0, ticksTraveledLeftBack = 0, ticksTraveledRightFront = 0, ticksTraveledRightBack = 0;
         double inchesTraveledX = 0, inchesTraveledY = 0, inchesTraveledTotal = 0, rotationInchesTotal = 0;
-        long cycleMillisNow = 0, cycleMillisPrior = System.currentTimeMillis(), cycleMillisDelta, startMillis = System.currentTimeMillis();
+        long cycleMillisNow, cycleMillisPrior = System.currentTimeMillis(), cycleMillisDelta, startMillis = System.currentTimeMillis();
 
         // Get the time it is right now, so we can start the timer
         //long start = System.currentTimeMillis();
@@ -209,7 +205,7 @@ public class Drive {
 
 
 
-            TotalMotorCurrent = leftFrontDrive.getCurrent();
+            double TotalMotorCurrent = leftFrontDrive.getCurrent();
             TotalMotorCurrent += leftBackDrive.getCurrent();
             TotalMotorCurrent += rightFrontDrive.getCurrent();
             TotalMotorCurrent += rightBackDrive.getCurrent();
@@ -255,18 +251,17 @@ public class Drive {
 
             if(runtime.seconds()>.05 && inchesTraveledTotal <= magnitude) {
                 //  timePassed = opMode.getRuntime() - initialTime;//Length of time of the loop
-                actualSpeedX = 1000 * (deltaInchesRobotX / cycleMillisDelta);//gets the actual speed in inches/second in x direction
-                actualSpeedY = 1000 * (deltaInchesRobotY / cycleMillisDelta);//gets the actual speed in inches/second in y direction
+                double actualSpeedX = 1000 * (deltaInchesRobotX / cycleMillisDelta);//gets the actual speed in inches/second in x direction
+                double actualSpeedY = 1000 * (deltaInchesRobotY / cycleMillisDelta);//gets the actual speed in inches/second in y direction
                 //SPEEDSCALE = 24.0;//Speed in inches/second at speed=1
                 //speedScaled = speed * SPEEDSCALE;//Speed in terms of inches/second instead of 0 to 1
 
 
                 double actualSpeed = Math.sqrt((actualSpeedX * actualSpeedX) + (actualSpeedY * actualSpeedY));//Take hypotenuse of speed in x and y
-                Log.i("Speed", String.format("........................................................................................."));
+                Log.i("Speed", ".........................................................................................");
                 Log.i("Speed", String.format("InchesDeltaX, %.3f, InchesDeltaY, %.3f", deltaInchesRobotX, deltaInchesRobotY));
 
                 Log.i("Speed", String.format("Actual Speed in/s:, %.2f", actualSpeed));//log actual speed
-                Log.i("Speed", String.format("Time:, %.2f", timePassed));//log actual speed
 
                 Log.i("Speed", String.format("SpeedScale:, %.1f", SPEEDSCALE));
                 Log.i("Speed", String.format("Target Speed in/s:, %.1f", inchesPerSecond));
@@ -287,7 +282,7 @@ public class Drive {
                 //Log.i("Speed", String.format("New Speed in/s:, %.2f", speed));//log actual speed
                 // speed = speedScaled / SPEEDSCALE;//converts adjusted speed to 0 to 1 scale
                 Log.i("Speed", String.format("New Speed from 0 to 1:, %.2f", speed));//log actual speed
-                Log.i("Speed", String.format("........................................................................................."));
+                Log.i("Speed", ".........................................................................................");
                 //Provide feedback to keep robot moving in right direction based on encoder ticks
 
 
@@ -374,10 +369,15 @@ public class Drive {
                 targetTheta/Math.PI*180, nowTheta/Math.PI*180, adjustedTargetTheta/Math.PI*180, thetaErrorSum/Math.PI*180));
     }
 
-    double mCurrentImuAngle, mPriorImuAngle, mTargetAngle, mAdjustedAngle, mPriorAdjustedAngle, mImuCalibrationAngle, mTargetAngleErrorSum;
+    double mCurrentImuAngle;
+    double mPriorImuAngle;
+    double mTargetAngle;
+    double mAdjustedAngle;
+    double mPriorAdjustedAngle;
+    double mTargetAngleErrorSum;
 
     public void setTargetAngle(double targetAngle){
-        mPriorImuAngle = mTargetAngle = targetAngle + imuSecondOpModeAdjustment;
+        mPriorImuAngle = mTargetAngle = targetAngle;
     }
 
     /**
@@ -388,7 +388,7 @@ public class Drive {
      * @return 0
      */
     public double getImuAngle(){
-        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES);
+        Orientation angles = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES);
         telemetry.addData("IMU Angles (X/Y/Z)", "%.1f / %.1f / %.1f", angles.secondAngle, angles.thirdAngle, angles.firstAngle);
         telemetry.update();
         Log.i(TAG, String.format("getImuAngle: IMU Angles (X/Y/Z): %.1f / %.1f / %.1f", angles.secondAngle, angles.thirdAngle, angles.firstAngle));
@@ -450,7 +450,7 @@ public class Drive {
         Log.i(TAG, String.format("getPowerCorrection: targetAngle: %.2f, imuAngle: %.2f, diffAngle: %.2f, diffAngleSum: %.2f", mTargetAngle, angle, angleError, mTargetAngleErrorSum));
 
         //gain = Math.max(-0.05*Math.abs(angleError) + 0.1, .05);  //Varies from .2 around zero to .05 for errors above 10 degrees
-        pGain = Math.max(-0.05*Math.abs(angleError) + 0.1, .05)/3;  //Varies from .2 around zero to .05 for errors above 10 degrees
+        //pGain = Math.max(-0.05*Math.abs(angleError) + 0.1, .05)/3;  //Varies from .2 around zero to .05 for errors above 10 degrees
         pGain = 0.06 / 8.0;
         iGain = 0.04 / 8.0;
 
@@ -472,16 +472,7 @@ public class Drive {
         return powerCorrection;
     }
 
-    private class Speeds{
-        public double rightSpeed;
-        public double leftSpeed;
-        public Speeds(double right, double left){
-            rightSpeed = right;
-            leftSpeed = left;
-        }
-    }
-
-    private class SpeedsPhi{
+    private static class SpeedsPhi{
         public double rightFrontSpeed;
         public double leftFrontSpeed;
         public double rightBackSpeed;
@@ -496,8 +487,6 @@ public class Drive {
 
     /**
      * Get the adjusted speeds for each side of the robot to allow it to turn enough to stay on a straight line. Only call once per cycle.
-     * @param targetSpeed
-     * @return
      */
     private SpeedsPhi getPhiSpeeds(double targetSpeed, HashMap<org.firstinspires.ftc.teamcode.robot.hardware.Drive, Double> motorPowerFactors){
         double powerCorrection = getPowerCorrection();
@@ -547,13 +536,10 @@ public class Drive {
 
 
     /**
-     *
-     * @param targetAngle
-     * @param nowAngle
      * @return Difference in target angle and nowAngle
      */
     private double calculateAngleDifference(double targetAngle, double nowAngle){
-        double angle1 = 0, angle2 = 0, angleDiff180 = 0, angleDiff0 = 0, angleDifference = 0, returnAngle = 0;
+        double angle1, angle2, angleDiff180 = 0, angleDiff0 = 0, angleDifference;
         if(targetAngle >= 0 && nowAngle <= 0){
             angle1 = Math.PI - targetAngle;
             angle2 = nowAngle + Math.PI;
