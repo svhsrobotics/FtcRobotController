@@ -12,9 +12,9 @@ import org.firstinspires.ftc.teamcode.util.Logger;
 
 public class PowerPlayBotV2 extends Robot {
 
-    static final double REV_COUNTS = 28;
-    static final double GEAR_REDUCTION = 40;
-    static final double WHEEL_DIAMETER = 3;
+    public final double REV_COUNTS = 28;
+    public final double GEAR_REDUCTION = 40;
+    public final double WHEEL_DIAMETER = 3;
 
     public Arm arm;
 
