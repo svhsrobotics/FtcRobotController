@@ -5,6 +5,7 @@ import android.util.Log;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -12,6 +13,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.robot.Robot;
+import org.firstinspires.ftc.teamcode.util.Logger;
 
 import java.util.HashMap;
 
@@ -27,6 +29,7 @@ public class Drive {
     LinearOpMode opMode;
     // TODO: This should replaced with a Logger
     Telemetry telemetry;
+    Logger logger = new Logger();
 
     // TODO: Replace this with a local timer variable
     private final ElapsedTime runtime = new ElapsedTime();
@@ -68,16 +71,13 @@ public class Drive {
         setTargetAngle(0);
     }
 
-    /**navigationByPhi
-     *
+    /**
+     * Utilizes orientation away from the desired location(phi) in order to alter power factors on the motors.
      * @param targetSpeed Desired Speed
      * @param targetTheta Desired Orientation of Robot
-     *
-     * Utilizes orientation away from the desired location(phi) in order to alter power power facotrs on the motors.
      */
     public void navigationByPhi(double targetSpeed, double targetTheta) {
         double rightFrontPowerFactor, leftFrontPowerFactor, rightBackPowerFactor, leftBackPowerFactor;
-        double pi = Math.PI;
 
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Path",  "Starting at %7d : %7d",
@@ -88,43 +88,43 @@ public class Drive {
         // reset the timeout time and start motion.
         runtime.reset();
 
-        if(targetTheta > 0 && targetTheta < pi/2){
+        if (targetTheta > 0 && targetTheta < Math.PI / 2) {
             rightFrontPowerFactor = -Math.cos(2 * targetTheta);
-        }else if(targetTheta >= -pi && targetTheta < -pi/2){
+        } else if (targetTheta >= -Math.PI && targetTheta < -Math.PI / 2) {
             rightFrontPowerFactor = Math.cos(2 * targetTheta);
-        }else if(targetTheta >= pi/2 && targetTheta <= pi){
+        } else if (targetTheta >= Math.PI / 2 && targetTheta <= Math.PI) {
             rightFrontPowerFactor = 1;
-        }else{
+        } else {
             rightFrontPowerFactor = -1;
         }
 
-        if(targetTheta > 0 && targetTheta < pi/2) {
+        if (targetTheta > 0 && targetTheta < Math.PI / 2) {
             leftBackPowerFactor = -Math.cos(2 * targetTheta);
-        }else if(targetTheta >= -pi && targetTheta < -pi/2){
+        } else if (targetTheta >= -Math.PI && targetTheta < -Math.PI / 2) {
             leftBackPowerFactor = Math.cos(2 * targetTheta);
-        }else if(targetTheta >= pi/2 && targetTheta <= pi){
+        } else if (targetTheta >= Math.PI / 2 && targetTheta <= Math.PI) {
             leftBackPowerFactor = 1;
-        }else{
+        } else {
             leftBackPowerFactor = -1;
         }
 
-        if(targetTheta > -pi/2 && targetTheta < 0) {
+        if (targetTheta > -Math.PI / 2 && targetTheta < 0) {
             rightBackPowerFactor = Math.cos(2 * targetTheta);
-        }else if(targetTheta > pi/2 && targetTheta < pi){
+        } else if (targetTheta > Math.PI / 2 && targetTheta < Math.PI) {
             rightBackPowerFactor = -Math.cos(2 * targetTheta);
-        }else if(targetTheta >= 0 && targetTheta <= pi/2){
+        } else if (targetTheta >= 0 && targetTheta <= Math.PI / 2) {
             rightBackPowerFactor = 1;
-        }else{
+        } else {
             rightBackPowerFactor = -1;
         }
 
-        if(targetTheta > -pi/2 && targetTheta < 0) {
+        if (targetTheta > -Math.PI / 2 && targetTheta < 0) {
             leftFrontPowerFactor = Math.cos(2 * targetTheta);
-        }else if(targetTheta > pi/2 && targetTheta < pi){
+        } else if (targetTheta > Math.PI / 2 && targetTheta < Math.PI) {
             leftFrontPowerFactor = -Math.cos(2 * targetTheta);
-        }else if(targetTheta >= 0 && targetTheta <= pi/2){
+        } else if (targetTheta >= 0 && targetTheta <= Math.PI / 2) {
             leftFrontPowerFactor = 1;
-        }else{
+        } else {
             leftFrontPowerFactor = -1;
         }
 
@@ -132,9 +132,60 @@ public class Drive {
         motorPowerFactors.put(leftBackDrive, leftBackPowerFactor);
         motorPowerFactors.put(rightFrontDrive, rightFrontPowerFactor);
         motorPowerFactors.put(rightBackDrive, rightBackPowerFactor);
-
         SpeedsPhi speedsPhi = getPhiSpeeds(targetSpeed, motorPowerFactors);
         setMotorPowersPhi(speedsPhi);
+    }
+
+    HashMap<org.firstinspires.ftc.teamcode.robot.hardware.Drive, Double> getPowerFactors(double theta) {
+        double rightFrontPowerFactor, leftFrontPowerFactor, rightBackPowerFactor, leftBackPowerFactor;
+
+        if (theta > 0 && theta < Math.PI / 2) {
+            rightFrontPowerFactor = -Math.cos(2 * theta);
+        } else if (theta >= -Math.PI && theta < -Math.PI / 2) {
+            rightFrontPowerFactor = Math.cos(2 * theta);
+        } else if (theta >= Math.PI / 2 && theta <= Math.PI) {
+            rightFrontPowerFactor = 1;
+        } else {
+            rightFrontPowerFactor = -1;
+        }
+
+        if (theta > 0 && theta < Math.PI / 2) {
+            leftBackPowerFactor = -Math.cos(2 * theta);
+        } else if (theta >= -Math.PI && theta < -Math.PI / 2) {
+            leftBackPowerFactor = Math.cos(2 * theta);
+        } else if (theta >= Math.PI / 2 && theta <= Math.PI) {
+            leftBackPowerFactor = 1;
+        } else {
+            leftBackPowerFactor = -1;
+        }
+
+        if (theta > -Math.PI / 2 && theta < 0) {
+            rightBackPowerFactor = Math.cos(2 * theta);
+        } else if (theta > Math.PI / 2 && theta < Math.PI) {
+            rightBackPowerFactor = -Math.cos(2 * theta);
+        } else if (theta >= 0 && theta <= Math.PI / 2) {
+            rightBackPowerFactor = 1;
+        } else {
+            rightBackPowerFactor = -1;
+        }
+
+        if (theta > -Math.PI / 2 && theta < 0) {
+            leftFrontPowerFactor = Math.cos(2 * theta);
+        } else if (theta > Math.PI / 2 && theta < Math.PI) {
+            leftFrontPowerFactor = -Math.cos(2 * theta);
+        } else if (theta >= 0 && theta <= Math.PI / 2) {
+            leftFrontPowerFactor = 1;
+        } else {
+            leftFrontPowerFactor = -1;
+        }
+
+        HashMap<org.firstinspires.ftc.teamcode.robot.hardware.Drive, Double> powerFactors = new HashMap<>();
+        powerFactors.put(leftFrontDrive, leftFrontPowerFactor);
+        powerFactors.put(leftBackDrive, leftBackPowerFactor);
+        powerFactors.put(rightFrontDrive, rightFrontPowerFactor);
+        powerFactors.put(rightBackDrive, rightBackPowerFactor);
+
+        return powerFactors;
     }
 
 
@@ -162,6 +213,24 @@ public class Drive {
         navigationMonitorExternal(speed, xInches, yInches, phi, timout, false);
     }
 
+    public void navigate(double speed, double x, double y) {
+        double theta = Math.atan2(y, x); // angle to travel
+        double magnitude = Math.hypot(x, y); // distance to travel
+
+        speed = speed / SPEEDSCALE; // scale speed
+
+        double currentPhi = getAngleFromIMU(); // current heading
+        double phi = 0; // target heading
+
+        HashMap<org.firstinspires.ftc.teamcode.robot.hardware.Drive, Double> powerFactors = getPowerFactors(theta);
+        double powerCorrection = getPowerCorrection(phi);
+        MotorGroup<Double> phiSpeeds = getPhiSpeeds(speed, powerCorrection, powerFactors);
+
+
+
+
+    }
+
     /**
      * This is the underlying version that also provides an "external" lambda that
      * can decide to prematurely stop the control loop.
@@ -173,14 +242,13 @@ public class Drive {
      * @param isMonitorAcceleration should we monitor the acceleration
      */
     public void navigationMonitorExternal(double inchesPerSecond, double xInches, double yInches, double phi, double timeoutSec, boolean isMonitorAcceleration) {
-        //Borrowed Holonomic robot navigation ideas from https://www.bridgefusion.com/blog/2019/4/10/robot-localization-dead-reckoning-in-f  irst-tech-challenge-ftc
+        //Borrowed Holonomic robot navigation ideas from https://www.bridgefusion.com/blog/2019/4/10/robot-localization-dead-reckoning-in-first-tech-challenge-ftc
         //    Robot Localization -- Dead Reckoning in First Tech Challenge (FTC)
         Log.i("start", "#$#$#$#$#$#$#$#$#$");
         double theta = Math.atan2(yInches, xInches);
         double magnitude = Math.hypot(xInches, yInches);
         int tickCountPriorLeftFront = leftFrontDrive.getCurrentPosition(), tickCountPriorLeftBack = leftBackDrive.getCurrentPosition();
         int tickCountPriorRightFront = rightFrontDrive.getCurrentPosition(), tickCountPriorRightBack = rightBackDrive.getCurrentPosition();
-        int ticksTraveledLeftFront = 0, ticksTraveledLeftBack = 0, ticksTraveledRightFront = 0, ticksTraveledRightBack = 0;
         double inchesTraveledX = 0, inchesTraveledY = 0, inchesTraveledTotal = 0, rotationInchesTotal = 0;
         long cycleMillisNow, cycleMillisPrior = System.currentTimeMillis(), cycleMillisDelta, startMillis = System.currentTimeMillis();
 
@@ -201,29 +269,17 @@ public class Drive {
         setTargetAngle(angle_fudged);
 
         while (opMode.opModeIsActive() && System.currentTimeMillis() < startMillis + (1000 * timeoutSec) && inchesTraveledTotal <= magnitude && !mIsStopped && !shouldStopIfApplicable(isMonitorAcceleration, startMillis)){
-//For Speed Changing
-
-
-
-            double TotalMotorCurrent = leftFrontDrive.getCurrent();
-            TotalMotorCurrent += leftBackDrive.getCurrent();
-            TotalMotorCurrent += rightFrontDrive.getCurrent();
-            TotalMotorCurrent += rightBackDrive.getCurrent();
-            Log.i(TAG,"navigationMonitorTicks: Total Motor Current= "+ TotalMotorCurrent);
-
-
             int tickCountNowLeftFront = leftFrontDrive.getCurrentPosition();
             int tickCountNowLeftBack = leftBackDrive.getCurrentPosition();
             int tickCountNowRightFront = rightFrontDrive.getCurrentPosition();
             int tickCountNowRightBack = rightBackDrive.getCurrentPosition();
+
             int deltaTicksLeftFront = tickCountNowLeftFront - tickCountPriorLeftFront;
             int deltaTicksLeftBack = tickCountNowLeftBack - tickCountPriorLeftBack;
             int deltaTicksRightFront = tickCountNowRightFront - tickCountPriorRightFront;
             int deltaTicksRightBack = tickCountNowRightBack - tickCountPriorRightBack;
-            ticksTraveledLeftFront += deltaTicksLeftFront;
-            ticksTraveledLeftBack += deltaTicksLeftBack;
-            ticksTraveledRightFront += deltaTicksRightFront;
-            ticksTraveledRightBack += deltaTicksRightBack;
+
+
             double leftFrontInchesDelta = deltaTicksLeftFront / COUNTS_PER_INCH;
             double rightFrontInchesDelta = -deltaTicksRightFront / COUNTS_PER_INCH;  //Minus sign converts to holonomic drive perspective
             double rightBackInchesDelta = -deltaTicksRightBack / COUNTS_PER_INCH;  //Minus sign converts to holonomic drive perspective
@@ -293,14 +349,14 @@ public class Drive {
 
 
 
-            telemetry.addData("Ticks Traveled (lf, lb)", "%7d, %7d", ticksTraveledLeftFront, ticksTraveledLeftBack);
-            telemetry.addData("Ticks Traveled (rf, rb)", "%7d, %7d", ticksTraveledRightFront, ticksTraveledRightBack);
+            //telemetry.addData("Ticks Traveled (lf, lb)", "%7d, %7d", ticksTraveledLeftFront, ticksTraveledLeftBack);
+            //telemetry.addData("Ticks Traveled (rf, rb)", "%7d, %7d", ticksTraveledRightFront, ticksTraveledRightBack);
             telemetry.addData("In Traveled (X, Y)", "X: %.1f, Y: %.1f", inchesTraveledX, inchesTraveledY);
             telemetry.addData("In Traveled (Tot, Rot)", "%.1f, %.1f", inchesTraveledTotal,rotationInchesTotal);
             telemetry.addData("Cycle Millis:", "%d", cycleMillisDelta);
             telemetry.update();
-            Log.i("Drive", String.format("Ticks Traveled (lf, lb): %7d, %7d", ticksTraveledLeftFront, ticksTraveledLeftBack));
-            Log.i("Drive", String.format("Ticks Traveled (rf, rb): %7d, %7d", ticksTraveledRightFront, ticksTraveledRightBack));
+            //Log.i("Drive", String.format("Ticks Traveled (lf, lb): %7d, %7d", ticksTraveledLeftFront, ticksTraveledLeftBack));
+            //Log.i("Drive", String.format("Ticks Traveled (rf, rb): %7d, %7d", ticksTraveledRightFront, ticksTraveledRightBack));
             Log.i("Drive", String.format("Ticks Delta (lf, lb): %7d, %7d", deltaTicksLeftFront, deltaTicksLeftBack));
             Log.i("Drive", String.format("Ticks Delta (rf, rb): %7d, %7d", deltaTicksRightFront, deltaTicksRightBack));
             Log.i("Drive", String.format("In Traveled (X, Y): X: %.2f, Y: %.2f", inchesTraveledX, inchesTraveledY));
@@ -369,16 +425,16 @@ public class Drive {
                 targetTheta/Math.PI*180, nowTheta/Math.PI*180, adjustedTargetTheta/Math.PI*180, thetaErrorSum/Math.PI*180));
     }
 
-    double mCurrentImuAngle;
-    double mPriorImuAngle;
-    double mTargetAngle;
-    double mAdjustedAngle;
-    double mPriorAdjustedAngle;
-    double mTargetAngleErrorSum;
+    //double mCurrentImuAngle;
+    //double mPriorImuAngle;
+    //double mTargetAngle;
+    //double mAdjustedAngle;
+    //double mPriorAdjustedAngle;
+    //double mTargetAngleErrorSum;
 
-    public void setTargetAngle(double targetAngle){
-        mPriorImuAngle = mTargetAngle = targetAngle;
-    }
+    //public void setTargetAngle(double targetAngle){
+    //    mPriorImuAngle = mTargetAngle = targetAngle;
+    //}
 
     /**
      *We experimentally determined the Z axis is the axis we want to use for heading angle.
@@ -396,12 +452,20 @@ public class Drive {
 
     }
 
+    private double getAngleFromIMU() {
+        return robot.imu.getAngularOrientation(
+                AxesReference.INTRINSIC,
+                AxesOrder.ZYX,
+                AngleUnit.DEGREES
+        ).firstAngle;
+    }
+
     /**
      *
      * @return New adjusted angle used to create adjusted power levels
      */
     public double getAdjustedAngle(){
-        return mAdjustedAngle = getEulerAngleDegrees(getImuAngle());
+        return mAdjustedAngle = convertToHeading(getImuAngle());
     }
 
     /**
@@ -419,77 +483,62 @@ public class Drive {
 
     /**
      * Convert an angle such that -180 <= angle <= 180
+     * Calling this a "heading" is much more clear then an "euler angle"
      */
-    private double getEulerAngleDegrees(double angle){
-        double modAngle = angle%360;
-        if(modAngle < -180) return modAngle + 360;
+    private double convertToHeading(double angle) {
+        double modAngle = angle % 360;
+        if (modAngle < -180) return modAngle + 360;
         else if (modAngle > 180) return modAngle - 360;
         else return modAngle;
     }
+
+    double errorSum; /// Sum of all errors, used in PID equation
 
     /**
      * See if we are moving in a straight line and if not return a power correction value.
      * @return Power adjustment, + is adjust left - is adjust right.
      */
-    private double getPowerCorrection()
-    {
+    private double getPowerCorrection(double targetAngle) {
         // The gain value determines how sensitive the correction is to direction changes.
         // You will have to experiment with your robot to get small smooth direction changes
         // to stay on a straight line.
-        double angleError, powerCorrection, angle, pGain, iGain;
 
-        angle = getAdjustedAngle();  //IMU angle converted to Euler angle (IMU may already deliver Euler angles)
+        double angle = convertToHeading(getAngleFromIMU());
 
-        angleError = getEulerAngleDegrees(mTargetAngle - angle);        // reverse sign of angle for correction.
-        mTargetAngleErrorSum += angleError;
-        int MAX_ERROR_ANGLE_SUM = 3;
-        if(mTargetAngleErrorSum > MAX_ERROR_ANGLE_SUM)
-            mTargetAngleErrorSum = MAX_ERROR_ANGLE_SUM;
-        else if(mTargetAngleErrorSum < -MAX_ERROR_ANGLE_SUM)
-            mTargetAngleErrorSum = -MAX_ERROR_ANGLE_SUM;
-        Log.i(TAG, String.format("getPowerCorrection: targetAngle: %.2f, imuAngle: %.2f, diffAngle: %.2f, diffAngleSum: %.2f", mTargetAngle, angle, angleError, mTargetAngleErrorSum));
+        double angleError = convertToHeading(targetAngle - angle);
+        errorSum += angleError;
+        // Limit the error sum to the range -3 to 3
+        errorSum = Range.clip(errorSum, -3, 3);
 
-        //gain = Math.max(-0.05*Math.abs(angleError) + 0.1, .05);  //Varies from .2 around zero to .05 for errors above 10 degrees
-        //pGain = Math.max(-0.05*Math.abs(angleError) + 0.1, .05)/3;  //Varies from .2 around zero to .05 for errors above 10 degrees
-        pGain = 0.06 / 8.0;
-        iGain = 0.04 / 8.0;
+        double pGain = 0.06 / 8.0; // How we wait the current error
+        double iGain = 0.04 / 8.0; // How we weight the error sum
 
-        // If the angleError is really big, go open-loop for a bit to speed up the turn
-        if (Math.abs(angleError) > 20) {
+        // TODO: If the angleError is really big, go open-loop for a bit to speed up the turn
+        /*if (Math.abs(angleError) > 20) {
             pGain += 1000;
-        }
+        }*/
 
-        powerCorrection = angleError * pGain + mTargetAngleErrorSum * iGain;
-
-        android.util.Log.d("angleError", String.valueOf(angleError));
-        android.util.Log.d("mTargetAngleErrorSum", String.valueOf(mTargetAngleErrorSum));
-        android.util.Log.d("mTargetAngle", String.valueOf(mTargetAngle));
-
-        /*telemetry.addData("angleError", angleError);
-        telemetry.addData("mTargetAngleErrorSum", mTargetAngleErrorSum);
-        telemetry.addData("mTargetAngle", mTargetAngle);*/
-
-        return powerCorrection;
+        return angleError * pGain + errorSum * iGain;
     }
 
-    private static class SpeedsPhi{
-        public double rightFrontSpeed;
-        public double leftFrontSpeed;
-        public double rightBackSpeed;
-        public double leftBackSpeed;
-        public SpeedsPhi(double leftFront, double leftBack, double rightFront, double rightBack){
-            leftFrontSpeed = leftFront;
-            leftBackSpeed = leftBack;
-            rightFrontSpeed = rightFront;
-            rightBackSpeed = rightBack;
+    private static class MotorGroup<T> {
+        public T leftFront;
+        public T leftBack;
+        public T rightFront;
+        public T rightBack;
+
+        public MotorGroup(T leftFront, T leftBack, T rightFront, T rightBack) {
+            this.leftFront = leftFront;
+            this.leftBack = leftBack;
+            this.rightFront = rightFront;
+            this.rightBack = rightBack;
         }
     }
 
     /**
      * Get the adjusted speeds for each side of the robot to allow it to turn enough to stay on a straight line. Only call once per cycle.
      */
-    private SpeedsPhi getPhiSpeeds(double targetSpeed, HashMap<org.firstinspires.ftc.teamcode.robot.hardware.Drive, Double> motorPowerFactors){
-        double powerCorrection = getPowerCorrection();
+    private MotorGroup<Double> getPhiSpeeds(double targetSpeed, double powerCorrection, HashMap<org.firstinspires.ftc.teamcode.robot.hardware.Drive, Double> motorPowerFactors){
         double adjustedLeftFrontSpeed, adjustedLeftBackSpeed, adjustedRightFrontSpeed, adjustedRightBackSpeed;
 
         if(motorPowerFactors.get(leftFrontDrive)*targetSpeed - powerCorrection > 1){
@@ -524,14 +573,7 @@ public class Drive {
             adjustedRightBackSpeed = motorPowerFactors.get(rightBackDrive) * targetSpeed + powerCorrection;
         }
 
-        mPriorImuAngle = mCurrentImuAngle;
-        mPriorAdjustedAngle = mAdjustedAngle;
-        Log.i(TAG, String.format("getSpeedsPhi: targetSpeed: %.3f, powerCorrection: %.3f", targetSpeed, powerCorrection));
-        Log.i(TAG, String.format("getSpeedsPhi: adjustedLeftFrontSpeed: %.3f, adjustedLeftBackSpeed: %.3f, adjustedRightFrontSpeed: %.3f, adjustedRightBackSpeed: %.3f",
-                adjustedLeftFrontSpeed, adjustedLeftBackSpeed, adjustedRightFrontSpeed, adjustedRightBackSpeed));
-        Log.i(TAG, String.format("getSpeedsPhi: leftFrontMotorPowerFactor: %.3f, leftBackMotorPowerFactor: %.3f, rightFrontMotorPowerFactor: %.3f, rightBackMotorPowerFactor: %.3f",
-                motorPowerFactors.get(leftFrontDrive), motorPowerFactors.get(leftBackDrive), motorPowerFactors.get(rightFrontDrive), motorPowerFactors.get(rightBackDrive)));
-        return new SpeedsPhi(adjustedLeftFrontSpeed, adjustedLeftBackSpeed, adjustedRightFrontSpeed, adjustedRightBackSpeed);
+        return new MotorGroup<>(adjustedLeftFrontSpeed, adjustedLeftBackSpeed, adjustedRightFrontSpeed, adjustedRightBackSpeed);
     }
 
 
