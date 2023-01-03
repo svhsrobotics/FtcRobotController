@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Shared;
 
+import android.annotation.SuppressLint;
 import android.util.Log;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -17,6 +18,7 @@ import org.firstinspires.ftc.teamcode.util.Logger;
 
 import java.util.HashMap;
 
+@SuppressLint("DefaultLocale")
 public class Drive {
     // Used to when calling Android's Log class
     String TAG = "Drive";
@@ -305,7 +307,7 @@ public class Drive {
 
 //Working on Changing Speed to be consistent
 
-            if(runtime.seconds()>.05 && inchesTraveledTotal <= magnitude) {
+            if(runtime.seconds()>.05 && inchesTraveledTotal <= magnitude && ) {
                 //  timePassed = opMode.getRuntime() - initialTime;//Length of time of the loop
                 double actualSpeedX = 1000 * (deltaInchesRobotX / cycleMillisDelta);//gets the actual speed in inches/second in x direction
                 double actualSpeedY = 1000 * (deltaInchesRobotY / cycleMillisDelta);//gets the actual speed in inches/second in y direction
@@ -494,6 +496,10 @@ public class Drive {
 
     double errorSum; /// Sum of all errors, used in PID equation
 
+    private boolean doneTurning(double targetAngle) {
+        return getPowerCorrection(targetAngle) < 0.1;
+    }
+
     /**
      * See if we are moving in a straight line and if not return a power correction value.
      * @return Power adjustment, + is adjust left - is adjust right.
@@ -517,6 +523,7 @@ public class Drive {
         /*if (Math.abs(angleError) > 20) {
             pGain += 1000;
         }*/
+        logger.debug(String.format("Power Correction: %f", angleError * pGain + errorSum * iGain));
 
         return angleError * pGain + errorSum * iGain;
     }
