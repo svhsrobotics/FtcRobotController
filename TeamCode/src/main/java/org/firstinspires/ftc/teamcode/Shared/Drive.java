@@ -200,11 +200,13 @@ public class Drive {
         double angle_fudged = phi - (phi * (1.5 / 90.0));
         setTargetAngle(angle_fudged);
 
-        while (opMode.opModeIsActive() && System.currentTimeMillis() < startMillis + (1000 * timeoutSec) && inchesTraveledTotal <= magnitude && !mIsStopped && !shouldStopIfApplicable(isMonitorAcceleration, startMillis)){
-//For Speed Changing
-
-
-
+        while (opMode.opModeIsActive()
+                && System.currentTimeMillis() < startMillis + (1000 * timeoutSec)
+                && inchesTraveledTotal <= magnitude
+                && !mIsStopped
+                && !shouldStopIfApplicable(isMonitorAcceleration, startMillis)
+                && getPowerCorrection() < 0.1 // We're not actively working to correct our phi angle
+        ) {
             double TotalMotorCurrent = leftFrontDrive.getCurrent();
             TotalMotorCurrent += leftBackDrive.getCurrent();
             TotalMotorCurrent += rightFrontDrive.getCurrent();
