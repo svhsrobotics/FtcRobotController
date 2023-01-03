@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.Shared.Drive2;
 import org.firstinspires.ftc.teamcode.robot.PowerPlayBotV2;
 import org.firstinspires.ftc.teamcode.util.Logger;
 //import org.firstinspires.ftc.teamcode.vision.TensorflowStandardSleeve;
+import org.firstinspires.ftc.teamcode.vision.AprilTagPipeline;
 import org.firstinspires.ftc.teamcode.vision.TensorflowStandardSleeve;
 import org.firstinspires.ftc.teamcode.vision.TfodSleeve;
 
@@ -20,13 +21,16 @@ public class AllAutomovement extends LinearOpMode {
         robot.initHardware();
         Drive2 drive = new Drive2(robot, this);
 
-        // Initialize TensorFlow before init because it takes awhile
-        TensorflowStandardSleeve tensor = new TensorflowStandardSleeve(this);
-        tensor.init();
+        AprilTagPipeline pipeline = new AprilTagPipeline();
+        robot.camera.setPipeline(pipeline);
+        robot.camera.open();
 
         waitForStart();
-        // Request the result after init b/c it should have been randomized
-        TfodSleeve detected = tensor.scanStandardSleeve();
+
+        while (pipeline.getIds() == null) {};
+
+        int detected = pipeline.getIds()[0];
+        robot.camera.close();
 
         logger.info("Sleeve Detected: " + detected);
 
@@ -46,15 +50,15 @@ public class AllAutomovement extends LinearOpMode {
 
 
         switch(detected) {
-            case THREE: // This is the rightmost slot
+            case 16: // This is the rightmost slot
                 drive.navigationMonitorTicks(20, 70.5, 0, 10);
                 drive.ceaseMotion();
                 break;
-            case TWO: // This is the center slot
+            case 15: // This is the center slot
                 drive.navigationMonitorTicks(20, 20, 0, 10);
                 drive.ceaseMotion();
                 break;
-            case ONE: // This is the leftmost slot
+            case 14: // This is the leftmost slot
                 drive.navigationMonitorTicks(20, -32, 0, 10);
                 drive.ceaseMotion();
                 break;
