@@ -12,6 +12,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.robot.Robot;
+import org.firstinspires.ftc.teamcode.util.Logger;
 
 import java.util.HashMap;
 
@@ -27,6 +28,7 @@ public class Drive {
     LinearOpMode opMode;
     // TODO: This should replaced with a Logger
     Telemetry telemetry;
+    Logger logger = new Logger();
 
     // TODO: Replace this with a local timer variable
     private final ElapsedTime runtime = new ElapsedTime();
@@ -52,6 +54,7 @@ public class Drive {
         this.robot = robot;
         this.opMode = opMode;
         this.telemetry = opMode.telemetry;
+        this.logger = new Logger(opMode.telemetry);
 
         this.leftFrontDrive = robot.drives.get(Robot.DrivePos.FRONT_LEFT);
         this.rightFrontDrive = robot.drives.get(Robot.DrivePos.FRONT_RIGHT);
@@ -159,20 +162,24 @@ public class Drive {
      * @param timout seconds
      */
     public void navigationMonitorTicksPhi(double speed, double xInches, double yInches, double phi, double timout) {
-        navigationMonitorExternal(speed, xInches, yInches, phi, timout, false);
+        internalNavigationLoop(speed, xInches, yInches, phi, timout, false, true);
+    }
+
+    public void navigationMonitorTurn(double phi) {
+        // We only want to turn, but due to a bug in the navigation loop, it will not work if both x/y are 0.
+        // So we'll set x to 1, and the speed to 0 so that it doesn't actually move.
+        // monitorTotalTravel is set to false so that the loop is not blocked until the correct number of ticks are reached (which will never happen)
+        internalNavigationLoop(0, 1, 0, phi, 0, false, false);
+    }
+
+    public void navigationMonitorExternal(double inchesPerSecond, double xInches, double yInches, double phi, double timeoutSec, boolean isMonitorAcceleration) {
+        internalNavigationLoop(inchesPerSecond, xInches, yInches, phi, timeoutSec, isMonitorAcceleration, true);
     }
 
     /**
-     * This is the underlying version that also provides an "external" lambda that
-     * can decide to prematurely stop the control loop.
-     * @param inchesPerSecond inches per second
-     * @param xInches inches left/right
-     * @param yInches inches forward/backwards
-     * @param phi degrees heading (relative)
-     * @param timeoutSec seconds
-     * @param isMonitorAcceleration should we monitor the acceleration
+     * INTERNAL USE ONLY. Takes care of the navigation loop, lots of parameters that should be engaged with other functions.
      */
-    public void navigationMonitorExternal(double inchesPerSecond, double xInches, double yInches, double phi, double timeoutSec, boolean isMonitorAcceleration) {
+    private void internalNavigationLoop(double inchesPerSecond, double xInches, double yInches, double phi, double timeoutSec, boolean isMonitorAcceleration, boolean monitorTotalTravel) {
         //Borrowed Holonomic robot navigation ideas from https://www.bridgefusion.com/blog/2019/4/10/robot-localization-dead-reckoning-in-f  irst-tech-challenge-ftc
         //    Robot Localization -- Dead Reckoning in First Tech Challenge (FTC)
         Log.i("start", "#$#$#$#$#$#$#$#$#$");
@@ -197,16 +204,28 @@ public class Drive {
         //setTargetAngle(mImuCalibrationAngle);
 
         // We fudge the angle a little, because something is wrong...
+        // TODO: Investigate this fudge
         double angle_fudged = phi - (phi * (1.5 / 90.0));
         setTargetAngle(angle_fudged);
 
-        while (opMode.opModeIsActive()
-                && System.currentTimeMillis() < startMillis + (1000 * timeoutSec)
-                && inchesTraveledTotal <= magnitude
-                && !mIsStopped
-                && !shouldStopIfApplicable(isMonitorAcceleration, startMillis)
-                && getPowerCorrection() < 0.1 // We're not actively working to correct our phi angle
+        int settleCounter = 0;
+
+        // Stay in the main loop while:
+        while (opMode.opModeIsActive() // The opmode is still active
+                && System.currentTimeMillis() < startMillis + (1000 * timeoutSec) // We haven't timed out
+                && (monitorTotalTravel && (inchesTraveledTotal < magnitude)) // We are monitoring total travel, and we haven't reached the target yet
+                || (settleCounter < 3) // We are waiting for the robot to settle
+                && !mIsStopped // We haven't been told to stop (by another thread)
+                && !shouldStopIfApplicable(isMonitorAcceleration, startMillis) // We haven't been told to stop (by the acceleration monitor)
         ) {
+            if (getEulerAngleDegrees(mTargetAngle - getAdjustedAngle()) < 1) {
+                // If we're really close to the target, increase the settle counter
+                settleCounter++;
+            } else {
+                // If we're not close, reset the settle counter
+                settleCounter = 0;
+            }
+
             double TotalMotorCurrent = leftFrontDrive.getCurrent();
             TotalMotorCurrent += leftBackDrive.getCurrent();
             TotalMotorCurrent += rightFrontDrive.getCurrent();
@@ -346,6 +365,7 @@ public class Drive {
     private double thetaErrorSum;
     public void adjustThetaInit() { thetaErrorSum = 0; }
     public void adjustTheta(double targetX, double targetY, double targetSpeed, double nowX, double nowY){
+        // TODO: Why is this testing the target angle
         if(nowX == 0 && nowY == 0 && mTargetAngle == 0){
             Log.i("Drive", "adjustTheta: nowX and nowY are both still zero so not computing an adjustment factor yet");
             return;
@@ -441,7 +461,6 @@ public class Drive {
         double angleError, powerCorrection, angle, pGain, iGain;
 
         angle = getAdjustedAngle();  //IMU angle converted to Euler angle (IMU may already deliver Euler angles)
-
         angleError = getEulerAngleDegrees(mTargetAngle - angle);        // reverse sign of angle for correction.
         mTargetAngleErrorSum += angleError;
         int MAX_ERROR_ANGLE_SUM = 3;
@@ -457,9 +476,9 @@ public class Drive {
         iGain = 0.04 / 8.0;
 
         // If the angleError is really big, go open-loop for a bit to speed up the turn
-        if (Math.abs(angleError) > 20) {
-            pGain += 1000;
-        }
+        //if (Math.abs(angleError) > 20) {
+        //    pGain += 1000;
+        //}
 
         powerCorrection = angleError * pGain + mTargetAngleErrorSum * iGain;
 
@@ -470,6 +489,8 @@ public class Drive {
         /*telemetry.addData("angleError", angleError);
         telemetry.addData("mTargetAngleErrorSum", mTargetAngleErrorSum);
         telemetry.addData("mTargetAngle", mTargetAngle);*/
+
+        logger.debug("power correction: " + powerCorrection);
 
         return powerCorrection;
     }

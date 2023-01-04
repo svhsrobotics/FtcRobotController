@@ -19,7 +19,8 @@ public class Rotation extends LinearOpMode {
 
         waitForStart();
 
-        drive.navigationMonitorTicksPhi(0, 999999, 9999999, 90, 10);
+        //drive.navigationMonitorTicksPhi(0, 1, 0, 90, 10);
+        drive.navigationMonitorTurn(90);
         drive.ceaseMotion();
     }
 }
