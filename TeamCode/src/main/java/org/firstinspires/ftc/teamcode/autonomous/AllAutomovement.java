@@ -35,48 +35,64 @@ public class AllAutomovement extends LinearOpMode {
 
         logger.info("Sleeve Detected: " + detected);
         // Get the cone in the pincher and get ready to drive
-        robot.arm.pincher.expand();
-        // Move up to the pole
-        drive.navigationMonitorTicks(12,0,3.5,10);
-        robot.arm.lift.setPreset(Arm.Lift.Preset.DRIVING);
-        drive.ceaseMotion();
-        drive.navigationMonitorTicks(15,32 + 30,0,10);
-        drive.ceaseMotion();
-        drive.navigationMonitorTicks(25, 0, 66.5, 10);
-        drive.ceaseMotion();
-        drive.navigationMonitorTicks(13, 0, 18, 10);
-        drive.ceaseMotion();
-        drive.navigationMonitorTicks(20, -25, 0, 10);
-        drive.ceaseMotion();
-        //drive.na
-        drive.navigationMonitorTicksPhi(0, 10, 0 ,70,1);
-
+//        robot.arm.pincher.expand();
+//        // Move up to the pole
+//        drive.navigationMonitorTicks(12,0,3.5,10);
+//        robot.arm.lift.setPreset(Arm.Lift.Preset.DRIVING);
+//        drive.ceaseMotion();
+//        drive.navigationMonitorTicks(15,32 + 30,0,10);
+//        drive.ceaseMotion();
+//        drive.navigationMonitorTicks(25, 0, 66.5, 10);
+//        drive.ceaseMotion();
+//        drive.navigationMonitorTicks(13, 0, 18, 10);
+//        drive.ceaseMotion();
+//        drive.navigationMonitorTicks(20, -25, 0, 10);
+//        drive.ceaseMotion();
+//        drive.navigationMonitorTurn(70);
+        // Arm should move up and outwards to the first pole and drop a cone then hopefully not hit anything on its way down
         robot.arm.lift.setPreset(Arm.Lift.Preset.HIGH_POLE);
         while (robot.arm.lift.isBusy() && !isStopRequested()) {}
-        robot.arm.reacher.setTargetPosition(2000);
-        while (robot.arm.reacher.isBusy() && !isStopRequested()) {}
-        robot.arm.pincher.contract();
-        robot.arm.reacher.setTargetPosition(0);
-        while (robot.arm.reacher.isBusy() && !isStopRequested()) {}
-        robot.arm.lift.setPreset(Arm.Lift.Preset.DRIVING);
-        while (robot.arm.lift.isBusy() && !isStopRequested()) {}
+        while (opModeIsActive()) {}
+//        robot.arm.reacher.setTargetPosition(2000);
+//        while (robot.arm.reacher.isBusy() && !isStopRequested()) {}
+//        robot.arm.pincher.contract();
+//        robot.arm.reacher.setTargetPosition(0);
+//        while (robot.arm.reacher.isBusy() && !isStopRequested()) {}
+//        robot.arm.lift.setPreset(Arm.Lift.Preset.DRIVING);
+//        while (robot.arm.lift.isBusy() && !isStopRequested()) {}
         // This is where the pole would be dropped
+//        Now the car should turn and get a cone from the cone pile and then come back
+//        drive.navigationMonitorTurn(0);
+//        drive.navigationMonitorTurn(-90);
+//        robot.arm.pincher.contract();
+//        robot.arm.lift.setTargetPosition(600);
+//        while (robot.arm.lift.isBusy() && !isStopRequested()) {}
+//        robot.arm.reacher.setTargetPosition(500);
+//        while (robot.arm.reacher.isBusy() && !isStopRequested()) {}
+//        robot.arm.lift.setTargetPosition(500);
+//        while (robot.arm.lift.isBusy() && !isStopRequested()) {}
+//        robot.arm.pincher.expand();
+//        robot.arm.lift.setTargetPosition(600);
+//        while (robot.arm.lift.isBusy() && !isStopRequested()) {}
+//        robot.arm.reacher.setTargetPosition(0);
+//        while (robot.arm.reacher.isBusy() && !isStopRequested()) {}
 
 
-        switch(detected) {
-            case 16: // This is the rightmost slot
-                drive.navigationMonitorTicks(20, 70.5, 0, 10);
-                drive.ceaseMotion();
-                break;
-            case 15: // This is the center slot
-                drive.navigationMonitorTicks(20, 20, 0, 10);
-                drive.ceaseMotion();
-                break;
-            case 14: // This is the leftmost slot
-                drive.navigationMonitorTicks(20, -32, 0, 10);
-                drive.ceaseMotion();
-                break;
-        }
+
+//        switch(detected) {
+//            case 16: // This is the rightmost slot
+//                drive.navigationMonitorTicks(20, 70.5, 0, 10);
+//                drive.ceaseMotion();
+//                break;
+//            case 15: // This is the center slot
+//                drive.navigationMonitorTicks(20, 20, 0, 10);
+//                drive.ceaseMotion();
+//                break;
+//            case 14: // This is the leftmost slot
+//                drive.navigationMonitorTicks(20, -32, 0, 10);
+//                drive.ceaseMotion();
+//                break;
+//        }
     }
 }
 
