@@ -41,10 +41,16 @@ public class AprilTagPipeline extends OpenCvPipeline
     /// This function does all the actual work. It works with JNI pointers, be careful!
     private synchronized int[] detectTags(Mat input) {
         // Get a JNI pointer to the array containing the detections
+        if (nativeApriltagPtr == 0) {
+            throw new RuntimeException("AprilTagDetectionPipeline.detectTags(): nativeApriltagPtr was NULL");
+        }
+        if (input.nativeObj == 0) {
+            throw new RuntimeException("AprilTagDetectionPipeline.detectTags(): input.nativeObj was NULL");
+        }
         long detectionArrayPtr = runApriltagDetector(nativeApriltagPtr, input.nativeObj);
         // If no tags were found, return null
         if (detectionArrayPtr == 0) {
-            freeDetectionList(detectionArrayPtr);
+            //freeDetectionList(detectionArrayPtr);
             return null;
         }
         // Turn the JNI pointer to an array into an array of JNI pointers
@@ -53,6 +59,9 @@ public class AprilTagPipeline extends OpenCvPipeline
         int[] ids = new int[detectionsPtr.length];
         // For each JNI pointer
         for (int i = 0; i < detectionsPtr.length; i++) {
+            if (detectionsPtr[i] == 0) {
+                throw new RuntimeException("AprilTagDetectionPipeline.detectTags(): detectionsPtr[" + i + "] was NULL");
+            }
             ids[i] = getId(detectionsPtr[i]);
         }
         freeDetectionList(detectionArrayPtr);
