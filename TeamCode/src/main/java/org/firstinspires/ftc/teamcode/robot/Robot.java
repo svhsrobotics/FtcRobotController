@@ -11,6 +11,10 @@ import java.util.EnumMap;
 
 public abstract class Robot {
 
+    public final double REV_COUNTS = 28;
+    public final double GEAR_REDUCTION = 40;
+    public final double WHEEL_DIAMETER = 3;
+
     protected final HardwareMap hardwareMap;
     protected Logger logger;
 
