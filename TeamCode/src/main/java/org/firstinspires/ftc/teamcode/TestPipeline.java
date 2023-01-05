@@ -24,7 +24,26 @@ public class TestPipeline extends LinearOpMode {
 
         robot.camera.open();
 
-        while (opModeInInit()) {
+        waitForStart();
+
+        while (opModeIsActive()) {
+            // Tune for red cones
+            pipeline.minHue = 174.0;
+            pipeline.maxHue = 8.0;
+            pipeline.minBlue = 147.3;
+            pipeline.maxBlue = 184.2;
+
+            // Turn until centered
+            while (pipeline.necessaryCorrection() != 0) {
+                //
+            }
+        }
+
+
+        // Turn until centered
+
+
+        /*while (opModeInInit()) {
 
             if (pipeline.necessaryCorrection() > 5) {
                 // Right
@@ -48,7 +67,7 @@ public class TestPipeline extends LinearOpMode {
                 //drive.navigationMonitorTicks(0, 9999, 99999, 1);
                 //drive.ceaseMotion();
             }
-        }
+        }*/
         /*waitForStart();
 
 

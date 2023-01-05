@@ -14,9 +14,11 @@ import org.openftc.easyopencv.OpenCvWebcam;
 
 public class Webcam {
     // Constants
-    private static final OpenCvCameraRotation ROTATION = OpenCvCameraRotation.UPRIGHT;
-    private static final int WIDTH = 320;
-    private static final int HEIGHT = 240;
+    private static final OpenCvCameraRotation ROTATION = OpenCvCameraRotation.SIDEWAYS_LEFT;
+    //private static final int WIDTH = 320;
+    //private static final int HEIGHT = 240;
+    private static final int HEIGHT = 320;
+    private static final int WIDTH = 240;
 
     private final OpenCvWebcam webcam;
 

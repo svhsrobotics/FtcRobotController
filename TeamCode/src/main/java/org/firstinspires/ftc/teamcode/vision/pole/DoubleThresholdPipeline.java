@@ -59,11 +59,28 @@ public class DoubleThresholdPipeline extends OpenCvPipeline {
     }
 
     // White pixels are in range, black pixels are out of range
-    private Mat hueRange(Mat input, double min, double max) {
+    /*private Mat hueRange(Mat input, double min, double max) {
         input = convertColor(input, ColorFormat.HSV);
         input = extractChannel(input, 0);
         Mat output = GlobalMatPool.get();
         Core.inRange(input, new Scalar(min), new Scalar(max), output);
+        return output;
+    }*/
+
+    private Mat hueRange(Mat input, double min, double max) {
+        input = convertColor(input, ColorFormat.HSV);
+        input = extractChannel(input, 0);
+        Mat output = GlobalMatPool.get();
+        // If the min is greater than the max, we need to split the range
+        if (min > max) {
+            Mat output1 = GlobalMatPool.get();
+            Mat output2 = GlobalMatPool.get();
+            Core.inRange(input, new Scalar(min), new Scalar(180.0), output1);
+            Core.inRange(input, new Scalar(0.0), new Scalar(max), output2);
+            Core.bitwise_or(output1, output2, output);
+        } else {
+            Core.inRange(input, new Scalar(min), new Scalar(max), output);
+        }
         return output;
     }
 
