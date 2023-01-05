@@ -41,10 +41,6 @@ public class PowerPlayBotV2 extends Robot {
         camera = new Webcam("Webcam 1", hardwareMap);
     }
 
-    protected void initCamera() {
-        camera = new Webcam("Webcam 1", hardwareMap);
-    }
-
     protected void initArm() {
         arm = new Arm(
                new Arm.Lift(
