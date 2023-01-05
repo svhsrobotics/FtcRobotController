@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.Shared.Drive2;
+import org.firstinspires.ftc.teamcode.Shared.Drive;
 import org.firstinspires.ftc.teamcode.robot.PowerPlayBotV2;
 import org.firstinspires.ftc.teamcode.robot.Robot;
 import org.firstinspires.ftc.teamcode.vision.pole.DoubleThresholdPipeline;
@@ -16,7 +16,7 @@ public class TestPipeline extends LinearOpMode {
         PowerPlayBotV2 robot = new PowerPlayBotV2(hardwareMap);
         robot.initHardware();
 
-        Drive2 drive = new Drive2(robot, this);
+        Drive drive = new Drive(robot, this);
 
         DoubleThresholdPipeline pipeline = new DoubleThresholdPipeline(telemetry);
 
