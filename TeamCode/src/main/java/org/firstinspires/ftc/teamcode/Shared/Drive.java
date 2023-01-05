@@ -490,7 +490,7 @@ public class Drive {
         telemetry.addData("mTargetAngleErrorSum", mTargetAngleErrorSum);
         telemetry.addData("mTargetAngle", mTargetAngle);*/
 
-        logger.debug("power correction: " + powerCorrection);
+        //logger.debug("power correction: " + powerCorrection);
 
         return powerCorrection;
     }

@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.Shared.Drive;
 import org.firstinspires.ftc.teamcode.robot.PowerPlayBotV2;
 import org.firstinspires.ftc.teamcode.robot.Robot;
+import org.firstinspires.ftc.teamcode.robot.hardware.Arm;
+import org.firstinspires.ftc.teamcode.util.Logger;
 import org.firstinspires.ftc.teamcode.vision.pole.DoubleThresholdPipeline;
 
 @TeleOp(name = "Test Pipeline")
@@ -13,6 +15,7 @@ public class TestPipeline extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+        Logger logger = new Logger(telemetry);
         PowerPlayBotV2 robot = new PowerPlayBotV2(hardwareMap);
         robot.initHardware();
 
@@ -24,6 +27,15 @@ public class TestPipeline extends LinearOpMode {
 
         robot.camera.open();
 
+        logger.info("Camera opened!");
+
+        //robot.arm.lift.setPreset(Arm.Lift.Preset.LOW_POLE);
+        // Tune for red cones
+        pipeline.minHue = 174.0;
+        pipeline.maxHue = 8.0;
+        pipeline.minBlue = 147.3;
+        pipeline.maxBlue = 184.2;
+
         waitForStart();
 
         while (opModeIsActive()) {
@@ -33,9 +45,12 @@ public class TestPipeline extends LinearOpMode {
             pipeline.minBlue = 147.3;
             pipeline.maxBlue = 184.2;
 
-            // Turn until centered
-            while (pipeline.necessaryCorrection() != 0) {
-                //
+            while (pipeline.necessaryCorrection() != 0 && opModeIsActive()) {
+                // Turn until centered
+                logger.debug("Correction: " + pipeline.necessaryCorrection());
+                logger.debug("Current Angle: " + drive.getAdjustedAngle());
+                drive.navigationMonitorTurn(drive.getAdjustedAngle() - (0.2 * pipeline.necessaryCorrection()));
+                //drive.getAdjustedAngle();
             }
         }
 
