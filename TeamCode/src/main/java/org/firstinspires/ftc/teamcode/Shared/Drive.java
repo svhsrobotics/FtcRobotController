@@ -140,16 +140,21 @@ public class Drive {
         setMotorPowersPhi(speedsPhi);
     }
 
+    public void navigationMonitorTicksAndCeaseMotion(double speed, double xInches, double yInches, double timeout) {
+        navigationMonitorTicks(speed, xInches, yInches, timeout);
+        ceaseMotion();
+    }
+
 
     /**
      * This is the original navigation function, without anything fancy.
      * @param speed inches per second
      * @param xInches inches left/right
      * @param yInches inches forward/backwards
-     * @param timout seconds
+     * @param timeout seconds
      */
-    public void navigationMonitorTicks(double speed, double xInches, double yInches, double timout) {
-        navigationMonitorTicksPhi(speed, xInches, yInches, 0, timout);
+    public void navigationMonitorTicks(double speed, double xInches, double yInches, double timeout) {
+        navigationMonitorTicksPhi(speed, xInches, yInches, 0, timeout);
     }
 
     /**
@@ -490,7 +495,7 @@ public class Drive {
         telemetry.addData("mTargetAngleErrorSum", mTargetAngleErrorSum);
         telemetry.addData("mTargetAngle", mTargetAngle);*/
 
-        logger.debug("power correction: " + powerCorrection);
+        //logger.debug("power correction: " + powerCorrection);
 
         return powerCorrection;
     }
