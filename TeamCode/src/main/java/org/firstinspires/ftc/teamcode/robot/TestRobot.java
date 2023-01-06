@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.robot.hardware.Drive;
+import org.firstinspires.ftc.teamcode.robot.hardware.Webcam;
 import org.firstinspires.ftc.teamcode.util.Logger;
 
 public class TestRobot extends Robot{
@@ -12,6 +13,8 @@ public class TestRobot extends Robot{
     static final double REV_COUNTS = 28;
     static final double GEAR_REDUCTION = 40;
     static final double WHEEL_DIAMETER = 3;
+
+    public Webcam camera;
 
     public TestRobot(HardwareMap hardwareMap, Logger logger) {
         super(hardwareMap, logger);
@@ -35,4 +38,15 @@ public class TestRobot extends Robot{
         drives.get(DrivePos.FRONT_LEFT).setDirection(DcMotorSimple.Direction.REVERSE);
         drives.get(DrivePos.BACK_LEFT).setDirection(DcMotorSimple.Direction.REVERSE);
     }
+
+    @Override
+    public void initHardware() {
+        super.initHardware();
+        initCamera();
+    }
+
+    protected void initCamera() {
+        camera = new Webcam("Webcam 1", hardwareMap);
+    }
+
 }
