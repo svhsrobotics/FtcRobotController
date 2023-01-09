@@ -171,6 +171,15 @@ public class Drive {
     }
 
     public void navigationMonitorTurn(double phi) {
+        navigationMonitorTurn(phi, true);
+    }
+
+    public void navigationMonitorTurn(double phi, boolean fudge) {
+        if (fudge) {
+            // We fudge the angle a little, because something is wrong...
+            // TODO: Investigate this fudge
+            phi = phi - (phi * (1.5 / 90.0));
+        }
         // We only want to turn, but due to a bug in the navigation loop, it will not work if both x/y are 0.
         // So we'll set x to 1, and the speed to 0 so that it doesn't actually move.
         // monitorTotalTravel is set to false so that the loop is not blocked until the correct number of ticks are reached (which will never happen)
@@ -208,10 +217,7 @@ public class Drive {
         adjustThetaInit();
         //setTargetAngle(mImuCalibrationAngle);
 
-        // We fudge the angle a little, because something is wrong...
-        // TODO: Investigate this fudge
-        double angle_fudged = phi - (phi * (1.5 / 90.0));
-        setTargetAngle(angle_fudged);
+        setTargetAngle(phi);
 
         int settleCounter = 0;
 
@@ -398,7 +404,7 @@ public class Drive {
 
     double mCurrentImuAngle;
     double mPriorImuAngle;
-    double mTargetAngle;
+    public double mTargetAngle;
     double mAdjustedAngle;
     double mPriorAdjustedAngle;
     double mTargetAngleErrorSum;
