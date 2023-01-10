@@ -2,25 +2,25 @@ package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.teamcode.Shared.Drive;
+import org.firstinspires.ftc.teamcode.Shared.PoleLocalize;
 import org.firstinspires.ftc.teamcode.robot.PowerPlayBotV2;
-import org.firstinspires.ftc.teamcode.robot.hardware.Arm;
+import org.firstinspires.ftc.teamcode.robot.Robot;
+import org.firstinspires.ftc.teamcode.robot.hardware.Drive;
 import org.firstinspires.ftc.teamcode.util.Logger;
 //import org.firstinspires.ftc.teamcode.vision.TensorflowStandardSleeve;
+import org.firstinspires.ftc.teamcode.util.PIController;
 import org.firstinspires.ftc.teamcode.util.Timeout;
 import org.firstinspires.ftc.teamcode.vision.AprilTagPipeline;
-import org.firstinspires.ftc.teamcode.vision.TensorflowStandardSleeve;
-import org.firstinspires.ftc.teamcode.vision.TfodSleeve;
 import org.firstinspires.ftc.teamcode.vision.pole.DoubleThresholdPipeline;
-import org.openftc.easyopencv.OpenCvPipeline;
 
 @Autonomous(name = "Autonomous", preselectTeleOp = "TeleOp")
 public class AllAutomovement extends LinearOpMode {
     private final Logger logger = new Logger(telemetry, true);
 
     private PowerPlayBotV2 robot;
-    private Drive drive;
+    private PoleLocalize drive;
 
     private AprilTagPipeline initializeAprilTag() {
         AprilTagPipeline pipeline = new AprilTagPipeline();
@@ -67,37 +67,52 @@ public class AllAutomovement extends LinearOpMode {
         return ids[0];
     }
 
-    private void localizeOnPole() {
-        //DoubleThresholdPipeline pipeline = initializePoleDetection();
+    @SuppressWarnings("ConstantConditions")
+    private void localizeOnPole(DoubleThresholdPipeline pipeline) {
+        PIController poleLocalizationController = new PIController((0.06 / 8.0) / 2, 0);
 
-        //while (opModeIsActive()) {
-        while (opModeInInit()) {
-            // Turn until centered
-            //logger.debug("Correction: " + pipeline.necessaryCorrection());
-            //logger.debug("Current Angle: " + drive.getAdjustedAngle());
-            logger.debug("Target Angle: " + drive.mTargetAngle);
-            double angle = drive.getAdjustedAngle();  //IMU angle converted to Euler angle (IMU may already deliver Euler angles)
-            double angleError = drive.getEulerAngleDegrees(drive.mTargetAngle - angle);
-            logger.debug("Angle Error: " + angleError);
-            //drive.navigationMonitorTurn(drive.mTargetAngle - (0.1 * pipeline.necessaryCorrection()), false);
-            drive.navigationMonitorTurn(drive.mTargetAngle);
-            drive.ceaseMotion();
+        int settleCounter = 0;
+        while (settleCounter < 3 && (opModeIsActive() || opModeInInit())) {
+            double correctionPx = -pipeline.necessaryCorrection();
+            logger.debug("px Correction: " + correctionPx);
 
-            sleep(4000);
+            if (Math.abs(correctionPx) < 5) {
+                // If we're really close to the target, increase the settle counter
+                settleCounter++;
+            } else {
+                // If we're not close, reset the settle counter
+                settleCounter = 0;
+            }
 
-            //drive.navigationMonitorTurn(drive.mTargetAngle, false);
-            //drive.getAdjustedAngle();
+            double correctionPower = poleLocalizationController.update(correctionPx);
+            logger.debug("Power Correction: " + correctionPower);
+
+            robot.drives.get(Robot.DrivePos.FRONT_LEFT).setPower(-correctionPower);
+            robot.drives.get(Robot.DrivePos.BACK_LEFT).setPower(-correctionPower);
+            robot.drives.get(Robot.DrivePos.FRONT_RIGHT).setPower(correctionPower);
+            robot.drives.get(Robot.DrivePos.BACK_RIGHT).setPower(correctionPower);
         }
 
+        // Stop the wheels when we're done (just in case)
+        for (Drive drive : robot.drives.values()) {
+            drive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            drive.setPower(0);
+        }
     }
 
     @Override
     public void runOpMode() throws InterruptedException {
         robot = new PowerPlayBotV2(hardwareMap, logger);
         robot.initHardware();
-        drive = new Drive(robot, this, initializePoleDetection());
+        //drive = new PoleLocalize(robot, this, initializePoleDetection());
 
-        localizeOnPole();
+        DoubleThresholdPipeline pipeline = initializePoleDetection();
+
+        while (opModeInInit()) {
+            logger.debug("Calling localize on pole...");
+            localizeOnPole(pipeline);
+            sleep(5000);
+        }
         // Start the AprilTagPipeline
         //AprilTagPipeline aprilTagPipeline = initializeAprilTag();
         /*
