@@ -13,7 +13,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.robot.Robot;
 import org.firstinspires.ftc.teamcode.util.Logger;
-import org.firstinspires.ftc.teamcode.vision.pole.DoubleThresholdPipeline;
 
 import java.util.HashMap;
 
@@ -50,13 +49,6 @@ public class Drive {
     boolean mIsStopped = false;
 
     final double SPEEDSCALE = 50;//Speed in inches/second at speed=1
-
-    DoubleThresholdPipeline GLOBAL_PIPELINE;
-
-    public Drive(Robot robot, LinearOpMode opMode, DoubleThresholdPipeline pipeline) {
-        this(robot, opMode);
-        GLOBAL_PIPELINE = pipeline;
-    }
 
     public Drive(Robot robot, LinearOpMode opMode){
         this.robot = robot;
@@ -179,15 +171,6 @@ public class Drive {
     }
 
     public void navigationMonitorTurn(double phi) {
-        navigationMonitorTurn(phi, true);
-    }
-
-    public void navigationMonitorTurn(double phi, boolean fudge) {
-        if (fudge) {
-            // We fudge the angle a little, because something is wrong...
-            // TODO: Investigate this fudge
-            phi = phi - (phi * (1.5 / 90.0));
-        }
         // We only want to turn, but due to a bug in the navigation loop, it will not work if both x/y are 0.
         // So we'll set x to 1, and the speed to 0 so that it doesn't actually move.
         // monitorTotalTravel is set to false so that the loop is not blocked until the correct number of ticks are reached (which will never happen)
@@ -225,7 +208,10 @@ public class Drive {
         adjustThetaInit();
         //setTargetAngle(mImuCalibrationAngle);
 
-        setTargetAngle(phi);
+        // We fudge the angle a little, because something is wrong...
+        // TODO: Investigate this fudge
+        double angle_fudged = phi - (phi * (1.5 / 90.0));
+        setTargetAngle(angle_fudged);
 
         int settleCounter = 0;
 
@@ -237,7 +223,7 @@ public class Drive {
                 && !mIsStopped // We haven't been told to stop (by another thread)
                 && !shouldStopIfApplicable(isMonitorAcceleration, startMillis) // We haven't been told to stop (by the acceleration monitor)
         ) {
-            if (Math.abs(GLOBAL_PIPELINE.necessaryCorrection()) < 5) {
+            if (getEulerAngleDegrees(mTargetAngle - getAdjustedAngle()) < 1) {
                 // If we're really close to the target, increase the settle counter
                 settleCounter++;
             } else {
@@ -412,7 +398,7 @@ public class Drive {
 
     double mCurrentImuAngle;
     double mPriorImuAngle;
-    public double mTargetAngle;
+    double mTargetAngle;
     double mAdjustedAngle;
     double mPriorAdjustedAngle;
     double mTargetAngleErrorSum;
@@ -461,60 +447,18 @@ public class Drive {
     /**
      * Convert an angle such that -180 <= angle <= 180
      */
-    public double getEulerAngleDegrees(double angle){
+    private double getEulerAngleDegrees(double angle){
         double modAngle = angle%360;
         if(modAngle < -180) return modAngle + 360;
         else if (modAngle > 180) return modAngle - 360;
         else return modAngle;
     }
 
-    int MAX_ERROR_ANGLE_SUM = 3;
-
-    private double getPowerCorrection() {
-        // The gain value determines how sensitive the correction is to direction changes.
-        // You will have to experiment with your robot to get small smooth direction changes
-        // to stay on a straight line.
-        //double angleError, powerCorrection, angle, pGain, iGain;
-
-        double angleError = -GLOBAL_PIPELINE.necessaryCorrection();
-        mTargetAngleErrorSum += angleError;
-
-        if(mTargetAngleErrorSum > MAX_ERROR_ANGLE_SUM)
-            mTargetAngleErrorSum = MAX_ERROR_ANGLE_SUM;
-        else if(mTargetAngleErrorSum < -MAX_ERROR_ANGLE_SUM)
-            mTargetAngleErrorSum = -MAX_ERROR_ANGLE_SUM;
-
-        Log.i(TAG, String.format("getPowerCorrection: targetAngle: %.2f, diffAngle: %.2f, diffAngleSum: %.2f", mTargetAngle, angleError, mTargetAngleErrorSum));
-
-        //gain = Math.max(-0.05*Math.abs(angleError) + 0.1, .05);  //Varies from .2 around zero to .05 for errors above 10 degrees
-        //pGain = Math.max(-0.05*Math.abs(angleError) + 0.1, .05)/3;  //Varies from .2 around zero to .05 for errors above 10 degrees
-        double pGain = (0.06 / 8.0) / 2;
-        //double iGain = 0.04 / 8.0;
-
-        // If the angleError is really big, go open-loop for a bit to speed up the turn
-        //if (Math.abs(angleError) > 20) {
-        //    pGain += 1000;
-        //}
-
-        double powerCorrection = angleError * pGain ;
-
-        android.util.Log.d("angleError", String.valueOf(angleError));
-        android.util.Log.d("mTargetAngleErrorSum", String.valueOf(mTargetAngleErrorSum));
-        android.util.Log.d("mTargetAngle", String.valueOf(mTargetAngle));
-
-        /*telemetry.addData("angleError", angleError);
-        telemetry.addData("mTargetAngleErrorSum", mTargetAngleErrorSum);
-        telemetry.addData("mTargetAngle", mTargetAngle);*/
-
-        //logger.debug("power correction: " + powerCorrection);
-
-        return powerCorrection;
-    }
     /**
      * See if we are moving in a straight line and if not return a power correction value.
      * @return Power adjustment, + is adjust left - is adjust right.
      */
-    private double getPowerCorrection2()
+    private double getPowerCorrection()
     {
         // The gain value determines how sensitive the correction is to direction changes.
         // You will have to experiment with your robot to get small smooth direction changes

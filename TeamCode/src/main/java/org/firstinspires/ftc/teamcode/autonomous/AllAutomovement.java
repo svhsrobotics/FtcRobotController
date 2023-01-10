@@ -4,7 +4,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.teamcode.Shared.PoleLocalize;
 import org.firstinspires.ftc.teamcode.robot.PowerPlayBotV2;
 import org.firstinspires.ftc.teamcode.robot.Robot;
 import org.firstinspires.ftc.teamcode.robot.hardware.Drive;
@@ -20,7 +19,7 @@ public class AllAutomovement extends LinearOpMode {
     private final Logger logger = new Logger(telemetry, true);
 
     private PowerPlayBotV2 robot;
-    private PoleLocalize drive;
+    private Drive drive;
 
     private AprilTagPipeline initializeAprilTag() {
         AprilTagPipeline pipeline = new AprilTagPipeline();
