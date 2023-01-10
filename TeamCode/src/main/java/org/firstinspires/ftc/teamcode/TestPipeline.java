@@ -3,10 +3,8 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.Shared.Drive;
+import org.firstinspires.ftc.teamcode.Shared.Navigator;
 import org.firstinspires.ftc.teamcode.robot.PowerPlayBotV2;
-import org.firstinspires.ftc.teamcode.robot.Robot;
-import org.firstinspires.ftc.teamcode.robot.hardware.Arm;
 import org.firstinspires.ftc.teamcode.util.Logger;
 import org.firstinspires.ftc.teamcode.vision.pole.DoubleThresholdPipeline;
 
@@ -19,7 +17,7 @@ public class TestPipeline extends LinearOpMode {
         PowerPlayBotV2 robot = new PowerPlayBotV2(hardwareMap);
         robot.initHardware();
 
-        Drive drive = new Drive(robot, this);
+        Navigator navigator = new Navigator(robot, this);
 
         DoubleThresholdPipeline pipeline = new DoubleThresholdPipeline(telemetry);
 
@@ -48,8 +46,8 @@ public class TestPipeline extends LinearOpMode {
             while (pipeline.necessaryCorrection() != 0 && opModeIsActive()) {
                 // Turn until centered
                 logger.debug("Correction: " + pipeline.necessaryCorrection());
-                logger.debug("Current Angle: " + drive.getAdjustedAngle());
-                drive.navigationMonitorTurn(drive.getAdjustedAngle() - (0.2 * pipeline.necessaryCorrection()));
+                logger.debug("Current Angle: " + navigator.getAdjustedAngle());
+                navigator.navigationMonitorTurn(navigator.getAdjustedAngle() - (0.2 * pipeline.necessaryCorrection()));
                 //drive.getAdjustedAngle();
             }
         }

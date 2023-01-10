@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.util.Logger;
 
 import java.util.HashMap;
 
-public class Drive {
+public class Navigator {
     // Used to when calling Android's Log class
     String TAG = "Drive";
 
@@ -50,7 +50,7 @@ public class Drive {
 
     final double SPEEDSCALE = 50;//Speed in inches/second at speed=1
 
-    public Drive(Robot robot, LinearOpMode opMode){
+    public Navigator(Robot robot, LinearOpMode opMode){
         this.robot = robot;
         this.opMode = opMode;
         this.telemetry = opMode.telemetry;

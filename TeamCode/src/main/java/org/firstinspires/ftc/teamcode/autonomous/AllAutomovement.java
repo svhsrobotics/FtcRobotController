@@ -4,8 +4,10 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.teamcode.Shared.Navigator;
 import org.firstinspires.ftc.teamcode.robot.PowerPlayBotV2;
 import org.firstinspires.ftc.teamcode.robot.Robot;
+import org.firstinspires.ftc.teamcode.robot.hardware.Arm;
 import org.firstinspires.ftc.teamcode.robot.hardware.Drive;
 import org.firstinspires.ftc.teamcode.util.Logger;
 //import org.firstinspires.ftc.teamcode.vision.TensorflowStandardSleeve;
@@ -19,7 +21,7 @@ public class AllAutomovement extends LinearOpMode {
     private final Logger logger = new Logger(telemetry, true);
 
     private PowerPlayBotV2 robot;
-    private Drive drive;
+    private Navigator navigator;
 
     private AprilTagPipeline initializeAprilTag() {
         AprilTagPipeline pipeline = new AprilTagPipeline();
@@ -67,7 +69,8 @@ public class AllAutomovement extends LinearOpMode {
     }
 
     @SuppressWarnings("ConstantConditions")
-    private void localizeOnPole(DoubleThresholdPipeline pipeline) {
+    private void localizeOnPole() {
+        DoubleThresholdPipeline pipeline = initializePoleDetection();
         PIController poleLocalizationController = new PIController((0.06 / 8.0) / 2, 0);
 
         int settleCounter = 0;
@@ -103,18 +106,18 @@ public class AllAutomovement extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         robot = new PowerPlayBotV2(hardwareMap, logger);
         robot.initHardware();
-        //drive = new PoleLocalize(robot, this, initializePoleDetection());
+        navigator = new Navigator(robot, this);
 
         DoubleThresholdPipeline pipeline = initializePoleDetection();
 
         while (opModeInInit()) {
             logger.debug("Calling localize on pole...");
-            localizeOnPole(pipeline);
-            sleep(5000);
+            localizeOnPole();
+            //sleep(5000);
         }
         // Start the AprilTagPipeline
-        //AprilTagPipeline aprilTagPipeline = initializeAprilTag();
-        /*
+        AprilTagPipeline aprilTagPipeline = initializeAprilTag();
+
         // Wait for the start button to be pressed
         waitForStart();
 
@@ -129,7 +132,7 @@ public class AllAutomovement extends LinearOpMode {
         robot.arm.pincher.expand();
 
         // Move forward so we don't scrape against the wall
-        drive.navigationMonitorTicksAndCeaseMotion(3, 0, 2, 10);
+        navigator.navigationMonitorTicksAndCeaseMotion(3, 0, 2, 10);
 
         // Lift the preloaded cone up to drive height
         robot.arm.lift.setPreset(Arm.Lift.Preset.DRIVING);
@@ -140,17 +143,17 @@ public class AllAutomovement extends LinearOpMode {
         }
 
         // Move right past the ground station
-        drive.navigationMonitorTicksAndCeaseMotion(3, 15, 0, 10);
+        navigator.navigationMonitorTicksAndCeaseMotion(3, 15, 0, 10);
 
         // Move forward
-        drive.navigationMonitorTicksAndCeaseMotion(3, 0, 17, 10);
+        navigator.navigationMonitorTicksAndCeaseMotion(3, 0, 17, 10);
 
         // Turn to face our target direction
-        drive.navigationMonitorTurn(60);
+        navigator.navigationMonitorTurn(60);
 
         // Move up to our special spot
-        drive.navigationMonitorTicksPhi(3, 0, 6, 60, 10);
-        drive.ceaseMotion();
+        navigator.navigationMonitorTicksPhi(3, 0, 6, 60, 10);
+        navigator.ceaseMotion();
 
         // Now it's time to drop the preloaded cone!
         // Raise up to med height so that our camera is not obstructed
@@ -176,8 +179,6 @@ public class AllAutomovement extends LinearOpMode {
         // TODO
         // Drop the cone
         robot.arm.pincher.contract();
-
-         */
     }
 }
 
