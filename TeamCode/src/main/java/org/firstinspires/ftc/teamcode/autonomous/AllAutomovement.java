@@ -69,8 +69,7 @@ public class AllAutomovement extends LinearOpMode {
     }
 
     @SuppressWarnings("ConstantConditions")
-    private void localizeOnPole() {
-        DoubleThresholdPipeline pipeline = initializePoleDetection();
+    private void localizeOnPole(DoubleThresholdPipeline pipeline) {
         PIController poleLocalizationController = new PIController((0.06 / 8.0) / 2, 0);
 
         int settleCounter = 0;
@@ -108,13 +107,6 @@ public class AllAutomovement extends LinearOpMode {
         robot.initHardware();
         navigator = new Navigator(robot, this);
 
-        DoubleThresholdPipeline pipeline = initializePoleDetection();
-
-        while (opModeInInit()) {
-            logger.debug("Calling localize on pole...");
-            localizeOnPole();
-            //sleep(5000);
-        }
         // Start the AprilTagPipeline
         AprilTagPipeline aprilTagPipeline = initializeAprilTag();
 
@@ -164,8 +156,13 @@ public class AllAutomovement extends LinearOpMode {
             Thread.yield();
         }
 
-        // Center on the pole
-        localizeOnPole();
+        DoubleThresholdPipeline pipeline = initializePoleDetection();
+
+        while (opModeIsActive()) {
+            // Center on the pole
+            localizeOnPole(pipeline);
+            Thread.sleep(5000);
+        }
 
         // Raise it up to high height
         robot.arm.lift.setPreset(Arm.Lift.Preset.HIGH_POLE);
