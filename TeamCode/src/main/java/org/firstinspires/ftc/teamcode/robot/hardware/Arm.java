@@ -72,7 +72,7 @@ public class Arm {
             DRIVING (400),
             LOW_POLE (1130),
             MEDIUM_POLE (1910),
-            HIGH_POLE (2635);
+            HIGH_POLE (2735);
 
             final int height;
             Preset(int height) {
