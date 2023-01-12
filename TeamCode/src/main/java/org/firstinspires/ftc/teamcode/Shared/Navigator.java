@@ -223,7 +223,7 @@ public class Navigator {
                 && !mIsStopped // We haven't been told to stop (by another thread)
                 && !shouldStopIfApplicable(isMonitorAcceleration, startMillis) // We haven't been told to stop (by the acceleration monitor)
         ) {
-            if (getEulerAngleDegrees(mTargetAngle - getAdjustedAngle()) < 1) {
+            if (Math.abs(getEulerAngleDegrees(mTargetAngle - getAdjustedAngle())) < 1) {
                 // If we're really close to the target, increase the settle counter
                 settleCounter++;
             } else {
