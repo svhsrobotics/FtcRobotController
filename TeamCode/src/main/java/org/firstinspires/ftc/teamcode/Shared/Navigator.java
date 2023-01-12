@@ -174,7 +174,7 @@ public class Navigator {
         // We only want to turn, but due to a bug in the navigation loop, it will not work if both x/y are 0.
         // So we'll set x to 1, and the speed to 0 so that it doesn't actually move.
         // monitorTotalTravel is set to false so that the loop is not blocked until the correct number of ticks are reached (which will never happen)
-        internalNavigationLoop(0, 1, 0, phi, 0, false, false);
+        internalNavigationLoop(0, 1, 0, phi, 10, false, false);
     }
 
     public void navigationMonitorExternal(double inchesPerSecond, double xInches, double yInches, double phi, double timeoutSec, boolean isMonitorAcceleration) {

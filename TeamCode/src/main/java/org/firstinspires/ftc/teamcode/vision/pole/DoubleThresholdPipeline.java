@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.vision.pole;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.util.Logger;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
@@ -12,11 +13,11 @@ import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class DoubleThresholdPipeline extends OpenCvPipeline {
     // This constructor is used by the simulator to pass a Telemetry object
@@ -286,6 +287,7 @@ public class DoubleThresholdPipeline extends OpenCvPipeline {
 
     @Override
     public Mat processFrame(Mat input) {
+        //new Logger(telemetry).debug("ENTERED DOUBLE THRESHOLD PROCESS FRAME");
         telemetry.addData("Loop time" , ((System.nanoTime() - lastNanoTime) / 1000 / 1000));
         lastNanoTime = System.nanoTime();
         //Mat luma = luma(input);
@@ -319,8 +321,7 @@ public class DoubleThresholdPipeline extends OpenCvPipeline {
         }
 
         Imgproc.line(input, new Point(targetX, 0), new Point(targetX, input.height()), new Scalar(0, 0, 255), 2);
-        // Atomic because it's accessed in a lambda? and -1 so we know nothing was detected
-        AtomicInteger somePoleX = new AtomicInteger(-1);
+
         // Find the contour with the largest area
         contours.stream().max(Comparator.comparingDouble(this::getPoleWidth)).ifPresent(max -> {
             Point[] points = fitRotatedRect(max);
@@ -331,10 +332,11 @@ public class DoubleThresholdPipeline extends OpenCvPipeline {
             //Imgproc.drawMarker(input, bottomMiddle, new Scalar(0, 255, 0), Imgproc.MARKER_CROSS, 20, 2);
             Point topMiddle = getTopMiddle(points);
             Imgproc.drawMarker(input, topMiddle, new Scalar(0, 255, 255), Imgproc.MARKER_CROSS, 10, 2);
-            somePoleX.set((int) Math.floor(topMiddle.x));
+            new Logger(telemetry).info(String.format("Pole Width: %f", getPoleWidth(max)));
+            Imgproc.putText(input, String.format("%f", getPoleWidth(max)), new Point(0, 50), Imgproc.FONT_HERSHEY_PLAIN, 1.5, new Scalar(0, 255, 0), 2);
+            poleX.set((int) Math.floor(topMiddle.x));
+            poleWidth.set(getPoleWidth(max));
         });
-
-        poleX = somePoleX.get();
 
         Imgproc.putText(input, String.format("%d", necessaryCorrection()), new Point(0, 20), Imgproc.FONT_HERSHEY_PLAIN, 1.5, new Scalar(0, 255, 0), 2);
         //Imgproc.putText(input, String.valueOf(poleX), new Point(0,0), 0);
@@ -353,16 +355,19 @@ public class DoubleThresholdPipeline extends OpenCvPipeline {
     }
 
     /* PUBLIC INTERFACE */
-    private int poleX = -1;
+    private AtomicInteger poleX = new AtomicInteger(-1);
+    private AtomicReference<Double> poleWidth = new AtomicReference<>(-1.0);
+    public double getPoleWidth() { return poleWidth.get(); }
     public int getPoleX() {
-        return poleX;
+        return poleX.get();
     }
 
     public int necessaryCorrection() {
-        if (poleX == -1) { // We haven't ran yet, no correction is necessary
+        int px = poleX.get();
+        if (px == -1) { // We haven't ran yet, no correction is necessary
             return 0;
         } else {
-            return poleX - targetX;
+            return px - targetX;
         }
     }
 }

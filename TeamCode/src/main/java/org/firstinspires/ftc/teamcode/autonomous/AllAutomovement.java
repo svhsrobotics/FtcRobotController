@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.util.Logger;
 import org.firstinspires.ftc.teamcode.util.PIController;
 import org.firstinspires.ftc.teamcode.util.Timeout;
 import org.firstinspires.ftc.teamcode.vision.AprilTagPipeline;
+import org.firstinspires.ftc.teamcode.vision.SwitchablePipeline;
 import org.firstinspires.ftc.teamcode.vision.pole.DoubleThresholdPipeline;
 
 @Autonomous(name = "Autonomous", preselectTeleOp = "TeleOp")
@@ -45,12 +46,6 @@ public class AllAutomovement extends LinearOpMode {
         // Offset for center of robot
         pipeline.targetX = 120;
 
-        robot.camera.setPipeline(pipeline);
-        if (!robot.camera.opened) {
-            robot.camera.open(new Timeout(10));
-        } else {
-            robot.camera.resume();
-        }
         return pipeline;
     }
 
@@ -70,7 +65,7 @@ public class AllAutomovement extends LinearOpMode {
 
     @SuppressWarnings("ConstantConditions")
     private void localizeOnPole(DoubleThresholdPipeline pipeline) {
-        PIController poleLocalizationController = new PIController((0.06 / 8.0) / 2, 0);
+        PIController poleLocalizationController = new PIController((0.06 / 8.0) / 2, 0, 3.0);
 
         int settleCounter = 0;
         while (settleCounter < 3 && (opModeIsActive() || opModeInInit())) {
@@ -107,8 +102,14 @@ public class AllAutomovement extends LinearOpMode {
         robot.initHardware();
         navigator = new Navigator(robot, this);
 
-        // Start the AprilTagPipeline
-        AprilTagPipeline aprilTagPipeline = initializeAprilTag();
+        AprilTagPipeline aprilTagPipeline = new AprilTagPipeline();
+        SwitchablePipeline pipeline = new SwitchablePipeline(aprilTagPipeline); //TODO: Remove no longer necessary, use setPipeline
+        robot.camera.setPipeline(pipeline);
+        if (!robot.camera.opened) {
+            robot.camera.open(new Timeout(10));
+        } else {
+            robot.camera.resume();
+        }
 
         // Wait for the start button to be pressed
         waitForStart();
@@ -117,14 +118,18 @@ public class AllAutomovement extends LinearOpMode {
         int tagId = detectTag(aprilTagPipeline);
         logger.info("AprilTag Detected: " + tagId);
 
+        DoubleThresholdPipeline poleDetectionPipeline = initializePoleDetection();
+        pipeline.currentPipeline = poleDetectionPipeline;
+
+
         // Pause the pipeline to save resources
-        robot.camera.pause();
+       // robot.camera.pause();
 
         // Get the cone in the pincher and get ready to drive
         robot.arm.pincher.expand();
 
         // Move forward so we don't scrape against the wall
-        navigator.navigationMonitorTicksAndCeaseMotion(3, 0, 2, 10);
+        navigator.navigationMonitorTicksAndCeaseMotion(6, 0, 1, 10);
 
         // Lift the preloaded cone up to drive height
         robot.arm.lift.setPreset(Arm.Lift.Preset.DRIVING);
@@ -135,16 +140,16 @@ public class AllAutomovement extends LinearOpMode {
         }
 
         // Move right past the ground station
-        navigator.navigationMonitorTicksAndCeaseMotion(3, 15, 0, 10);
+        navigator.navigationMonitorTicksAndCeaseMotion(6, 15, 0, 10);
 
         // Move forward
-        navigator.navigationMonitorTicksAndCeaseMotion(3, 0, 17, 10);
+        navigator.navigationMonitorTicksAndCeaseMotion(6, 0, 17, 10);
 
         // Turn to face our target direction
-        navigator.navigationMonitorTurn(60);
+        navigator.navigationMonitorTurn(57);
 
         // Move up to our special spot
-        navigator.navigationMonitorTicksPhi(3, 0, 6, 60, 10);
+        navigator.navigationMonitorTicksPhi(6, 0, 5.5, 57, 10);
         navigator.ceaseMotion();
 
         // Now it's time to drop the preloaded cone!
@@ -156,13 +161,7 @@ public class AllAutomovement extends LinearOpMode {
             Thread.yield();
         }
 
-        DoubleThresholdPipeline pipeline = initializePoleDetection();
-
-        while (opModeIsActive()) {
-            // Center on the pole
-            localizeOnPole(pipeline);
-            Thread.sleep(5000);
-        }
+        localizeOnPole(poleDetectionPipeline);
 
         // Raise it up to high height
         robot.arm.lift.setPreset(Arm.Lift.Preset.HIGH_POLE);
@@ -171,6 +170,19 @@ public class AllAutomovement extends LinearOpMode {
         while (robot.arm.lift.isBusy() && !isStopRequested()) {
             Thread.yield();
         }
+
+        robot.arm.reacher.setTargetPosition(1850);
+
+        while (robot.arm.reacher.isBusy() && !isStopRequested()) {}
+
+        sleep(5000);
+
+        robot.arm.reacher.setTargetPosition(900);
+
+        navigator.navigationMonitorTurn(-57);
+        navigator.ceaseMotion();
+
+        while (!isStopRequested()) {}
 
         // Extend the reacher over the pole
         // TODO
