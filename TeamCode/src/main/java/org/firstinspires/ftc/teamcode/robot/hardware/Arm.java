@@ -41,6 +41,14 @@ public class Arm {
         }
 
         public void setTargetPosition(int position) {
+            if (position < getCurrentPosition()) {
+                setTargetPosition(position, -0.5);
+            } else {
+                setTargetPosition(position, 1);
+            }
+        }
+
+        public void setTargetPosition(int position, double power) {
             motor1.setTargetPosition(position);
             motor2.setTargetPosition(position);
             motor3.setTargetPosition(position);
@@ -49,9 +57,9 @@ public class Arm {
             motor2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             motor3.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-            motor1.setPower(1); // TODO: Don't hardcode motor power
-            motor2.setPower(1);
-            motor3.setPower(1);
+            motor1.setPower(power); // TODO: Don't hardcode motor power
+            motor2.setPower(power);
+            motor3.setPower(power);
         }
 
         public int getTargetPosition() {

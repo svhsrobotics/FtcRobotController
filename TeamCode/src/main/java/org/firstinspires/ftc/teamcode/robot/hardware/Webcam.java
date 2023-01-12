@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.robot.hardware;
 
 import androidx.annotation.NonNull;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -43,6 +44,7 @@ public class Webcam {
         } catch (IllegalArgumentException e) {
             throw new HardwareNotFoundException(e, "Webcam"); // Use Webcam instead of WebcamName
         }
+        FtcDashboard.getInstance().startCameraStream(this.webcam, 30);
     }
 
     /**

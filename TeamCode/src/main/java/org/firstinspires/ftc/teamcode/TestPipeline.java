@@ -43,13 +43,13 @@ public class TestPipeline extends LinearOpMode {
             pipeline.minBlue = 147.3;
             pipeline.maxBlue = 184.2;
 
-            while (pipeline.necessaryCorrection() != 0 && opModeIsActive()) {
+            /*while (pipeline.necessaryCorrection() != 0 && opModeIsActive()) {
                 // Turn until centered
                 logger.debug("Correction: " + pipeline.necessaryCorrection());
                 logger.debug("Current Angle: " + navigator.getAdjustedAngle());
                 navigator.navigationMonitorTurn(navigator.getAdjustedAngle() - (0.2 * pipeline.necessaryCorrection()));
                 //drive.getAdjustedAngle();
-            }
+            }*/
         }
 
 

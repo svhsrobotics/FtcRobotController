@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.vision.pole;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.autonomous.AllAutomovement;
 import org.firstinspires.ftc.teamcode.util.Logger;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
@@ -285,6 +286,9 @@ public class DoubleThresholdPipeline extends OpenCvPipeline {
 
     public long lastNanoTime = 0;
 
+    private AtomicInteger frameCount = new AtomicInteger(0);
+    //private AtomicReference<Double> widthMovingAverage = new AtomicReference<Double>(0.0);
+
     @Override
     public Mat processFrame(Mat input) {
         //new Logger(telemetry).debug("ENTERED DOUBLE THRESHOLD PROCESS FRAME");
@@ -320,8 +324,11 @@ public class DoubleThresholdPipeline extends OpenCvPipeline {
             Imgproc.drawMarker(input, getTopMiddle(points), new Scalar(0, 0, 255), Imgproc.MARKER_CROSS, 10, 2);
         }
 
-        Imgproc.line(input, new Point(targetX, 0), new Point(targetX, input.height()), new Scalar(0, 0, 255), 2);
+        // TODO: Remove or abstract
+        Imgproc.line(input, new Point(AllAutomovement.RotationPID.TARGET, 0), new Point(AllAutomovement.RotationPID.TARGET, input.height()), new Scalar(0, 0, 255), 2);
 
+        poleX.set(-1);
+        poleWidth.set(-1.0);
         // Find the contour with the largest area
         contours.stream().max(Comparator.comparingDouble(this::getPoleWidth)).ifPresent(max -> {
             Point[] points = fitRotatedRect(max);
@@ -332,18 +339,30 @@ public class DoubleThresholdPipeline extends OpenCvPipeline {
             //Imgproc.drawMarker(input, bottomMiddle, new Scalar(0, 255, 0), Imgproc.MARKER_CROSS, 20, 2);
             Point topMiddle = getTopMiddle(points);
             Imgproc.drawMarker(input, topMiddle, new Scalar(0, 255, 255), Imgproc.MARKER_CROSS, 10, 2);
-            new Logger(telemetry).info(String.format("Pole Width: %f", getPoleWidth(max)));
-            Imgproc.putText(input, String.format("%f", getPoleWidth(max)), new Point(0, 50), Imgproc.FONT_HERSHEY_PLAIN, 1.5, new Scalar(0, 255, 0), 2);
+
             poleX.set((int) Math.floor(topMiddle.x));
+
+            /*poleWidth.getAndUpdate((old) -> {
+                double frameCount = this.frameCount.incrementAndGet();
+                double modifiedOld = old * ((frameCount - 1) / frameCount);
+                double modifiedNew = getPoleWidth(max) / (frameCount);
+                return modifiedOld + modifiedNew;
+            });*/
             poleWidth.set(getPoleWidth(max));
+
+            //new Logger(telemetry).info(String.format("Pole Width: %f", poleWidth.get()));
+            Imgproc.putText(input, String.format("%f", poleWidth.get()), new Point(0, 50), Imgproc.FONT_HERSHEY_PLAIN, 1.5, new Scalar(0, 255, 0), 2);
+            Imgproc.putText(input, String.format("%d", poleX.get()), new Point(0, 20), Imgproc.FONT_HERSHEY_PLAIN, 1.5, new Scalar(0, 255, 0), 2);
+
+
         });
 
-        Imgproc.putText(input, String.format("%d", necessaryCorrection()), new Point(0, 20), Imgproc.FONT_HERSHEY_PLAIN, 1.5, new Scalar(0, 255, 0), 2);
+
         //Imgproc.putText(input, String.valueOf(poleX), new Point(0,0), 0);
 
         GlobalMatPool.returnAll(telemetry);
 
-        telemetry.addData("Correction", necessaryCorrection());
+       // telemetry.addData("Correction", necessaryCorrection());
         // Update the telemetry once per frame
         telemetry.update();
 
@@ -357,17 +376,20 @@ public class DoubleThresholdPipeline extends OpenCvPipeline {
     /* PUBLIC INTERFACE */
     private AtomicInteger poleX = new AtomicInteger(-1);
     private AtomicReference<Double> poleWidth = new AtomicReference<>(-1.0);
-    public double getPoleWidth() { return poleWidth.get(); }
+    public double getPoleWidth() {
+        return poleWidth.get();
+    }
+
     public int getPoleX() {
         return poleX.get();
     }
 
-    public int necessaryCorrection() {
+    /*public int necessaryCorrection() {
         int px = poleX.get();
         if (px == -1) { // We haven't ran yet, no correction is necessary
-            return 0;
+            return -1;
         } else {
             return px - targetX;
         }
-    }
+    }*/
 }
