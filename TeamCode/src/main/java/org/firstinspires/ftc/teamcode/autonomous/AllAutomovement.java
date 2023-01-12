@@ -44,7 +44,7 @@ public class AllAutomovement extends LinearOpMode {
         pipeline.minBlue = 167.4;
         pipeline.maxBlue = 208.4;
         // Offset for center of robot
-        pipeline.targetX = 120;
+        pipeline.targetX = 160;
 
         return pipeline;
     }
@@ -87,6 +87,41 @@ public class AllAutomovement extends LinearOpMode {
             robot.drives.get(Robot.DrivePos.BACK_LEFT).setPower(-correctionPower);
             robot.drives.get(Robot.DrivePos.FRONT_RIGHT).setPower(correctionPower);
             robot.drives.get(Robot.DrivePos.BACK_RIGHT).setPower(correctionPower);
+        }
+
+        // Stop the wheels when we're done (just in case)
+        for (Drive drive : robot.drives.values()) {
+            drive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            drive.setPower(0);
+        }
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    private void localizeDistance(DoubleThresholdPipeline pipeline) {
+        PIController distanceController = new PIController((0.06 / 8.0) / 2, 0, 3.0);
+
+        int settleCounter = 0;
+        while (settleCounter < 3 && (opModeIsActive() || opModeInInit())) {
+            double widthCorrection = 26 - pipeline.getPoleWidth();
+            logger.debug("Width Correction: " + widthCorrection);
+
+            if (Math.abs(widthCorrection) < .5) {
+                // If we're really close to the target, increase the settle counter
+                settleCounter++;
+            } else {
+                // If we're not close, reset the settle counter
+                settleCounter = 0;
+            }
+
+            double widthPowerCorrection = distanceController.update(widthCorrection);
+            logger.debug("Width Power Correction: " + widthPowerCorrection);
+
+            robot.drives.get(Robot.DrivePos.FRONT_LEFT).setPower(widthPowerCorrection);
+            robot.drives.get(Robot.DrivePos.BACK_LEFT).setPower(widthPowerCorrection);
+            robot.drives.get(Robot.DrivePos.FRONT_RIGHT).setPower(widthPowerCorrection);
+            robot.drives.get(Robot.DrivePos.BACK_RIGHT).setPower(widthPowerCorrection);
+
+            sleep(100);
         }
 
         // Stop the wheels when we're done (just in case)
@@ -161,6 +196,7 @@ public class AllAutomovement extends LinearOpMode {
             Thread.yield();
         }
 
+        localizeDistance(poleDetectionPipeline);
         localizeOnPole(poleDetectionPipeline);
 
         // Raise it up to high height
@@ -171,23 +207,20 @@ public class AllAutomovement extends LinearOpMode {
             Thread.yield();
         }
 
-        robot.arm.reacher.setTargetPosition(1850);
+        robot.arm.reacher.setTargetPosition(1800);
 
         while (robot.arm.reacher.isBusy() && !isStopRequested()) {}
+
+        robot.arm.pincher.contract();
 
         sleep(5000);
 
         robot.arm.reacher.setTargetPosition(900);
 
-        navigator.navigationMonitorTurn(-57);
+        navigator.navigationMonitorTurn(0);
         navigator.ceaseMotion();
 
         while (!isStopRequested()) {}
-
-        // Extend the reacher over the pole
-        // TODO
-        // Drop the cone
-        robot.arm.pincher.contract();
     }
 }
 
