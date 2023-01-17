@@ -258,6 +258,8 @@ public class AllAutomovement extends LinearOpMode {
             robot.camera.setPipeline(poleDetectionPipeline);
         }
 
+        if (isStopRequested()) return;
+
         if (DO_AUTO_PATH) {
 
             // Pause the pipeline to save resources
