@@ -2,6 +2,9 @@ package org.firstinspires.ftc.teamcode.Shared;
 
 import android.util.Log;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -16,6 +19,7 @@ import org.firstinspires.ftc.teamcode.util.Logger;
 
 import java.util.HashMap;
 
+@Config
 public class Navigator {
     // Used to when calling Android's Log class
     String TAG = "Drive";
@@ -170,11 +174,13 @@ public class Navigator {
         internalNavigationLoop(speed, xInches, yInches, phi, timout, false, true);
     }
 
+    public static int ROT_TIMEOUT = 2;
+
     public void navigationMonitorTurn(double phi) {
         // We only want to turn, but due to a bug in the navigation loop, it will not work if both x/y are 0.
         // So we'll set x to 1, and the speed to 0 so that it doesn't actually move.
         // monitorTotalTravel is set to false so that the loop is not blocked until the correct number of ticks are reached (which will never happen)
-        internalNavigationLoop(0, 1, 0, phi, 10, false, false);
+        internalNavigationLoop(0, 999, 0, phi, ROT_TIMEOUT, false, true);
     }
 
     public void navigationMonitorExternal(double inchesPerSecond, double xInches, double yInches, double phi, double timeoutSec, boolean isMonitorAcceleration) {
@@ -215,21 +221,32 @@ public class Navigator {
 
         int settleCounter = 0;
 
+        FtcDashboard dashboard = FtcDashboard.getInstance();
+
         // Stay in the main loop while:
         while (opMode.opModeIsActive() // The opmode is still active
                 && System.currentTimeMillis() < startMillis + (1000 * timeoutSec) // We haven't timed out
                 && (monitorTotalTravel && (inchesTraveledTotal < magnitude)) // We are monitoring total travel, and we haven't reached the target yet
-                || (settleCounter < 3) // We are waiting for the robot to settle
+                //|| (settleCounter < 10) // We are waiting for the robot to settle
                 && !mIsStopped // We haven't been told to stop (by another thread)
                 && !shouldStopIfApplicable(isMonitorAcceleration, startMillis) // We haven't been told to stop (by the acceleration monitor)
         ) {
+            /*TelemetryPacket packet = new TelemetryPacket();
+            packet.put("Target", mTargetAngle);
+            packet.put("IMU Angle", getImuAngle());
+            packet.put("Error", mTargetAngle - getImuAngle());
+            packet.put("Euler Error", getEulerAngleDegrees(mTargetAngle - getImuAngle()));
+            dashboard.sendTelemetryPacket(packet);
+
             if (Math.abs(getEulerAngleDegrees(mTargetAngle - getAdjustedAngle())) < 1) {
                 // If we're really close to the target, increase the settle counter
                 settleCounter++;
             } else {
                 // If we're not close, reset the settle counter
                 settleCounter = 0;
-            }
+            }*/
+
+
 
             double TotalMotorCurrent = leftFrontDrive.getCurrent();
             TotalMotorCurrent += leftBackDrive.getCurrent();

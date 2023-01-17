@@ -5,11 +5,19 @@ import static org.openftc.apriltag.ApriltagDetectionJNI.freeDetectionList;
 import static org.openftc.apriltag.ApriltagDetectionJNI.getDetectionPointers;
 import static org.openftc.apriltag.ApriltagDetectionJNI.getId;
 
+import android.icu.text.BidiRun;
+
+import com.acmerobotics.dashboard.config.Config;
+
+import org.opencv.core.Core;
 import org.opencv.core.Mat;
+import org.opencv.core.Point;
+import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.apriltag.AprilTagDetectorJNI;
 import org.openftc.easyopencv.OpenCvPipeline;
 
+@Config
 public class AprilTagPipeline extends OpenCvPipeline
 {
     private int[] ids;
@@ -68,6 +76,9 @@ public class AprilTagPipeline extends OpenCvPipeline
         return ids;
     }
 
+    public static double CONTRAST = 2.0;
+    public static int BRIGHTNESS = 0;
+
     @Override
     public Mat processFrame(Mat input)
     {
@@ -75,10 +86,15 @@ public class AprilTagPipeline extends OpenCvPipeline
 
         // Convert to greyscale
         Imgproc.cvtColor(input, grey, Imgproc.COLOR_RGBA2GRAY);
+        Core.convertScaleAbs(grey, grey, CONTRAST, BRIGHTNESS);
 
         this.ids = detectTags(grey);
 
-        return input;
+        if (this.ids != null) {
+            Imgproc.drawMarker(grey, new Point(10,10), new Scalar(0,255,0));
+        }
+
+        return grey;
     }
 
     public int[] getIds() {

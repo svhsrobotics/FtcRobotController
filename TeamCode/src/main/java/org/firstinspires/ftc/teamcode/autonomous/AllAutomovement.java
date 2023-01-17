@@ -18,7 +18,6 @@ import org.firstinspires.ftc.teamcode.util.Logger;
 import org.firstinspires.ftc.teamcode.util.PIController;
 import org.firstinspires.ftc.teamcode.util.Timeout;
 import org.firstinspires.ftc.teamcode.vision.AprilTagPipeline;
-import org.firstinspires.ftc.teamcode.vision.SwitchablePipeline;
 import org.firstinspires.ftc.teamcode.vision.pole.DoubleThresholdPipeline;
 
 @Config
@@ -74,7 +73,7 @@ public class AllAutomovement extends LinearOpMode {
         public static double IGAIN = 0.0;
         public static double IWINDUPLIMIT = 3.0;
         public static int SETTLE_PX = 5;
-        public static int TARGET = 170;
+        public static int TARGET = 140;
         public static int FRAME_SLEEP = 30;
     }
 
@@ -222,28 +221,37 @@ public class AllAutomovement extends LinearOpMode {
         }
     }*/
 
-    public static double AUTO_SPEED = 12.0;
+    public static double AUTO_SPEED = 20.0;
     public static int REACH_LENGTH = 1800;
-    public static double NEXT_DEG = 0.0;
+    public static double NEXT_DEG = 90.0;
     public static double TURN_DEG = 57.0;
 
-    public static boolean DO_AUTO_PATH = false;
-    public static boolean DO_DISTANCE = false;
-    public static boolean DO_ROTATION = false;
+    public static boolean DO_AUTO_PATH = true;
+    public static boolean DO_DISTANCE = true;
+    public static boolean DO_ROTATION = true;
+    public static boolean DO_PARKING = true;
     public static boolean LOOP_ROTATION = false;
     public static boolean LOOP_DISTANCE = false;
 
+   // public static double X_MODIFIER = 0.0;
+    public static double Y_PARK = 0.0;
+
     public static int LOOP_SLEEP = 5000;
+
+    public static double MAGIC_CONVERSION = .4;
+
+    public static double FORWARD = 17;
 
     @Override
     public void runOpMode() throws InterruptedException {
         robot = new PowerPlayBotV2(hardwareMap, logger);
         robot.initHardware();
         navigator = new Navigator(robot, this);
+        FtcDashboard dashboard = FtcDashboard.getInstance();
 
         AprilTagPipeline aprilTagPipeline = new AprilTagPipeline();
-        SwitchablePipeline pipeline = new SwitchablePipeline(aprilTagPipeline); //TODO: Remove no longer necessary, use setPipeline
-        robot.camera.setPipeline(pipeline);
+        //SwitchablePipeline pipeline = new SwitchablePipeline(aprilTagPipeline); //TODO: Remove no longer necessary, use setPipeline
+        robot.camera.setPipeline(aprilTagPipeline);
         if (!robot.camera.opened) {
             robot.camera.open(new Timeout(10));
         } else {
@@ -253,15 +261,20 @@ public class AllAutomovement extends LinearOpMode {
         // Wait for the start button to be pressed
         waitForStart();
 
+        int tagId = 0;
         if (DO_AUTO_PATH) {
-
             // Detect the tag
-            int tagId = detectTag(aprilTagPipeline);
+            tagId = detectTag(aprilTagPipeline);
             logger.info("AprilTag Detected: " + tagId);
+        }
 
-            DoubleThresholdPipeline poleDetectionPipeline = initializePoleDetection();
-            pipeline.currentPipeline = poleDetectionPipeline;
+        DoubleThresholdPipeline poleDetectionPipeline = null;
+        if (DO_DISTANCE || DO_ROTATION || LOOP_DISTANCE || LOOP_ROTATION) {
+            poleDetectionPipeline = initializePoleDetection();
+            robot.camera.setPipeline(poleDetectionPipeline);
+        }
 
+        if (DO_AUTO_PATH) {
 
             // Pause the pipeline to save resources
             // robot.camera.pause();
@@ -284,7 +297,7 @@ public class AllAutomovement extends LinearOpMode {
             navigator.navigationMonitorTicksAndCeaseMotion(AUTO_SPEED, 15, 0, 10);
 
             // Move forward
-            navigator.navigationMonitorTicksAndCeaseMotion(AUTO_SPEED, 0, 17, 10);
+            navigator.navigationMonitorTicksAndCeaseMotion(AUTO_SPEED, 0, FORWARD, 10);
 
             // Turn to face our target direction
             navigator.navigationMonitorTurn(TURN_DEG);
@@ -303,24 +316,24 @@ public class AllAutomovement extends LinearOpMode {
             }
         }
 
-        if (DO_DISTANCE || DO_ROTATION || LOOP_ROTATION || LOOP_DISTANCE) {
-            DoubleThresholdPipeline poleDetectionPipeline = initializePoleDetection();
-            pipeline.currentPipeline = poleDetectionPipeline;
-            if (DO_DISTANCE) {
-                localizeDistance(poleDetectionPipeline);
-            }
-            if (DO_ROTATION) {
-                localizeOnPole(poleDetectionPipeline);
-            }
 
-            while (LOOP_DISTANCE) {
-                localizeDistance(poleDetectionPipeline);
-                sleep(LOOP_SLEEP);
-            }
-            while (LOOP_ROTATION) {
-                localizeOnPole(poleDetectionPipeline);
-                sleep(LOOP_SLEEP);
-            }
+        if (DO_ROTATION) {
+            localizeOnPole(poleDetectionPipeline);
+        }
+        if (DO_DISTANCE) {
+            localizeDistance(poleDetectionPipeline);
+        }
+        if (DO_ROTATION) {
+            localizeOnPole(poleDetectionPipeline);
+        }
+
+        while (LOOP_DISTANCE && opModeIsActive()) {
+            localizeDistance(poleDetectionPipeline);
+            sleep(LOOP_SLEEP);
+        }
+        while (LOOP_ROTATION && opModeIsActive()) {
+            localizeOnPole(poleDetectionPipeline);
+            sleep(LOOP_SLEEP);
         }
 
         if (DO_AUTO_PATH) {
@@ -345,13 +358,31 @@ public class AllAutomovement extends LinearOpMode {
 
             robot.arm.reacher.setTargetPosition(0);
 
-            navigator.navigationMonitorTurn(NEXT_DEG);
-            navigator.ceaseMotion();
+            //navigator.navigationMonitorTurn(NEXT_DEG);
+           // navigator.ceaseMotion();
 
             while (robot.arm.reacher.isBusy() && !isStopRequested()) {}
 
-            robot.arm.lift.setPreset(Arm.Lift.Preset.MEDIUM_POLE);
+            //robot.arm.lift.setPreset(Arm.Lift.Preset.MEDIUM_POLE);
 
+        }
+
+        if (DO_PARKING) {
+            TelemetryPacket packet = new TelemetryPacket();
+            double angle = navigator.getImuAngle();
+            packet.put("IMU Angle", angle);
+
+            navigator.navigationMonitorTurn(NEXT_DEG);
+            navigator.ceaseMotion();
+
+            robot.arm.lift.setPower(0);
+
+            double error = -(12 - (26 * Math.cos(angle)));
+            packet.put("Error", error);
+            packet.put("Converted", error * MAGIC_CONVERSION);
+            dashboard.sendTelemetryPacket(packet);
+            navigator.navigationMonitorTicksPhi(AUTO_SPEED, error * MAGIC_CONVERSION, Y_PARK, NEXT_DEG, 10);
+            navigator.ceaseMotion();
         }
         while (!isStopRequested()) {}
     }
