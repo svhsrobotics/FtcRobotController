@@ -332,7 +332,7 @@ public class AllAutomovement extends LinearOpMode {
             sleep(LOOP_SLEEP);
         }
 
-        if (DO_AUTO_PATH) {
+        if (DO_AUTO_PATH && !isStopRequested()) {
 
             // Raise it up to high height
             robot.arm.lift.setPreset(Arm.Lift.Preset.HIGH_POLE);
@@ -345,6 +345,11 @@ public class AllAutomovement extends LinearOpMode {
             robot.arm.reacher.setTargetPosition(REACH_LENGTH);
 
             while (robot.arm.reacher.isBusy() && !isStopRequested()) {}
+
+            if (isStopRequested()) {
+                robot.arm.reacher.setTargetPosition(0);
+                return;
+            }
 
             robot.arm.pincher.contract();
 
@@ -363,7 +368,7 @@ public class AllAutomovement extends LinearOpMode {
 
         }
 
-        if (DO_PARKING) {
+        if (DO_PARKING && !isStopRequested()) {
             TelemetryPacket packet = new TelemetryPacket();
             double angle = navigator.getImuAngle();
             packet.put("IMU Angle", angle);
