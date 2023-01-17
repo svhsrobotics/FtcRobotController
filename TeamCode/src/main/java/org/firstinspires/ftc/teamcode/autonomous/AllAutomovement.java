@@ -142,6 +142,7 @@ public class AllAutomovement extends LinearOpMode {
         public static int FRAME_SLEEP = 30;
         public static double SAFETY_MAX = 1.0;
         public static double MIN_WIDTH = 15.0;
+        public static double CUTOFF = 30;
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -163,6 +164,10 @@ public class AllAutomovement extends LinearOpMode {
                 dashboard.sendTelemetryPacket(packet);
                 sleep(DistancePID.FRAME_SLEEP);
                 continue;
+            }
+            if (width > DistancePID.CUTOFF) {
+                // This isn't realistic, we're getting a bad reading
+                width = DistancePID.CUTOFF;
             }
             double correction = DistancePID.TARGET - width;
             packet.put("correction", correction);
@@ -198,29 +203,6 @@ public class AllAutomovement extends LinearOpMode {
         }
     }
 
-    /*@Override
-    public void runOpMode() throws InterruptedException {
-        robot = new PowerPlayBotV2(hardwareMap, logger);
-        robot.initHardware();
-        navigator = new Navigator(robot, this);
-
-        DoubleThresholdPipeline pipeline = initializePoleDetection();
-        robot.camera.setPipeline(pipeline);
-        if (!robot.camera.opened) {
-            robot.camera.open(new Timeout(10));
-        } else {
-            robot.camera.resume();
-        }
-
-        waitForStart();
-
-        while (opModeIsActive()) {
-            //localizeDistance(pipeline);
-            localizeOnPole(pipeline);
-            sleep(DistancePID.LOOP_SLEEP);
-        }
-    }*/
-
     public static double AUTO_SPEED = 20.0;
     public static int REACH_LENGTH = 1800;
     public static double NEXT_DEG = 90.0;
@@ -238,9 +220,11 @@ public class AllAutomovement extends LinearOpMode {
 
     public static int LOOP_SLEEP = 5000;
 
-    public static double MAGIC_CONVERSION = .4;
+    public static double MAGIC_CONVERSION = .1;
 
     public static double FORWARD = 17;
+
+    public static boolean LEFT_SIDE_MIRROR = false;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -293,18 +277,30 @@ public class AllAutomovement extends LinearOpMode {
                 Thread.yield();
             }
 
-            // Move right past the ground station
-            navigator.navigationMonitorTicksAndCeaseMotion(AUTO_SPEED, 15, 0, 10);
+            if (LEFT_SIDE_MIRROR) {
+                // Move left past the ground station
+                navigator.navigationMonitorTicksAndCeaseMotion(AUTO_SPEED, -15, 0, 10);
+            } else {
+                // Move right past the ground station
+                navigator.navigationMonitorTicksAndCeaseMotion(AUTO_SPEED, 15, 0, 10);
+            }
 
             // Move forward
             navigator.navigationMonitorTicksAndCeaseMotion(AUTO_SPEED, 0, FORWARD, 10);
 
-            // Turn to face our target direction
-            navigator.navigationMonitorTurn(TURN_DEG);
-
-            // Move up to our special spot
-            navigator.navigationMonitorTicksPhi(AUTO_SPEED, 0, 5.5, 57, 10);
-            navigator.ceaseMotion();
+            if (LEFT_SIDE_MIRROR) {
+                // Turn to face our target direction
+                navigator.navigationMonitorTurn(-TURN_DEG);
+                // Move up to our special spot
+                navigator.navigationMonitorTicksPhi(AUTO_SPEED, 0, 5.5, -TURN_DEG, 10);
+                navigator.ceaseMotion();
+            } else {
+                // Turn to face our target direction
+                navigator.navigationMonitorTurn(TURN_DEG);
+                // Move up to our special spot
+                navigator.navigationMonitorTicksPhi(AUTO_SPEED, 0, 5.5, TURN_DEG, 10);
+                navigator.ceaseMotion();
+            }
 
             // Now it's time to drop the preloaded cone!
             // Raise up to med height so that our camera is not obstructed
