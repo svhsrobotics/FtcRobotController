@@ -368,16 +368,22 @@ public class AllAutomovement extends LinearOpMode {
             double angle = navigator.getImuAngle();
             packet.put("IMU Angle", angle);
 
-            navigator.navigationMonitorTurn(NEXT_DEG);
+            // Invert constants for left side
+            double next_deg = NEXT_DEG;
+            double magic_conversion = MAGIC_CONVERSION;
+            if (LEFT_SIDE_MIRROR) next_deg = -NEXT_DEG;
+            if (LEFT_SIDE_MIRROR) magic_conversion = -MAGIC_CONVERSION;
+
+            navigator.navigationMonitorTurn(next_deg);
             navigator.ceaseMotion();
 
             robot.arm.lift.setPower(0);
 
             double error = -(12 - (26 * Math.cos(angle)));
             packet.put("Error", error);
-            packet.put("Converted", error * MAGIC_CONVERSION);
+            packet.put("Converted", error * magic_conversion);
             dashboard.sendTelemetryPacket(packet);
-            navigator.navigationMonitorTicksPhi(AUTO_SPEED, error * MAGIC_CONVERSION, Y_PARK, NEXT_DEG, 10);
+            navigator.navigationMonitorTicksPhi(AUTO_SPEED, error * magic_conversion, Y_PARK, next_deg, 10);
             navigator.ceaseMotion();
         }
         while (!isStopRequested()) {}
