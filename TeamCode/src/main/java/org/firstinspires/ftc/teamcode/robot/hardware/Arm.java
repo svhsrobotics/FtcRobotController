@@ -77,9 +77,9 @@ public class Arm {
         public enum Preset {
             GRAB (40),
             GROUND (60),
-            DRIVING (400),
-            LOW_POLE (1130),
-            MEDIUM_POLE (1910),
+            DRIVING (500),
+            LOW_POLE (1230),
+            MEDIUM_POLE (2010),
             HIGH_POLE (2735);
 
             final int height;
