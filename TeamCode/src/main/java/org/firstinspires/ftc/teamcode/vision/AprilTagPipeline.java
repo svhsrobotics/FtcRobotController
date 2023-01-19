@@ -9,6 +9,7 @@ import android.icu.text.BidiRun;
 
 import com.acmerobotics.dashboard.config.Config;
 
+import org.firstinspires.ftc.teamcode.vision.pole.GlobalMatPool;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
@@ -82,7 +83,7 @@ public class AprilTagPipeline extends OpenCvPipeline
     @Override
     public Mat processFrame(Mat input)
     {
-        Mat grey = new Mat();
+        Mat grey = GlobalMatPool.get();
 
         // Convert to greyscale
         Imgproc.cvtColor(input, grey, Imgproc.COLOR_RGBA2GRAY);
@@ -90,11 +91,14 @@ public class AprilTagPipeline extends OpenCvPipeline
 
         this.ids = detectTags(grey);
 
+        Imgproc.cvtColor(grey, input, Imgproc.COLOR_GRAY2RGBA);
+
         if (this.ids != null) {
-            Imgproc.drawMarker(grey, new Point(10,10), new Scalar(0,255,0));
+            Imgproc.drawMarker(input, new Point(10,10), new Scalar(0,255,0));
         }
 
-        return grey;
+        GlobalMatPool.returnAll();
+        return input;
     }
 
     public int[] getIds() {
