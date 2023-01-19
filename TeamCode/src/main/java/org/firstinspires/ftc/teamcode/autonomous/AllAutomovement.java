@@ -396,9 +396,9 @@ public class AllAutomovement extends LinearOpMode {
             packet.put("Converted", error * magic_conversion);
             dashboard.sendTelemetryPacket(packet);
 
-            int y_park = 0;
+            double y_park = 0;
             if (tagId == 14) {
-                y_park = 13; // left
+                y_park = 11; // left
             } else if (tagId == 15) {
                 y_park = 3; // mid
             } else if (tagId == 16) {
