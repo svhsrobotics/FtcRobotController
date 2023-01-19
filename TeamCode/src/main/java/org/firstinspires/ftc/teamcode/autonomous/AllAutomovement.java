@@ -69,12 +69,12 @@ public class AllAutomovement extends LinearOpMode {
 
     @Config
     public static class RotationPID {
-        public static double PGAIN = (0.06 / 8.0) / 2;
+        public static double PGAIN = 0.000675;
         public static double IGAIN = 0.0;
-        public static double IWINDUPLIMIT = 3.0;
-        public static int SETTLE_PX = 5;
-        public static int TARGET = 140;
-        public static int FRAME_SLEEP = 30;
+        public static double IWINDUPLIMIT = 100.0;
+        public static int SETTLE_PX = 8;
+        public static int TARGET = 420;
+        public static int FRAME_SLEEP = 80;
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -134,15 +134,15 @@ public class AllAutomovement extends LinearOpMode {
 
     @Config
     public static class DistancePID {
-        public static double PGAIN = 0.06;
+        public static double PGAIN = 0.01;
         public static double IGAIN = 0;
         public static double IWINDUP_LIMIT = 100.0;
-        public static double SETTLE_LIMIT = 0.1;
-        public static int TARGET = 26;
-        public static int FRAME_SLEEP = 30;
+        public static double SETTLE_LIMIT = 0.01;
+        public static int TARGET = 50;
+        public static int FRAME_SLEEP = 80;
         public static double SAFETY_MAX = 1.0;
         public static double MIN_WIDTH = 15.0;
-        public static double CUTOFF = 30;
+        public static double CUTOFF = 300;
     }
 
     @SuppressWarnings("ConstantConditions")

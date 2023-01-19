@@ -291,6 +291,7 @@ public class DoubleThresholdPipeline extends OpenCvPipeline {
 
     @Override
     public Mat processFrame(Mat input) {
+        input = input.submat(new Rect(0, 720 / 2, 960, 720 / 2));
         //new Logger(telemetry).debug("ENTERED DOUBLE THRESHOLD PROCESS FRAME");
         telemetry.addData("Loop time" , ((System.nanoTime() - lastNanoTime) / 1000 / 1000));
         lastNanoTime = System.nanoTime();
@@ -330,6 +331,7 @@ public class DoubleThresholdPipeline extends OpenCvPipeline {
         poleX.set(-1);
         poleWidth.set(-1.0);
         // Find the contour with the largest area
+        Mat finalInput = input;
         contours.stream().max(Comparator.comparingDouble(this::getPoleWidth)).ifPresent(max -> {
             Point[] points = fitRotatedRect(max);
 
@@ -338,7 +340,7 @@ public class DoubleThresholdPipeline extends OpenCvPipeline {
             //Point bottomMiddle = new Point(rect.x + (rect.width / 2.0), rect.y + rect.height);
             //Imgproc.drawMarker(input, bottomMiddle, new Scalar(0, 255, 0), Imgproc.MARKER_CROSS, 20, 2);
             Point topMiddle = getTopMiddle(points);
-            Imgproc.drawMarker(input, topMiddle, new Scalar(0, 255, 255), Imgproc.MARKER_CROSS, 10, 2);
+            Imgproc.drawMarker(finalInput, topMiddle, new Scalar(0, 255, 255), Imgproc.MARKER_CROSS, 10, 2);
 
             poleX.set((int) Math.floor(topMiddle.x));
 
@@ -351,8 +353,8 @@ public class DoubleThresholdPipeline extends OpenCvPipeline {
             poleWidth.set(getPoleWidth(max));
 
             //new Logger(telemetry).info(String.format("Pole Width: %f", poleWidth.get()));
-            Imgproc.putText(input, String.format("%f", poleWidth.get()), new Point(0, 50), Imgproc.FONT_HERSHEY_PLAIN, 1.5, new Scalar(0, 255, 0), 2);
-            Imgproc.putText(input, String.format("%d", poleX.get()), new Point(0, 20), Imgproc.FONT_HERSHEY_PLAIN, 1.5, new Scalar(0, 255, 0), 2);
+            Imgproc.putText(finalInput, String.format("%f", poleWidth.get()), new Point(0, 50), Imgproc.FONT_HERSHEY_PLAIN, 1.5, new Scalar(0, 255, 0), 2);
+            Imgproc.putText(finalInput, String.format("%d", poleX.get()), new Point(0, 20), Imgproc.FONT_HERSHEY_PLAIN, 1.5, new Scalar(0, 255, 0), 2);
 
 
         });
