@@ -216,15 +216,17 @@ public class AllAutomovement extends LinearOpMode {
     public static boolean LOOP_DISTANCE = false;
 
    // public static double X_MODIFIER = 0.0;
-    public static double Y_PARK = 0.0;
+    //public static double Y_PARK = 0.0;
 
     public static int LOOP_SLEEP = 5000;
 
-    public static double MAGIC_CONVERSION = .1;
+    public static double MAGIC_CONVERSION = .04;
 
     public static double FORWARD = 17;
 
     public static boolean LEFT_SIDE_MIRROR = false;
+
+    public static int OVERRIDE_PARK_ID = 14;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -250,6 +252,9 @@ public class AllAutomovement extends LinearOpMode {
             // Detect the tag
             tagId = detectTag(aprilTagPipeline);
             logger.info("AprilTag Detected: " + tagId);
+        }
+        if (tagId == 0) {
+            tagId = OVERRIDE_PARK_ID;
         }
 
         DoubleThresholdPipeline poleDetectionPipeline = null;
@@ -390,7 +395,17 @@ public class AllAutomovement extends LinearOpMode {
             packet.put("Error", error);
             packet.put("Converted", error * magic_conversion);
             dashboard.sendTelemetryPacket(packet);
-            navigator.navigationMonitorTicksPhi(AUTO_SPEED, error * magic_conversion, Y_PARK, next_deg, 10);
+
+            int y_park = 0;
+            if (tagId == 14) {
+                y_park = 13; // left
+            } else if (tagId == 15) {
+                y_park = 3; // mid
+            } else if (tagId == 16) {
+                y_park = -5; // right
+            }
+
+            navigator.navigationMonitorTicksPhi(AUTO_SPEED, error * magic_conversion, y_park, next_deg, 10);
             navigator.ceaseMotion();
         }
         while (!isStopRequested()) {}
