@@ -32,6 +32,7 @@ public class PowerPlayBotV2 extends Robot {
     @Override
     public void initHardware() {
         super.initHardware();
+        initCamera();
         initArm();
         initCamera();
     }

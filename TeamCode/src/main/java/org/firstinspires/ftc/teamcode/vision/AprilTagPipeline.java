@@ -5,11 +5,20 @@ import static org.openftc.apriltag.ApriltagDetectionJNI.freeDetectionList;
 import static org.openftc.apriltag.ApriltagDetectionJNI.getDetectionPointers;
 import static org.openftc.apriltag.ApriltagDetectionJNI.getId;
 
+import android.icu.text.BidiRun;
+
+import com.acmerobotics.dashboard.config.Config;
+
+import org.firstinspires.ftc.teamcode.vision.pole.GlobalMatPool;
+import org.opencv.core.Core;
 import org.opencv.core.Mat;
+import org.opencv.core.Point;
+import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.apriltag.AprilTagDetectorJNI;
 import org.openftc.easyopencv.OpenCvPipeline;
 
+@Config
 public class AprilTagPipeline extends OpenCvPipeline
 {
     private int[] ids;
@@ -41,10 +50,16 @@ public class AprilTagPipeline extends OpenCvPipeline
     /// This function does all the actual work. It works with JNI pointers, be careful!
     private synchronized int[] detectTags(Mat input) {
         // Get a JNI pointer to the array containing the detections
+        if (nativeApriltagPtr == 0) {
+            throw new RuntimeException("AprilTagDetectionPipeline.detectTags(): nativeApriltagPtr was NULL");
+        }
+        if (input.nativeObj == 0) {
+            throw new RuntimeException("AprilTagDetectionPipeline.detectTags(): input.nativeObj was NULL");
+        }
         long detectionArrayPtr = runApriltagDetector(nativeApriltagPtr, input.nativeObj);
         // If no tags were found, return null
         if (detectionArrayPtr == 0) {
-            freeDetectionList(detectionArrayPtr);
+            //freeDetectionList(detectionArrayPtr);
             return null;
         }
         // Turn the JNI pointer to an array into an array of JNI pointers
@@ -53,22 +68,36 @@ public class AprilTagPipeline extends OpenCvPipeline
         int[] ids = new int[detectionsPtr.length];
         // For each JNI pointer
         for (int i = 0; i < detectionsPtr.length; i++) {
+            if (detectionsPtr[i] == 0) {
+                throw new RuntimeException("AprilTagDetectionPipeline.detectTags(): detectionsPtr[" + i + "] was NULL");
+            }
             ids[i] = getId(detectionsPtr[i]);
         }
         freeDetectionList(detectionArrayPtr);
         return ids;
     }
 
+    public static double CONTRAST = 2.0;
+    public static int BRIGHTNESS = 0;
+
     @Override
     public Mat processFrame(Mat input)
     {
-        Mat grey = new Mat();
+        Mat grey = GlobalMatPool.get();
 
         // Convert to greyscale
         Imgproc.cvtColor(input, grey, Imgproc.COLOR_RGBA2GRAY);
+        Core.convertScaleAbs(grey, grey, CONTRAST, BRIGHTNESS);
 
         this.ids = detectTags(grey);
 
+        Imgproc.cvtColor(grey, input, Imgproc.COLOR_GRAY2RGBA);
+
+        if (this.ids != null) {
+            Imgproc.drawMarker(input, new Point(10,10), new Scalar(0,255,0));
+        }
+
+        GlobalMatPool.returnAll();
         return input;
     }
 

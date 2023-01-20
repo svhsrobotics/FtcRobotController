@@ -2,10 +2,13 @@ package org.firstinspires.ftc.teamcode.robot.hardware;
 
 import androidx.annotation.NonNull;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.util.HardwareNotFoundException;
+import org.firstinspires.ftc.teamcode.util.Logger;
+import org.firstinspires.ftc.teamcode.util.Timeout;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -15,8 +18,10 @@ import org.openftc.easyopencv.OpenCvWebcam;
 public class Webcam {
     // Constants
     private static final OpenCvCameraRotation ROTATION = OpenCvCameraRotation.UPRIGHT;
-    private static final int WIDTH = 320;
-    private static final int HEIGHT = 240;
+    private static final int WIDTH = 960;
+    private static final int HEIGHT = 720;
+
+    public boolean opened = false;
 
     private final OpenCvWebcam webcam;
 
@@ -39,6 +44,7 @@ public class Webcam {
         } catch (IllegalArgumentException e) {
             throw new HardwareNotFoundException(e, "Webcam"); // Use Webcam instead of WebcamName
         }
+        FtcDashboard.getInstance().startCameraStream(this.webcam, 30);
     }
 
     /**
@@ -48,17 +54,25 @@ public class Webcam {
     public void openAsync() {
         this.webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
             @Override
-            public void onOpened() { resume(); }
+            public void onOpened() {
+                opened = true;
+                resume();
+            }
 
             @Override
-            public void onError(int errorCode) { }
+            public void onError(int errorCode) {
+                new Logger().error("Webcam returned error code: " + errorCode);
+            }
         });
     }
 
-    @Deprecated
     public void open() {
-        this.webcam.openCameraDevice();
-        resume();
+        open(new Timeout(10));
+    }
+
+    public void open(Timeout timeout) {
+        openAsync();
+        while (!this.opened && !timeout.expired()) { Thread.yield(); }
     }
 
     /**
