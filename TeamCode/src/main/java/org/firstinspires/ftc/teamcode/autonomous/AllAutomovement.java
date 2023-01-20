@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Shared.Navigator;
 import org.firstinspires.ftc.teamcode.robot.PowerPlayBotV2;
 import org.firstinspires.ftc.teamcode.robot.Robot;
@@ -21,9 +22,18 @@ import org.firstinspires.ftc.teamcode.vision.AprilTagPipeline;
 import org.firstinspires.ftc.teamcode.vision.pole.DoubleThresholdPipeline;
 
 @Config
-@Autonomous(name = "Autonomous", preselectTeleOp = "TeleOp")
-public class AllAutomovement extends LinearOpMode {
-    private final Logger logger = new Logger(telemetry, true);
+//@Autonomous(name = "Autonomous", preselectTeleOp = "TeleOp")
+public class AllAutomovement {
+    private LinearOpMode opMode;
+    private Logger logger = new Logger();
+
+    public AllAutomovement(LinearOpMode opMode) {
+        this.opMode = opMode;
+        this.logger = new Logger(opMode.telemetry, true);
+
+
+    }
+    //private final Logger logger = new Logger(opMode.telemetry, true);
 
     private PowerPlayBotV2 robot;
     private Navigator navigator;
@@ -40,7 +50,7 @@ public class AllAutomovement extends LinearOpMode {
     }
 
     private DoubleThresholdPipeline initializePoleDetection() {
-        DoubleThresholdPipeline pipeline = new DoubleThresholdPipeline(telemetry);
+        DoubleThresholdPipeline pipeline = new DoubleThresholdPipeline(opMode.telemetry);
 
         // Tune the pipeline for yellow poles
         pipeline.minHue = 16.4;
@@ -57,7 +67,7 @@ public class AllAutomovement extends LinearOpMode {
         logger.debug("Detecting tag...");
         // Wait for the camera to see a tag
         Timeout detectionTimeout = new Timeout(5);
-        while (pipeline.getIds() == null && opModeIsActive() && !detectionTimeout.expired()) { Thread.yield(); }
+        while (pipeline.getIds() == null && opMode.opModeIsActive() && !detectionTimeout.expired()) { Thread.yield(); }
         // null check to prevent crash
         int[] ids = pipeline.getIds();
         if (ids == null) {
@@ -83,7 +93,7 @@ public class AllAutomovement extends LinearOpMode {
         FtcDashboard dashboard = FtcDashboard.getInstance();
 
         int settleCounter = 0;
-        while (settleCounter < 3 && (opModeIsActive() || opModeInInit())) {
+        while (settleCounter < 3 && (opMode.opModeIsActive()) || opMode.opModeInInit()) {
             TelemetryPacket packet = new TelemetryPacket();
             double x = pipeline.getPoleX();
             packet.put("x", x);
@@ -94,7 +104,7 @@ public class AllAutomovement extends LinearOpMode {
                     drive.setPower(0);
                 }
                 dashboard.sendTelemetryPacket(packet);
-                sleep(RotationPID.FRAME_SLEEP);
+                opMode.sleep(RotationPID.FRAME_SLEEP);
                 continue;
             }
             double correction = RotationPID.TARGET - x;
@@ -122,7 +132,7 @@ public class AllAutomovement extends LinearOpMode {
             robot.drives.get(Robot.DrivePos.FRONT_RIGHT).setPower(correctionPower);
             robot.drives.get(Robot.DrivePos.BACK_RIGHT).setPower(correctionPower);
 
-            sleep(RotationPID.FRAME_SLEEP);
+            opMode.sleep(RotationPID.FRAME_SLEEP);
         }
 
         // Stop the wheels when we're done (just in case)
@@ -138,7 +148,7 @@ public class AllAutomovement extends LinearOpMode {
         public static double IGAIN = 0;
         public static double IWINDUP_LIMIT = 100.0;
         public static double SETTLE_LIMIT = 0.01;
-        public static int TARGET = 50;
+        public static int TARGET = 58;
         public static int FRAME_SLEEP = 80;
         public static double SAFETY_MAX = 1.0;
         public static double MIN_WIDTH = 15.0;
@@ -151,7 +161,7 @@ public class AllAutomovement extends LinearOpMode {
         FtcDashboard dashboard = FtcDashboard.getInstance();
 
         int settleCounter = 0;
-        while (settleCounter < 3 && (opModeIsActive() || opModeInInit())) {
+        while (settleCounter < 3 && (opMode.opModeIsActive() || opMode.opModeInInit())) {
             TelemetryPacket packet = new TelemetryPacket();
             double width = pipeline.getPoleWidth();
             packet.put("width", width);
@@ -162,7 +172,7 @@ public class AllAutomovement extends LinearOpMode {
                     drive.setPower(0);
                 }
                 dashboard.sendTelemetryPacket(packet);
-                sleep(DistancePID.FRAME_SLEEP);
+                opMode.sleep(DistancePID.FRAME_SLEEP);
                 continue;
             }
             if (width > DistancePID.CUTOFF) {
@@ -193,7 +203,7 @@ public class AllAutomovement extends LinearOpMode {
             robot.drives.get(Robot.DrivePos.FRONT_RIGHT).setPower(widthPowerCorrection);
             robot.drives.get(Robot.DrivePos.BACK_RIGHT).setPower(widthPowerCorrection);
 
-            sleep(DistancePID.FRAME_SLEEP);
+            opMode.sleep(DistancePID.FRAME_SLEEP);
         }
 
         // Stop the wheels when we're done (just in case)
@@ -228,11 +238,11 @@ public class AllAutomovement extends LinearOpMode {
 
     public static int OVERRIDE_PARK_ID = 14;
 
-    @Override
+   // @Override
     public void runOpMode() throws InterruptedException {
-        robot = new PowerPlayBotV2(hardwareMap, logger);
+        robot = new PowerPlayBotV2(opMode.hardwareMap, logger);
         robot.initHardware();
-        navigator = new Navigator(robot, this);
+        navigator = new Navigator(robot, opMode);
         FtcDashboard dashboard = FtcDashboard.getInstance();
 
         AprilTagPipeline aprilTagPipeline = new AprilTagPipeline();
@@ -245,7 +255,7 @@ public class AllAutomovement extends LinearOpMode {
         }
 
         // Wait for the start button to be pressed
-        waitForStart();
+        opMode.waitForStart();
 
         int tagId = 0;
         if (DO_AUTO_PATH) {
@@ -263,7 +273,7 @@ public class AllAutomovement extends LinearOpMode {
             robot.camera.setPipeline(poleDetectionPipeline);
         }
 
-        if (isStopRequested()) return;
+        if (opMode.isStopRequested()) return;
 
         if (DO_AUTO_PATH) {
 
@@ -280,7 +290,7 @@ public class AllAutomovement extends LinearOpMode {
             robot.arm.lift.setPreset(Arm.Lift.Preset.DRIVING);
 
             // Wait for it to arrive at drive height
-            while (robot.arm.lift.isBusy() && !isStopRequested()) {
+            while (robot.arm.lift.isBusy() && !opMode.isStopRequested()) {
                 Thread.yield();
             }
 
@@ -314,7 +324,7 @@ public class AllAutomovement extends LinearOpMode {
             robot.arm.lift.setPreset(Arm.Lift.Preset.MEDIUM_POLE);
 
             // Wait for it to arrive at the height
-            while (robot.arm.lift.isBusy() && !isStopRequested()) {
+            while (robot.arm.lift.isBusy() && !opMode.isStopRequested()) {
                 Thread.yield();
             }
         }
@@ -330,37 +340,37 @@ public class AllAutomovement extends LinearOpMode {
             localizeOnPole(poleDetectionPipeline);
         }
 
-        while (LOOP_DISTANCE && opModeIsActive()) {
+        while (LOOP_DISTANCE && opMode.opModeIsActive()) {
             localizeDistance(poleDetectionPipeline);
-            sleep(LOOP_SLEEP);
+            opMode.sleep(LOOP_SLEEP);
         }
-        while (LOOP_ROTATION && opModeIsActive()) {
+        while (LOOP_ROTATION && opMode.opModeIsActive()) {
             localizeOnPole(poleDetectionPipeline);
-            sleep(LOOP_SLEEP);
+            opMode.sleep(LOOP_SLEEP);
         }
 
-        if (DO_AUTO_PATH && !isStopRequested()) {
+        if (DO_AUTO_PATH && !opMode.isStopRequested()) {
 
             // Raise it up to high height
             robot.arm.lift.setPreset(Arm.Lift.Preset.HIGH_POLE);
 
             // Wait for it to arrive at the height
-            while (robot.arm.lift.isBusy() && !isStopRequested()) {
+            while (robot.arm.lift.isBusy() && !opMode.isStopRequested()) {
                 Thread.yield();
             }
 
             robot.arm.reacher.setTargetPosition(REACH_LENGTH);
 
-            while (robot.arm.reacher.isBusy() && !isStopRequested()) {}
+            while (robot.arm.reacher.isBusy() && !opMode.isStopRequested()) {}
 
-            if (isStopRequested()) {
+            if (opMode.isStopRequested()) {
                 robot.arm.reacher.setTargetPosition(0);
                 return;
             }
 
             robot.arm.pincher.contract();
 
-            sleep(500);
+            opMode.sleep(500);
 
             //sleep(5000);
 
@@ -369,13 +379,13 @@ public class AllAutomovement extends LinearOpMode {
             //navigator.navigationMonitorTurn(NEXT_DEG);
            // navigator.ceaseMotion();
 
-            while (robot.arm.reacher.isBusy() && !isStopRequested()) {}
+            while (robot.arm.reacher.isBusy() && !opMode.isStopRequested()) {}
 
             //robot.arm.lift.setPreset(Arm.Lift.Preset.MEDIUM_POLE);
 
         }
 
-        if (DO_PARKING && !isStopRequested()) {
+        if (DO_PARKING && !opMode.isStopRequested()) {
             TelemetryPacket packet = new TelemetryPacket();
             double angle = navigator.getImuAngle();
             packet.put("IMU Angle", angle);
@@ -383,7 +393,8 @@ public class AllAutomovement extends LinearOpMode {
             // Invert constants for left side
             double next_deg = NEXT_DEG;
             double magic_conversion = MAGIC_CONVERSION;
-            if (LEFT_SIDE_MIRROR) next_deg = -NEXT_DEG;
+            //if (LEFT_SIDE_MIRROR) next_deg = -NEXT_DEG;
+            next_deg = 0;
             if (LEFT_SIDE_MIRROR) magic_conversion = -MAGIC_CONVERSION;
 
             navigator.navigationMonitorTurn(next_deg);
@@ -397,18 +408,28 @@ public class AllAutomovement extends LinearOpMode {
             dashboard.sendTelemetryPacket(packet);
 
             double y_park = 0;
-            if (tagId == 14) {
-                y_park = 11; // left
-            } else if (tagId == 15) {
-                y_park = 3; // mid
-            } else if (tagId == 16) {
-                y_park = -5; // right
+            if (LEFT_SIDE_MIRROR) {
+                if (tagId == 16) {
+                    y_park = -14; // left
+                } else if (tagId == 15) {
+                    y_park = -3; // mid
+                } else if (tagId == 14) {
+                    y_park = 4; // right
+                }
+            } else {
+                if (tagId == 14) {
+                    y_park = 14; // left
+                } else if (tagId == 15) {
+                    y_park = 3; // mid
+                } else if (tagId == 16) {
+                    y_park = -4; // right
+                }
             }
 
-            navigator.navigationMonitorTicksPhi(AUTO_SPEED, error * magic_conversion, y_park, next_deg, 10);
+            navigator.navigationMonitorTicksPhi(AUTO_SPEED, -y_park, 0, next_deg, 10);
             navigator.ceaseMotion();
         }
-        while (!isStopRequested()) {}
+        while (!opMode.isStopRequested()) {}
     }
 }
 
