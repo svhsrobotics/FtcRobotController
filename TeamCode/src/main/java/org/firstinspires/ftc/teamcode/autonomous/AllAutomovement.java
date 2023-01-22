@@ -148,7 +148,7 @@ public class AllAutomovement {
         public static double IGAIN = 0;
         public static double IWINDUP_LIMIT = 100.0;
         public static double SETTLE_LIMIT = 0.01;
-        public static int TARGET = 58;
+        public static int TARGET = 56;
         public static int FRAME_SLEEP = 80;
         public static double SAFETY_MAX = 1.0;
         public static double MIN_WIDTH = 15.0;
@@ -402,6 +402,9 @@ public class AllAutomovement {
 
             robot.arm.lift.setPower(0);
 
+            navigator.navigationMonitorTicksPhi(AUTO_SPEED / 2, 0, -1, 0, 10);
+            navigator.ceaseMotion();
+
             double error = -(12 - (26 * Math.cos(angle)));
             packet.put("Error", error);
             packet.put("Converted", error * magic_conversion);
@@ -418,7 +421,7 @@ public class AllAutomovement {
                 }
             } else {
                 if (tagId == 14) {
-                    y_park = 14; // left
+                    y_park = 16; // left
                 } else if (tagId == 15) {
                     y_park = 3; // mid
                 } else if (tagId == 16) {
