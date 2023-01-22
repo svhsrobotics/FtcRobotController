@@ -319,9 +319,11 @@ public class AllAutomovement {
                 navigator.ceaseMotion();
             }
 
-            // Now it's time to drop the preloaded cone!
-            // Raise up to med height so that our camera is not obstructed
-            robot.arm.lift.setPreset(Arm.Lift.Preset.MEDIUM_POLE);
+            if (LEFT_SIDE_MIRROR) {
+                // Now it's time to drop the preloaded cone!
+                // Raise up to med height so that our camera is not obstructed
+                robot.arm.lift.setPreset(Arm.Lift.Preset.MEDIUM_POLE);
+            }
 
             // Wait for it to arrive at the height
             while (robot.arm.lift.isBusy() && !opMode.isStopRequested()) {
@@ -329,49 +331,52 @@ public class AllAutomovement {
             }
         }
 
+        if (LEFT_SIDE_MIRROR) {
+            if (DO_ROTATION) {
+                localizeOnPole(poleDetectionPipeline);
+            }
 
-        if (DO_ROTATION) {
-            localizeOnPole(poleDetectionPipeline);
-        }
-        if (DO_DISTANCE) {
-            localizeDistance(poleDetectionPipeline);
-        }
-        if (DO_ROTATION) {
-            localizeOnPole(poleDetectionPipeline);
-        }
+            if (DO_DISTANCE) {
+                localizeDistance(poleDetectionPipeline);
+            }
+            if (DO_ROTATION) {
+                localizeOnPole(poleDetectionPipeline);
+            }
 
-        while (LOOP_DISTANCE && opMode.opModeIsActive()) {
-            localizeDistance(poleDetectionPipeline);
-            opMode.sleep(LOOP_SLEEP);
-        }
-        while (LOOP_ROTATION && opMode.opModeIsActive()) {
-            localizeOnPole(poleDetectionPipeline);
-            opMode.sleep(LOOP_SLEEP);
+            while (LOOP_DISTANCE && opMode.opModeIsActive()) {
+                localizeDistance(poleDetectionPipeline);
+                opMode.sleep(LOOP_SLEEP);
+            }
+            while (LOOP_ROTATION && opMode.opModeIsActive()) {
+                localizeOnPole(poleDetectionPipeline);
+                opMode.sleep(LOOP_SLEEP);
+            }
         }
 
         if (DO_AUTO_PATH && !opMode.isStopRequested()) {
+            if (LEFT_SIDE_MIRROR) {
+                // Raise it up to high height
+                robot.arm.lift.setPreset(Arm.Lift.Preset.HIGH_POLE);
 
-            // Raise it up to high height
-            robot.arm.lift.setPreset(Arm.Lift.Preset.HIGH_POLE);
+                // Wait for it to arrive at the height
+                while (robot.arm.lift.isBusy() && !opMode.isStopRequested()) {
+                    Thread.yield();
+                }
 
-            // Wait for it to arrive at the height
-            while (robot.arm.lift.isBusy() && !opMode.isStopRequested()) {
-                Thread.yield();
+                robot.arm.reacher.setTargetPosition(REACH_LENGTH);
+
+                while (robot.arm.reacher.isBusy() && !opMode.isStopRequested()) {
+                }
+
+                if (opMode.isStopRequested()) {
+                    robot.arm.reacher.setTargetPosition(0);
+                    return;
+                }
+
+                robot.arm.pincher.contract();
+
+                opMode.sleep(500);
             }
-
-            robot.arm.reacher.setTargetPosition(REACH_LENGTH);
-
-            while (robot.arm.reacher.isBusy() && !opMode.isStopRequested()) {}
-
-            if (opMode.isStopRequested()) {
-                robot.arm.reacher.setTargetPosition(0);
-                return;
-            }
-
-            robot.arm.pincher.contract();
-
-            opMode.sleep(500);
-
             //sleep(5000);
 
             robot.arm.reacher.setTargetPosition(0);
@@ -399,11 +404,14 @@ public class AllAutomovement {
 
             navigator.navigationMonitorTurn(next_deg);
             navigator.ceaseMotion();
+            if (LEFT_SIDE_MIRROR) {
+                robot.arm.lift.setPower(0);
+            }
 
-            robot.arm.lift.setPower(0);
-
-            navigator.navigationMonitorTicksPhi(AUTO_SPEED / 2, 0, -1, 0, 10);
-            navigator.ceaseMotion();
+            if (LEFT_SIDE_MIRROR) {
+                navigator.navigationMonitorTicksPhi(AUTO_SPEED / 2, 0, -1, 0, 10);
+                navigator.ceaseMotion();
+            }
 
             double error = -(12 - (26 * Math.cos(angle)));
             packet.put("Error", error);
@@ -413,17 +421,17 @@ public class AllAutomovement {
             double y_park = 0;
             if (LEFT_SIDE_MIRROR) {
                 if (tagId == 16) {
-                    y_park = -14; // left
+                    y_park = -16; // left
                 } else if (tagId == 15) {
-                    y_park = -3; // mid
+                    y_park = -4; // mid
                 } else if (tagId == 14) {
-                    y_park = 4; // right
+                    y_park = 6; // right
                 }
             } else {
                 if (tagId == 14) {
                     y_park = 16; // left
                 } else if (tagId == 15) {
-                    y_park = 3; // mid
+                    y_park = 6; // mid
                 } else if (tagId == 16) {
                     y_park = -4; // right
                 }
