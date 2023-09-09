@@ -56,7 +56,7 @@ public class AprilTagPipeline extends OpenCvPipeline
         if (input.nativeObj == 0) {
             throw new RuntimeException("AprilTagDetectionPipeline.detectTags(): input.nativeObj was NULL");
         }
-        long detectionArrayPtr = runApriltagDetector(nativeApriltagPtr, input.nativeObj);
+        long detectionArrayPtr = runApriltagDetector(nativeApriltagPtr, input.nativeObj, input.width(), input.height());
         // If no tags were found, return null
         if (detectionArrayPtr == 0) {
             //freeDetectionList(detectionArrayPtr);
