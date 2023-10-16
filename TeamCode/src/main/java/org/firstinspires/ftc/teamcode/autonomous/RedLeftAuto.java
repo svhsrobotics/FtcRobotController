@@ -20,6 +20,7 @@ public class RedLeftAuto extends LinearOpMode {
 
         TrajectorySequence autoDrive = drive.trajectorySequenceBuilder(startPose)
 
+                //relativistic driving that also includes turning to simulate april tags recognition
                 .forward(24)
                 .waitSeconds(1)
                 .turn(Math.toRadians(90))
@@ -32,11 +33,14 @@ public class RedLeftAuto extends LinearOpMode {
 
 
            /*
+           //coordinate based driving
                 .lineTo(new Vector2d(-34, -36))
                 .strafeTo(new Vector2d(48, -36))
                 .build();
            */
-           /*     .splineTo(new Vector2d(-34, -30), Math.toRadians(90))
+           /*
+           // also coordinate but spline and goes to corner instead of right in front of board
+              .splineTo(new Vector2d(-34, -30), Math.toRadians(90))
                 .splineTo(new Vector2d(34, -30), Math.toRadians(-90))
                 .splineTo(new Vector2d(56, -56),Math.toRadians(0) )
                 .build();
