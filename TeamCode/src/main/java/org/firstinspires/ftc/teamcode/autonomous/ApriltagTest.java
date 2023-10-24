@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -12,6 +13,7 @@ import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Autonomous(name = "AprilTag Test")
@@ -32,6 +34,8 @@ public class ApriltagTest extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
+            //drive.setPoseEstimate(new Pose2d(0, 0, 0));
+            //drive.update();
             List<AprilTagDetection> currentDetections = aprilTag.getDetections();
             telemetry.addData("# AprilTags Detected", currentDetections.size());
 
@@ -49,7 +53,48 @@ public class ApriltagTest extends LinearOpMode {
                     double a = detection.ftcPose.range * Math.cos(Math.toRadians(thetaNeed));
                     double b = detection.ftcPose.range * Math.sin(Math.toRadians(thetaNeed));
                     telemetry.addData("a", a);
-                    telemetry.addData("b",b);
+                    telemetry.addData("b", b);
+                    //double absolutex = detection.metadata.fieldPosition.get(0) + a; // + for lower side
+                    //double absolutey = detection.metadata.fieldPosition.get(1) - b; // - for lower side
+
+                    //Vector2d absVector = new Vector2d(detection.metadata.fieldPosition.get(0) + a, detection.metadata.fieldPosition.get(1) - b);
+                    //absVector.rotated(detection.metadata.fieldOrientation.toOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.RADIANS).thirdAngle);
+
+                    //int[] NEED_TO_ROTATE = {1,2,3,4,5,6};
+                    List<Integer> NEED_TO_ROTATE = Arrays.asList(1,2,3,4,5,6);
+
+                    double absX, absY, absRot;
+                    if (NEED_TO_ROTATE.contains(detection.id)) {
+                        absX = detection.metadata.fieldPosition.get(0) - a; // + for lower side
+                        absY = detection.metadata.fieldPosition.get(1) + b; // - for lower side
+                        absRot = 180-detection.ftcPose.yaw + 180;
+
+                    } else {
+                        absX = detection.metadata.fieldPosition.get(0) + a; // + for lower side
+                        absY = detection.metadata.fieldPosition.get(1) - b; // - for lower side
+                        absRot = 180-detection.ftcPose.yaw;
+                    }
+
+
+
+                    //telemetry.addData("First Angle", detection.metadata.fieldOrientation.toOrientation(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).firstAngle);
+                    //telemetry.addData("Second Angle", detection.metadata.fieldOrientation.toOrientation(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).secondAngle );
+                    //telemetry.addData("Third Angle", detection.metadata.fieldOrientation.toOrientation(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle);
+
+
+
+                    //telemetry.addData("position x, position y", absolutex + "," + absolutey);
+
+
+                    telemetry.addData("Field Centric Deg", 180 - detection.ftcPose.yaw);
+
+                    Pose2d absPose = new Pose2d(absX, absY, Math.toRadians(absRot));
+
+                    //Vector2d vec = new Vector2d(absolutex, absolutey).rotated(180);
+                    //Pose2d poseFlipped = new Pose2d(vec.getX(),vec.getY(), Math.toRadians(-detection.ftcPose.yaw));
+
+                    drive.setPoseEstimate(absPose);
+                    //drive.update();
 
 
                     //telemetry.addData("Relative X", detection.ftcPose.range * Math.cos(Math.toRadians(detection.ftcPose.yaw)));
@@ -61,8 +106,11 @@ public class ApriltagTest extends LinearOpMode {
 
                     //telemetry.addLine(String.format("Field XYZ %6.1f %6.1f %6.1f  (inch)", detection.metadata.fieldPosition.get(0), detection.metadata.fieldPosition.get(1), detection.metadata.fieldPosition.get(2)));
                 }
-                telemetry.update();
+                //telemetry.update();
             }
+
+            drive.update();
+
         }
 
         visionPortal.close();
