@@ -1,8 +1,6 @@
 package org.firstinspires.ftc.teamcode.vision.pole;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.autonomous.AllAutomovement;
-import org.firstinspires.ftc.teamcode.util.Logger;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
@@ -326,7 +324,7 @@ public class DoubleThresholdPipeline extends OpenCvPipeline {
         }
 
         // TODO: Remove or abstract
-        Imgproc.line(input, new Point(AllAutomovement.RotationPID.TARGET, 0), new Point(AllAutomovement.RotationPID.TARGET, input.height()), new Scalar(0, 0, 255), 2);
+        //Imgproc.line(input, new Point(AllAutomovement.RotationPID.TARGET, 0), new Point(AllAutomovement.RotationPID.TARGET, input.height()), new Scalar(0, 0, 255), 2);
 
         poleX.set(-1);
         poleWidth.set(-1.0);
