@@ -53,6 +53,12 @@ public class ApriltagTest extends LinearOpMode {
      * @param cameraIndex the index of the camera to switch to
      */
     private void switchCamera(int cameraIndex) {
+        // Wait for the visionPortal status to be STREAMING before we attempt to switch cameras
+        android.util.Log.i("AprilTag Test", "Waiting for camera to start STREAMING before switching cameras");
+        while (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {
+            sleep(10);
+        }
+        android.util.Log.i("AprilTag Test", "Camera is STREAMING, switching cameras...");
         // Get the current camera
         CameraName currentCamera = visionPortal.getActiveCamera();
         // Find the index of the current camera in the array
@@ -134,27 +140,26 @@ public class ApriltagTest extends LinearOpMode {
                 .build();
 
         android.util.Log.i("AprilTag Test", "Waiting for start...");
+        switchCamera(1);
         waitForStart();
 
         while(opModeIsActive()) {
-            Pose2d cameraPose = estimateCameraPoseFromAprilTags(0);
+            Pose2d cameraPose = estimateCameraPoseFromAprilTags(1);
 
             if (cameraPose != null) {
                 android.util.Log.i("AprilTag Test", "Camera pose: " + cameraPose);
 
-                double CAMERA_OFFSET = 6; // Center camera
-                // TODO: Use camera angle, 0 for center camera
-                //double theta = Math.toRadians(quadrantTransform(Math.toDegrees(cameraPose.getHeading())));
-                double theta = cameraPose.getHeading();
+                double CAMERA_OFFSET = 10; // Center camera
+                double CAMERA_ANGLE = Math.toRadians(50);
 
-                double offsetX = CAMERA_OFFSET * Math.cos(theta);
-                double offsetY = CAMERA_OFFSET * Math.sin(theta);
+                double offsetX = CAMERA_OFFSET * Math.cos(cameraPose.getHeading());
+                double offsetY = CAMERA_OFFSET * Math.sin(cameraPose.getHeading());
 
                 android.util.Log.i("AprilTag Test", "Camera offset: " + offsetX + ", " + offsetY);
 
                 double robotX = cameraPose.getX() - offsetX;
-                double robotY = cameraPose.getY() + offsetY;
-                double robotHeading = cameraPose.getHeading();
+                double robotY = cameraPose.getY() - offsetY;
+                double robotHeading = cameraPose.getHeading() - CAMERA_ANGLE;
 
                 Pose2d robotPose = new Pose2d(robotX, robotY, robotHeading);
 
