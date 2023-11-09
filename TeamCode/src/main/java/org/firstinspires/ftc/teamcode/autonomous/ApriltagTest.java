@@ -117,6 +117,32 @@ public class ApriltagTest extends LinearOpMode {
 
         return new Pose2d(absX, absY, Math.toRadians(absRot));
     }
+    private Pose2d estimateRobotPoseFromAprilTags (int camera, double offset, double angle) {
+        Pose2d cameraPose = estimateCameraPoseFromAprilTags(camera);
+        Pose2d robotPose = null;
+
+        if (cameraPose != null) {
+            android.util.Log.i("AprilTag Test", "Camera pose: " + cameraPose);
+
+            // double CAMERA_OFFSET = 10; // Center camera
+            // double CAMERA_ANGLE = Math.toRadians(50);
+
+            double offsetX = offset * Math.cos(cameraPose.getHeading());
+            double offsetY = offset * Math.sin(cameraPose.getHeading());
+
+            android.util.Log.i("AprilTag Test", "Camera offset: " + offsetX + ", " + offsetY);
+
+            double robotX = cameraPose.getX() - offsetX;
+            double robotY = cameraPose.getY() - offsetY;
+            double robotHeading = cameraPose.getHeading() - angle;
+
+            robotPose = new Pose2d(robotX, robotY, robotHeading);
+
+            android.util.Log.i("AprilTag Test", "Robot pose: " + robotPose);
+
+        }
+        return robotPose;
+    }
     @Override
     public void runOpMode() throws InterruptedException {
         Telemetry telemetry = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
@@ -140,36 +166,18 @@ public class ApriltagTest extends LinearOpMode {
                 .build();
 
         android.util.Log.i("AprilTag Test", "Waiting for start...");
-        switchCamera(1);
+        //switchCamera(0);
         waitForStart();
 
         while(opModeIsActive()) {
-            Pose2d cameraPose = estimateCameraPoseFromAprilTags(1);
+            Pose2d robotPose = estimateRobotPoseFromAprilTags(1, 10, Math.toRadians(60));
 
-            if (cameraPose != null) {
-                android.util.Log.i("AprilTag Test", "Camera pose: " + cameraPose);
+            android.util.Log.i("AprilTag Test", "Robot pose: " + robotPose);
 
-                double CAMERA_OFFSET = 10; // Center camera
-                double CAMERA_ANGLE = Math.toRadians(50);
-
-                double offsetX = CAMERA_OFFSET * Math.cos(cameraPose.getHeading());
-                double offsetY = CAMERA_OFFSET * Math.sin(cameraPose.getHeading());
-
-                android.util.Log.i("AprilTag Test", "Camera offset: " + offsetX + ", " + offsetY);
-
-                double robotX = cameraPose.getX() - offsetX;
-                double robotY = cameraPose.getY() - offsetY;
-                double robotHeading = cameraPose.getHeading() - CAMERA_ANGLE;
-
-                Pose2d robotPose = new Pose2d(robotX, robotY, robotHeading);
-
-                android.util.Log.i("AprilTag Test", "Robot pose: " + robotPose);
-
-                drive.setPoseEstimate(robotPose);
-
-                drive.update();
-            }
+            drive.setPoseEstimate(robotPose);
+            drive.update();
         }
+
 
         visionPortal.close();
     }
