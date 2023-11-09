@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -19,6 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Autonomous(name = "AprilTag Test")
+@Config
 public class ApriltagTest extends LinearOpMode {
     private VisionPortal visionPortal;
     private AprilTagProcessor aprilTag;
@@ -94,8 +96,24 @@ public class ApriltagTest extends LinearOpMode {
         }
         // Get the first detection
         // TODO: Pick the best detection?
-        AprilTagDetection detection = detections.get(0);
-
+        AprilTagDetection detection = null;
+        //pick closest detection
+        for (AprilTagDetection currentDetection: detections) {
+            if (currentDetection == null) {
+                throw new RuntimeException("currentDetection was null");
+            }
+            if (currentDetection.ftcPose == null) {
+                throw new RuntimeException("ftcPose was null");
+            }
+            if (detection == null || currentDetection.ftcPose.range < detection.ftcPose.range) {
+                detection = currentDetection;
+            }
+        }
+        //long cutoff
+        if (detection.ftcPose.range >= 4 * 12) {
+            return null;
+            // 4 = feet 12 = inches
+        }
         double thetaNeed = detection.ftcPose.yaw - detection.ftcPose.bearing;
         double a = detection.ftcPose.range * Math.cos(Math.toRadians(thetaNeed));
         double b = detection.ftcPose.range * Math.sin(Math.toRadians(thetaNeed));
@@ -143,6 +161,9 @@ public class ApriltagTest extends LinearOpMode {
         }
         return robotPose;
     }
+
+    public static double CAMERA_ANGLE = 70;
+
     @Override
     public void runOpMode() throws InterruptedException {
         Telemetry telemetry = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
@@ -170,12 +191,30 @@ public class ApriltagTest extends LinearOpMode {
         waitForStart();
 
         while(opModeIsActive()) {
-            Pose2d robotPose = estimateRobotPoseFromAprilTags(1, 10, Math.toRadians(60));
+            Pose2d robotPose = estimateRobotPoseFromAprilTags(1, 10, Math.toRadians(CAMERA_ANGLE));
 
-            android.util.Log.i("AprilTag Test", "Robot pose: " + robotPose);
+            if (robotPose == null) {
+                robotPose = estimateRobotPoseFromAprilTags(2, 10, Math.toRadians(60));
 
-            drive.setPoseEstimate(robotPose);
+
+            }
+            if (robotPose != null) {
+                drive.setPoseEstimate(robotPose);
+            }
+
             drive.update();
+
+
+//            if (robotPose != null) {
+//                android.util.Log.i("AprilTag Test", "Robot pose: " + robotPose);
+//
+//                drive.setPoseEstimate(robotPose);
+//                drive.update();
+//            }
+
+
+
+
         }
 
 
