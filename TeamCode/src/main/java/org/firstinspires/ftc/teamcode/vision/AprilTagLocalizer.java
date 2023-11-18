@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.vision;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -13,17 +14,25 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import java.util.Arrays;
 import java.util.List;
 
+@Config
 public class AprilTagLocalizer {
-    private VisionPortal visionPortal;
-    private AprilTagProcessor aprilTag;
+    public static double APRILTAG_CUTOFF = 4 * 12;
+
+    private final VisionPortal visionPortal;
+    private final AprilTagProcessor aprilTag;
 
     /**
      * The array of webcams that will be used in the pipeline
+     * You must pass them all so that we can create a SwitchableCamera
      */
-    private WebcamName[] webcams;
-
-    public AprilTagLocalizer(WebcamName[] webcams) {
+    //private WebcamName[] webcams;
+    public AprilTagLocalizer(AprilTagCamera[] cameras) {
         aprilTag = new AprilTagProcessor.Builder().build();
+
+        WebcamName[] webcams = new WebcamName[cameras.length];
+        for (int i = 0; i < cameras.length; i++) {
+            webcams[i] = cameras[i].webcamName;
+        }
 
         CameraName switchableCamera = ClassFactory.getInstance()
                 .getCameraManager().nameForSwitchableCamera(webcams);
@@ -33,58 +42,70 @@ public class AprilTagLocalizer {
                 .setCamera(switchableCamera)
                 .addProcessor(aprilTag)
                 .build();
-
-        this.webcams = webcams;
     }
 
     /**
      * Switch to the camera at the given index in `webcams`
-     * @param cameraIndex the index of the camera to switch to
+     * @param camera AprilTagCamera to switch to
      */
-    public void switchCamera(int cameraIndex) {
-        // Wait for the visionPortal status to be STREAMING before we attempt to switch cameras
-        android.util.Log.i("AprilTag Test", "Waiting for camera to start STREAMING before switching cameras");
-        Timeout timeout = new Timeout(5);
-        while (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING && !timeout.expired()) {
-            Timeout.sleep(10);
-        }
-        android.util.Log.i("AprilTag Test", "Camera is STREAMING, switching cameras...");
-        // Get the current camera
-        CameraName currentCamera = visionPortal.getActiveCamera();
-        // Find the index of the current camera in the array
-        int currentCameraIndex = -1;
-        for (int i = 0; i < webcams.length; i++) {
-            if (webcams[i] == currentCamera) {
-                currentCameraIndex = i;
-                break;
+    public void switchCamera(AprilTagCamera camera) {
+        if (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {
+            // Wait for the visionPortal status to be STREAMING before we attempt to switch cameras
+            android.util.Log.i("AprilTag Test", "Waiting for camera to start STREAMING before switching cameras");
+            Timeout timeout = new Timeout(5);
+            while (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING && !timeout.expired()) {
+                Timeout.sleep(10);
             }
         }
-        // If the current camera is not the one we want to switch to, switch to it
-        if (currentCameraIndex != cameraIndex) {
-            visionPortal.setActiveCamera(webcams[cameraIndex]);
+        if (visionPortal.getActiveCamera().getSerialNumber() != camera.webcamName.getSerialNumber()) {
+            android.util.Log.i("AprilTag Test", "Camera is STREAMING, switching cameras from " + visionPortal.getActiveCamera().getSerialNumber() + " to " + camera.webcamName.getSerialNumber());
+            visionPortal.setActiveCamera(camera.webcamName);
             // Flush any detections from the previous camera
             aprilTag.getFreshDetections();
         }
     }
 
-    private Pose2d estimateCameraPoseFromAprilTags(int camera) {
+    private Pose2d estimateCameraPoseFromAprilTags(AprilTagCamera camera) {
+        android.util.Log.i("APRILTAG", "Switching cameras?");
         // Switch to the camera
         switchCamera(camera);
+        android.util.Log.i("APRILTAG", "Switched camreas");
+
+
+        android.util.Log.i("APRILTAG", "TEST");
+
         // Get the detections
         List<AprilTagDetection> detections = aprilTag.getFreshDetections();
         // Wait for detections to not be null
         // TODO: Timeout
         while (detections == null) {
+            //android.util.Log.i("APRILTAG", "Waiting for non null return");
             detections = aprilTag.getFreshDetections();
         }
         // If there are no detections, return null
         // TODO: Multiple tries?
         if (detections.size() == 0) {
+            android.util.Log.i("APRILTAG", "No detections (0 size)");
             return null;
         }
-        // Get the first detection
-        // TODO: Pick the best detection?
-        AprilTagDetection detection = detections.get(0);
+        // Get the closest AprilTag
+        AprilTagDetection detection = null;
+        for (AprilTagDetection currentDetection : detections) {
+            assert currentDetection != null;
+            assert currentDetection.ftcPose != null;
+
+            if (detection == null || currentDetection.ftcPose.range < detection.ftcPose.range) {
+                detection = currentDetection;
+            }
+        }
+
+        // AprilTags further than the cutoff are unreliable, ignore
+        if (detection.ftcPose.range > APRILTAG_CUTOFF) {
+            android.util.Log.i("APRILTAG", "Range ("+detection.ftcPose.range+") is less than cutoff");
+            return null;
+        }
+
+        android.util.Log.i("APRILTAG", "CAMERA ID: "+ detection.id);
 
         double thetaNeed = detection.ftcPose.yaw - detection.ftcPose.bearing;
         double a = detection.ftcPose.range * Math.cos(Math.toRadians(thetaNeed));
@@ -107,31 +128,17 @@ public class AprilTagLocalizer {
 
         return new Pose2d(absX, absY, Math.toRadians(absRot));
     }
-    public Pose2d estimateRobotPoseFromAprilTags (int camera, double offset, double angle) {
+    public Pose2d estimateRobotPoseFromAprilTags(AprilTagCamera camera) {
+        android.util.Log.i("APRILTAG", "Estimating robot pose for camera: " + camera.webcamName.getSerialNumber());
         Pose2d cameraPose = estimateCameraPoseFromAprilTags(camera);
-        Pose2d robotPose = null;
+        android.util.Log.i("APRILTAG", "Got camera pose");
 
         if (cameraPose != null) {
-            android.util.Log.i("AprilTag Test", "Camera pose: " + cameraPose);
-
-            // double CAMERA_OFFSET = 10; // Center camera
-            // double CAMERA_ANGLE = Math.toRadians(50);
-
-            double offsetX = offset * Math.cos(cameraPose.getHeading());
-            double offsetY = offset * Math.sin(cameraPose.getHeading());
-
-            android.util.Log.i("AprilTag Test", "Camera offset: " + offsetX + ", " + offsetY);
-
-            double robotX = cameraPose.getX() - offsetX;
-            double robotY = cameraPose.getY() - offsetY;
-            double robotHeading = cameraPose.getHeading() - angle;
-
-            robotPose = new Pose2d(robotX, robotY, robotHeading);
-
-            android.util.Log.i("AprilTag Test", "Robot pose: " + robotPose);
-
+            android.util.Log.i("APRILTAG", "TRANSLATING POSE");
+            return camera.translatePose(cameraPose);
         }
-        return robotPose;
+        android.util.Log.i("APRILTAG", "NULL POSE");
+        return null;
     }
 
     public void close() {
