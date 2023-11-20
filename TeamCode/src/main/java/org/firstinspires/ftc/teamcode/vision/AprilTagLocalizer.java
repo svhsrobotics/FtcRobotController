@@ -94,6 +94,9 @@ public class AprilTagLocalizer {
             assert currentDetection != null;
             assert currentDetection.ftcPose != null;
 
+            android.util.Log.e("APRILTAG", poseFromDetection(currentDetection).toString());
+
+
             if (detection == null || currentDetection.ftcPose.range < detection.ftcPose.range) {
                 detection = currentDetection;
             }
@@ -105,8 +108,10 @@ public class AprilTagLocalizer {
             return null;
         }
 
-        android.util.Log.i("APRILTAG", "CAMERA ID: "+ detection.id);
+        return poseFromDetection(detection);
+    }
 
+    private Pose2d poseFromDetection(AprilTagDetection detection) {
         double thetaNeed = detection.ftcPose.yaw - detection.ftcPose.bearing;
         double a = detection.ftcPose.range * Math.cos(Math.toRadians(thetaNeed));
         double b = detection.ftcPose.range * Math.sin(Math.toRadians(thetaNeed));
@@ -128,6 +133,7 @@ public class AprilTagLocalizer {
 
         return new Pose2d(absX, absY, Math.toRadians(absRot));
     }
+
     public Pose2d estimateRobotPoseFromAprilTags(AprilTagCamera camera) {
         android.util.Log.i("APRILTAG", "Estimating robot pose for camera: " + camera.webcamName.getSerialNumber());
         Pose2d cameraPose = estimateCameraPoseFromAprilTags(camera);
@@ -152,7 +158,7 @@ public class AprilTagLocalizer {
         BLUE_BOARD
     }
 
-    public Quadrant whichQuadrant(Pose2d pose) {
+    public static Quadrant whichQuadrant(Pose2d pose) {
         if (pose.getX() < 0) {
             if (pose.getY() < 0) {
                 return Quadrant.RED_AUDIENCE;

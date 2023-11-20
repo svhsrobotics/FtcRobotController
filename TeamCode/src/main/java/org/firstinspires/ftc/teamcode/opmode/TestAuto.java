@@ -54,8 +54,6 @@ public class TestAuto extends LinearOpMode {
         return null;
     }
 
-    public static double FUDGE = 0;
-
     @Override
     public void runOpMode() throws InterruptedException {
         TestBotDrive drive = new TestBotDrive(hardwareMap);
@@ -66,9 +64,9 @@ public class TestAuto extends LinearOpMode {
         //blinker.idle();
 
         AprilTagCamera[] cameras = new AprilTagCamera[3];
-        cameras[0] = new AprilTagCamera(hardwareMap.get(WebcamName.class, "Left"), 8, Math.toRadians(70));
-        cameras[1] = new AprilTagCamera(hardwareMap.get(WebcamName.class, "Center"), 7, Math.toRadians(90));
-        cameras[2] = new AprilTagCamera(hardwareMap.get(WebcamName.class, "Right"), 8, Math.toRadians(-70));
+        cameras[0] = new AprilTagCamera(hardwareMap.get(WebcamName.class, "Left"), 8, Math.toRadians(70), Math.toRadians(-45));
+        cameras[1] = new AprilTagCamera(hardwareMap.get(WebcamName.class, "Center"), 7, Math.toRadians(90), Math.toRadians(0));
+        cameras[2] = new AprilTagCamera(hardwareMap.get(WebcamName.class, "Right"), 8, Math.toRadians(-70), Math.toRadians(45));
 
         AprilTagLocalizer aprilTag = new AprilTagLocalizer(cameras);
 
@@ -107,31 +105,38 @@ public class TestAuto extends LinearOpMode {
 
         TrajectorySequence traj = null;
 
-        switch (aprilTag.whichQuadrant(startPose)) {
+        android.util.Log.w("APRILTAG", "POSE1:"  + startPose);
+        //startPose = new Pose2d(-38,-62, Math.toRadians(90));
+        android.util.Log.w("APRILTAG", "POSE2:" + startPose);
+
+        drive.setPoseEstimate(startPose);
+
+        switch (AprilTagLocalizer.whichQuadrant(startPose)) {
             case RED_AUDIENCE:
+            case RED_BOARD:
                 // HACK: Fudge the startPose
-                startPose = new Pose2d(startPose.getX(), startPose.getY() + FUDGE, startPose.getHeading());
-                drive.setPoseEstimate(startPose);
+                //startPose = new Pose2d(startPose.getX(), startPose.getY() + FUDGE, startPose.getHeading());
+                //drive.setPoseEstimate(startPose);
 
                 traj = drive.trajectorySequenceBuilder(startPose)
                         .lineTo(new Vector2d(startPose.getX(), -24))
-                        .splineTo(new Vector2d(0, 0), 0)
+                        //.splineTo(new Vector2d(0, 0), 0)
+                        //.splineToConstantHeading(new Vector2d(0, 0), 0)
+                        .splineToSplineHeading(new Pose2d(0,0,0), 0)
                         //.lineTo(new Vector2d(-34, -36))
                         //.strafeTo(new Vector2d(48, -36))
                         //.splineTo(new Vector2d(48, -35), 0)
                         .build();
                 break;
-            case RED_BOARD:
-                break;
             case BLUE_AUDIENCE:
-                break;
             case BLUE_BOARD:
                 // HACK: Fudge the startPose
-                startPose = new Pose2d(startPose.getX(), startPose.getY(), startPose.getHeading());
-                drive.setPoseEstimate(startPose);
+                //startPose = new Pose2d(startPose.getX(), startPose.getY(), startPose.getHeading());
+                //drive.setPoseEstimate(startPose);
 
                 traj = drive.trajectorySequenceBuilder(startPose)
-                        .strafeTo(new Vector2d(48, 36))
+                        .lineTo(new Vector2d(startPose.getX(), 24))
+                        .splineTo(new Vector2d(0, 0), 0)
                         .build();
                 break;
         }
