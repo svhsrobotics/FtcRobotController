@@ -45,4 +45,13 @@ public class Timeout {
     public boolean expired() {
         return elapsed() > this.duration;
     }
+
+    public static void sleep(int millis) {
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException(e);
+        }
+    }
 }
