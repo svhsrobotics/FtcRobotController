@@ -39,7 +39,15 @@ public class AprilTagCamera {
         return new Pose2d(robotX, robotY, robotHeading);
     }
 
+    /**
+     * Incredibly nieve back-up implementation, translates exclusively based on quadrant
+     * @param inputPose Pose2d to translate
+     * @return translated Pose2d
+     */
     public Pose2d translatePose(Pose2d inputPose) {
+        // 6.5: Distance from left camera to center of robot
+        // -6.5: Distance from right camera to center of robot
+        // 5: distance from center of robot to cameras (forward)
         switch (AprilTagLocalizer.whichQuadrant(inputPose)) {
             case RED_AUDIENCE:
                 return new Pose2d(inputPose.getX() + 6.5, inputPose.getY() - 5, Math.toRadians(90));

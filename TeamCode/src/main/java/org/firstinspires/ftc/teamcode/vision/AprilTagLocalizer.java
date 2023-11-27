@@ -1,11 +1,14 @@
 package org.firstinspires.ftc.teamcode.vision;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.drive.Drive;
+import com.acmerobotics.roadrunner.drive.DriveSignal;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.util.GlobalOpMode;
 import org.firstinspires.ftc.teamcode.util.Timeout;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
@@ -145,6 +148,46 @@ public class AprilTagLocalizer {
         }
         android.util.Log.i("APRILTAG", "NULL POSE");
         return null;
+    }
+
+    public void centerOnTag(AprilTagCamera camera, Drive drive, int tag) {
+        double error = 999;
+        switchCamera(camera);
+        while (!GlobalOpMode.opMode.isStopRequested() && Math.abs(error) > 0.1) {
+            List<AprilTagDetection> detections = aprilTag.getFreshDetections();
+            while (!GlobalOpMode.opMode.isStopRequested() && detections == null) {
+                detections = aprilTag.getFreshDetections();
+            }
+            AprilTagDetection detection = null;
+            for (AprilTagDetection currentDetection : detections) {
+                if (currentDetection.id == tag) {
+                    detection = currentDetection;
+                }
+            }
+            if (detection == null) {
+                throw new RuntimeException("Could not find tag to center on");
+            }
+            error = detection.ftcPose.x;
+            drive.setDriveSignal(new DriveSignal(new Pose2d(0, error*10, 0)));
+        }
+        drive.setDriveSignal(new DriveSignal(new Pose2d(0, 0, 0)));
+//        double error =
+//        List<AprilTagDetection> detections = aprilTag.getFreshDetections();
+//        while (detections == null) {
+//            //android.util.Log.i("APRILTAG", "Waiting for non null return");
+//            detections = aprilTag.getFreshDetections();
+//        }
+//        // If there are no detections, return null
+//        // TODO: Multiple tries?
+//        if (detections.size() == 0) {
+//            android.util.Log.i("APRILTAG", "No detections (0 size)");
+//            throw new RuntimeException("No detections to center with");
+//        }
+//        for (AprilTagDetection detection : detections) {
+//            if (detection.id == tag) {
+//
+//            }
+//        }
     }
 
     public void close() {
