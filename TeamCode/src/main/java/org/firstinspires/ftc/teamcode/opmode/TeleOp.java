@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.opmode;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.drive.testbot.TestBotDrive;
@@ -37,32 +39,26 @@ public class TeleOp extends LinearOpMode {
             // Rotation is not part of the rotated input thus must be passed in separately
             drive.setWeightedDrivePower(new Pose2d(input.getX(), input.getY(), -gamepad1.right_stick_x));
 
+            // TODO: Add controls to gamepad 2 as well
             if (gamepad1.a) {
-                //turn on intake or else >:(
+                // Intake running while A is held
+            } else {
+                // Turn off intake when A released
+            }
 
-            }
-            else {
-                //turn off intake motor or i come for you
-            }
             if (gamepad1.b) {
-                //make the release or i EAT YOU
-            }
-            else {
-                //close the pixel hand again
-            }
-            if (gamepad1.right_bumper && gamepad1.left_bumper) {
-                //launch the airplane
-            }
-            else {
-                //keep airplane closed or something idk
-            }
-            if (gamepad1.right_trigger>0.5) {
-                //raise bar hang
+                // Move pixel hand servo to release 1 pixel
+                // TODO: Do we need to debounce and count presses? Svit mentioned a "pixel cassette" that drops multiple pixels
+            } else {
+                // Close pixel hand servo
             }
 
-            if (gamepad1.left_trigger > 0.5) {
-                //lower bar hang
+            if (gamepad1.right_bumper && gamepad1.left_bumper) {
+                // Launch the airplane
+                // TODO: Check for endgame?
             }
+
+            // Set bar hang motor power to gamepad1.right_trigger - gamepad1.left_trigger for analog control
 
         }
 
@@ -70,5 +66,3 @@ public class TeleOp extends LinearOpMode {
 
     }
 }
-//hodie christus natus est terra canunt angeli laetantur archangeli alleluia hodie exultant justi dicentes gloria in excelsis deo et in terra pax homnibus bonnae voluntatis alleluia
-//et in terra pax homnibus bonnae voluntatis gloria in excelsis deo lauda muste glorifica muste benedicimuste
