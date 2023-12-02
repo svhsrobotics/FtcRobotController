@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -22,7 +21,7 @@ public class AnalogTest extends LinearOpMode {
             //servoTest.getCurrentPosition();
             telemetry.addData("Degrees", servoTest.getCurrentPosition());
             telemetry.addData("Power", gamepad1.left_stick_x);
-            telemetry.addData("Last Pos", servoTest.getLastPosDebug());
+            //telemetry.addData("Last Pos", servoTest.getLastPosDebug());
             telemetry.addData("Adjusted Degrees", servoTest.getAdjustedPosition());
             telemetry.addData("Voltage", servoTest.innerAnalog.getVoltage());
 

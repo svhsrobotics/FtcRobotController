@@ -9,15 +9,13 @@ public class AxonServo {
     public AnalogInput innerAnalog;
 
     // Create a new background thread to count rotations
-    private ServoCounter counter;
+    private final ServoCounter counter;
 
     private class ServoCounter extends Thread {
         private int count = 0;
 
-        public double lastPosition = getCurrentPosition();
-
         public void run() {
-            //double lastPosition = getCurrentPosition();
+            double lastPosition = getCurrentPosition();
             while (true) {
                 android.util.Log.w("AXON_THREAD", "LOOP");
                 double currentPosition = getCurrentPosition();
@@ -52,10 +50,6 @@ public class AxonServo {
 
     public double getAdjustedPosition() {
         return getCurrentPosition() + counter.getCount() * 360;
-    }
-
-    public double getLastPosDebug() {
-        return this.counter.lastPosition;
     }
 
 
