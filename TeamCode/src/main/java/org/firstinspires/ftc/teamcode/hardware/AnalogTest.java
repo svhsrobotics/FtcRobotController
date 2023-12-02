@@ -5,17 +5,17 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @TeleOp
-@Disabled
+//@Disabled
 public class AnalogTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-        AxonServo servoTest = new AxonServo("servo test", "servoadc", hardwareMap);
+        AxonServo servoTest = new AxonServo("servo", "a0", hardwareMap);
         waitForStart();
         while (opModeIsActive()) {
             if (gamepad1.a){
-                servoTest.innerServo.setPosition(0.6);}
+                servoTest.innerServo.setPower(0.6);}
              else
-                {servoTest.innerServo.setPosition(0.5);}
+                {servoTest.innerServo.setPower(0.2);}
             servoTest.innerAnalog.getVoltage();
              servoTest.getCurrentPosition();
              telemetry.addData("Degrees",servoTest.getCurrentPosition());
