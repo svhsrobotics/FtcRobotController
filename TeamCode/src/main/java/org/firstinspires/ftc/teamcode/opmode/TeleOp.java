@@ -28,6 +28,7 @@ public class TeleOp extends LinearOpMode {
 
 
         while (!isStopRequested()) {
+            drive.update(); // MUST be calld every loop cycle so that RoadRunner calculates the pose correctly
             // Read pose
             Pose2d poseEstimate = drive.getPoseEstimate();
 
@@ -39,9 +40,13 @@ public class TeleOp extends LinearOpMode {
             // Rotation is not part of the rotated input thus must be passed in separately
             drive.setWeightedDrivePower(new Pose2d(input.getX(), input.getY(), -gamepad1.right_stick_x));
 
+            if (gamepad1.x) {
+                drive.setPoseEstimate(new Pose2d(poseEstimate.getX(), poseEstimate.getY(), 0));
+            }
             // TODO: Add controls to gamepad 2 as well
             if (gamepad1.a) {
                 // Intake running while A is held
+
             } else {
                 // Turn off intake when A released
             }
@@ -53,9 +58,8 @@ public class TeleOp extends LinearOpMode {
                 // Close pixel hand servo
             }
 
-            if (gamepad1.right_bumper && gamepad1.left_bumper) {
+            if (gamepad1.right_bumper && gamepad1.left_bumper && getRuntime() >= 85) { // technically endgame is 90sec, we let them launch a little early just in case
                 // Launch the airplane
-                // TODO: Check for endgame?
             }
 
             // Set bar hang motor power to gamepad1.right_trigger - gamepad1.left_trigger for analog control
