@@ -144,7 +144,10 @@ public class AprilTagLocalizer {
 
         if (cameraPose != null) {
             android.util.Log.i("APRILTAG", "TRANSLATING POSE");
-            return camera.translatePose(cameraPose);
+            Pose2d translated = camera.translatePose(cameraPose);
+            android.util.Log.i("APRILTAG", translated.toString());
+            return translated;
+
         }
         android.util.Log.i("APRILTAG", "NULL POSE");
         return null;

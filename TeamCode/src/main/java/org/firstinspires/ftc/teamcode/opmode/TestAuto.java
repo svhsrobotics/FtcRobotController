@@ -118,24 +118,16 @@ public class TestAuto extends LinearOpMode {
                     case LEFT:
                     traj = drive.trajectorySequenceBuilder(startPose)
                             .lineTo(new Vector2d(startPose.getX(), -3 * 12 + 2)) // drive forward to prevent the spline from cutting through the poles
-                            .addDisplacementMarker(() -> {
 
-
-                                android.util.Log.i("DROP", "Turn");
-                            })
                             .turn(Math.toRadians(90))
 
                             .addDisplacementMarker(() -> {
                                 //PIXEL DROP
-                                sleep(10000);
-                                android.util.Log.i("DROP", "SLEEPING");
+
+                                android.util.Log.i("DROP", "drop");
                             })
                             .turn(Math.toRadians(-180))
-                            .addDisplacementMarker(() -> {
 
-
-                                android.util.Log.i("DROP", "turn again");
-                            })
                             //.splineToSplineHeading(new Pose2d(3*12 + 5, -3*12, 0), 0)
                             .lineToSplineHeading(new Pose2d(2 * 12, -3 * 12 + 2, Math.toRadians(90)))
                             .lineToSplineHeading(new Pose2d(3 * 12 + 5, -3 * 12 + 2, 0))
@@ -178,7 +170,7 @@ public class TestAuto extends LinearOpMode {
                                 .turn(Math.toRadians(90))
                                 .addDisplacementMarker(()->{
                                     //PIXEL DROP
-                                    sleep(2000);
+                                    android.util.Log.i("ARM", "drop");
                                 })
                                 .lineToSplineHeading(new Pose2d(2 * 12, 3 * 12 + 2, Math.toRadians(90)))
                                 .lineToSplineHeading(new Pose2d(3 * 12 + 5, 3 * 12 + 2, 0))
