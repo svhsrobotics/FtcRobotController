@@ -19,7 +19,7 @@ import java.util.List;
 
 @Config
 public class AprilTagLocalizer {
-    public static double APRILTAG_CUTOFF = 4 * 12;
+    public static double APRILTAG_CUTOFF = 6 * 12;
 
     private final VisionPortal visionPortal;
     private final AprilTagProcessor aprilTag;
