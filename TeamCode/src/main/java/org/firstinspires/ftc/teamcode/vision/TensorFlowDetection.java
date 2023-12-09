@@ -24,7 +24,8 @@ public class TensorFlowDetection {
      * The variable to store our instance of the vision portal.
      */
     private VisionPortal visionPortal;
-    private static String TFOD_MODEL_ASSET = "model_20231127_143238.tflite";
+    //private static String TFOD_MODEL_ASSET = "model_20231127_143238.tflite"; //model without negatives
+    private static String TFOD_MODEL_ASSET = "model_20231209_095349.tflite"; //model with negatives
     private static final String[] LABELS = {
             "prop",
     };
@@ -106,29 +107,36 @@ public class TensorFlowDetection {
 
     public PropPosition getPropPosition() {
         List<Recognition> currentRecognitions = tfod.getRecognitions();
-        while(currentRecognitions.size() < 1) {
-            android.util.Log.w("TENSORFLOW", "Spinning for current recognitions...");
+        while(currentRecognitions.size() < 1 && !GlobalOpMode.opMode.isStopRequested()) {
+            //android.util.Log.w("TENSORFLOW", "Spinning for current recognitions...");
             currentRecognitions = tfod.getRecognitions();
         }
         Recognition recognition = currentRecognitions.get(0);
-        while (recognition.getWidth() > 300 && !GlobalOpMode.opMode.isStopRequested()) {
-            android.util.Log.w("TENSORFLOW", "Spinning for current recognitions...");
-            for (Recognition rec :currentRecognitions) {
-                if (rec.getWidth() < recognition.getWidth()) {
-                    recognition = rec;
-                }
-            }
-        }
+//        while (recognition.getWidth() > 300 && !GlobalOpMode.opMode.isStopRequested()) {
+//            android.util.Log.w("TENSORFLOW", "Spinning for current recognitions...");
+//            for (Recognition rec :currentRecognitions) {
+//                if (rec.getWidth() < recognition.getWidth()) {
+//                    recognition = rec;
+//                }
+//            }
 
+        // GET MORE CURRENT RECOGNITIONS?
+//        }
+        visionPortal.close();
 
         double centerX = (recognition.getLeft() + recognition.getRight()) / 2 ;
         if (centerX < 214) {
+            //android.util.Log.w("TENSORFLOW", "LEFT");
             return PropPosition.LEFT;
         } else if(centerX > 214 && centerX < 428) {
+            //android.util.Log.w("TENSORFLOW", "CENTER");
             return PropPosition.CENTER;
         } else {
+            //android.util.Log.w("TENSORFLOW", "RIGHT");
             return PropPosition.RIGHT;
         }
+
+
 
     }
 }
