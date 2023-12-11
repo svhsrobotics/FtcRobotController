@@ -6,6 +6,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDir
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.teamcode.util.GlobalOpMode;
+import org.firstinspires.ftc.teamcode.util.Timeout;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.tfod.TfodProcessor;
 
@@ -105,6 +106,8 @@ public class TensorFlowDetection {
         LEFT, RIGHT, CENTER
     }
 
+
+
     public PropPosition getPropPosition() {
         List<Recognition> currentRecognitions = tfod.getRecognitions();
         while(currentRecognitions.size() < 1 && !GlobalOpMode.opMode.isStopRequested()) {
@@ -122,7 +125,7 @@ public class TensorFlowDetection {
 
         // GET MORE CURRENT RECOGNITIONS?
 //        }
-        visionPortal.close();
+        //visionPortal.close();
 
         double centerX = (recognition.getLeft() + recognition.getRight()) / 2 ;
         if (centerX < 214) {

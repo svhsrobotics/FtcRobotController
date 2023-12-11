@@ -25,7 +25,7 @@ public class TeleOp extends LinearOpMode {
         cameras[2] = new AprilTagCamera(hardwareMap.get(WebcamName.class, "Right"), 8, Math.toRadians(-70), Math.toRadians(45));
 
         waitForStart();
-
+//ryan is a silly goofy fella
 
         while (!isStopRequested()) {
             drive.update(); // MUST be called every loop cycle so that RoadRunner calculates the pose correctly

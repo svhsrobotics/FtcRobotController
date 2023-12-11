@@ -13,10 +13,12 @@ import org.firstinspires.ftc.teamcode.drive.testbot.TestBotDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.trajectorysequence.sequencesegment.WaitSegment;
 import org.firstinspires.ftc.teamcode.util.GlobalOpMode;
+import org.firstinspires.ftc.teamcode.util.Timeout;
 import org.firstinspires.ftc.teamcode.vision.AprilTagCamera;
 import org.firstinspires.ftc.teamcode.vision.AprilTagLocalizer;
 import org.firstinspires.ftc.teamcode.vision.PropellerDetection1;
 import org.firstinspires.ftc.teamcode.vision.TensorFlowDetection;
+import org.tensorflow.lite.Tensor;
 
 @Autonomous
 @Config
@@ -37,18 +39,24 @@ public class TestAuto extends LinearOpMode {
         return pose;
     }
 
+    public static double LEFTFORTYFIVE = -45;
+    public static double LEFTSEVENTY = 70;
+    public static double RIGHTFORTYFIVE = 45;
+    public static double RIGHTSEVENTY = -70;
+
     @Override
     public void runOpMode() throws InterruptedException {
         GlobalOpMode.opMode = this;
         TestBotDrive drive = new TestBotDrive(hardwareMap);
 
         AprilTagCamera[] cameras = new AprilTagCamera[3];
-        cameras[0] = new AprilTagCamera(hardwareMap.get(WebcamName.class, "Left"), 8, Math.toRadians(70), Math.toRadians(-45));
+        cameras[0] = new AprilTagCamera(hardwareMap.get(WebcamName.class, "Left"), 8, Math.toRadians(LEFTSEVENTY), Math.toRadians(LEFTFORTYFIVE));
         cameras[1] = new AprilTagCamera(hardwareMap.get(WebcamName.class, "Center"), 7, Math.toRadians(90), Math.toRadians(0));
-        cameras[2] = new AprilTagCamera(hardwareMap.get(WebcamName.class, "Right"), 8, Math.toRadians(-70), Math.toRadians(45));
+        cameras[2] = new AprilTagCamera(hardwareMap.get(WebcamName.class, "Right"), 8, Math.toRadians(RIGHTSEVENTY), Math.toRadians(RIGHTFORTYFIVE));
 
 
-        TensorFlowDetection tensor = new TensorFlowDetection(cameras[1].webcamName);
+        //TensorFlowDetection tensor = new TensorFlowDetection(cameras[1].webcamName);
+        TensorFlowDetection tensor = null;
         Log.i("PROGRESS", "I did this!");
 //        while (!isStopRequested()) {
 //            tensor.getPropPosition();
@@ -56,22 +64,25 @@ public class TestAuto extends LinearOpMode {
 //        }
 
 
-        TensorFlowDetection.PropPosition tensorPos = tensor.getPropPosition();
+
 
 //        TensorFlowDetection.PropPosition tensorPos = TensorFlowDetection.PropPosition.LEFT;
-        Log.i("PROGRESS", "Made it here");
-        Log.i("PROGRESS", tensorPos + "");
-        Log.i("PROGRESS", tensor.getPropPosition() + "");
+
 
 
         AprilTagLocalizer aprilTag = new AprilTagLocalizer(cameras);
         Pose2d startPose = null;
         Log.i("PROGRESS", "here?");
-        while(opModeInInit() && !isStopRequested() && startPose == null) {
+        while(opModeInInit() && !isStopRequested() ) {
             Log.i("PROGRESS", "before");
             startPose = estimateWithAllCameras(cameras, aprilTag);
             Log.i("PROGRESS", "after");
+            if (startPose != null) {
+                drive.setPoseEstimate(startPose);
+                drive.update();
+            }
         }
+        waitForStart();
         Log.i("PROGRESS", "Maybe?");
         if (startPose == null) {
             // Check one more time
@@ -89,6 +100,11 @@ public class TestAuto extends LinearOpMode {
 
         drive.setPoseEstimate(startPose);
         Log.i("PROGRESS", "Im here too!");
+
+        TensorFlowDetection.PropPosition tensorPos = tensor.getPropPosition();
+        if (tensorPos == null) {
+            tensorPos = TensorFlowDetection.PropPosition.CENTER;
+        }
 
 
         switch (AprilTagLocalizer.whichQuadrant(startPose)) {
@@ -285,7 +301,6 @@ public class TestAuto extends LinearOpMode {
             break;
         }
         Log.i("PROGRESS", "I got here???");
-        waitForStart();
 
         if (!isStopRequested())
             drive.followTrajectorySequence(traj);
