@@ -97,13 +97,14 @@ public class TestAuto extends LinearOpMode {
                             .lineTo(new Vector2d(10, -36))
                             .turn(Math.toRadians(90))
 
-
-                            .waitSeconds(10)
-                            .splineToSplineHeading(new Pose2d(11, -36, Math.toRadians(180)), Math.toRadians(180))
-                            .addDisplacementMarker(()->{
+                            .addTemporalMarker(() ->{
                                 //ARM DROPS PIXEL
-                                android.util.Log.i("DROP", "seconddDrop");
+                                android.util.Log.i("DROP", "Drop");
+
                             })
+
+                            .splineToSplineHeading(new Pose2d(11, -36, Math.toRadians(180)), Math.toRadians(180))
+
                             .turn(Math.toRadians(180))
 
                             .splineToSplineHeading(new Pose2d(3 * 12 + 5, -3 * 12, 0), 0)
@@ -115,11 +116,11 @@ public class TestAuto extends LinearOpMode {
                         traj = drive.trajectorySequenceBuilder(startPose)
                         .lineTo(new Vector2d(16, -36))
                             .turn(Math.toRadians(-90))
-                            .addDisplacementMarker(() ->{
+                            .addTemporalMarker(() ->{
                                 //ARM DROPS PIXEL
                                 android.util.Log.i("DROP", "drop");
                             })
-
+                                .lineTo(new Vector2d(startPose.getX(), startPose.getY()))
                             .splineToSplineHeading(new Pose2d(3 * 12 + 5, -3 * 12, 0), 0)
                             .build();
                     break;
@@ -127,7 +128,7 @@ public class TestAuto extends LinearOpMode {
 
                         traj = drive.trajectorySequenceBuilder(startPose)
                                 .lineTo(new Vector2d(16, -36))
-                                .addDisplacementMarker(() -> {
+                                .addTemporalMarker(() -> {
                                     //ARM DROPS PIXEL
                                     android.util.Log.i("DROP", "drop");
 
@@ -146,7 +147,7 @@ public class TestAuto extends LinearOpMode {
 
                             .turn(Math.toRadians(90))
 
-                            .addDisplacementMarker(() -> {
+                            .addTemporalMarker(() -> {
                                 //PIXEL DROP
 
                                 android.util.Log.i("DROP", "drop");
@@ -169,6 +170,7 @@ public class TestAuto extends LinearOpMode {
                                     //PIXEL DROP
                                     android.util.Log.i("DROP", "drop");
                                 })
+                                .lineTo(new Vector2d(startPose.getX(), startPose.getY()))
                                 //.splineToSplineHeading(new Pose2d(3*12 + 5, -3*12, 0), 0)
                                 .lineToSplineHeading(new Pose2d(2 * 12, -3 * 12 + 2, Math.toRadians(90)))
                                 .lineToSplineHeading(new Pose2d(3 * 12 + 5, -3 * 12 + 2, 0))
@@ -177,7 +179,7 @@ public class TestAuto extends LinearOpMode {
                     case CENTER:
                         traj = drive.trajectorySequenceBuilder(startPose)
                                 .lineTo(new Vector2d(startPose.getX(), -3 * 12 + 2)) // drive forward to prevent the spline from cutting through the poles
-                                .addDisplacementMarker(() -> {
+                                .addTemporalMarker(() -> {
                                     //PIXEL DROP
                                     android.util.Log.i("DROP", "drop");
                                 })
