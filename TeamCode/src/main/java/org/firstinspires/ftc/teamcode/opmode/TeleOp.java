@@ -25,10 +25,10 @@ public class TeleOp extends LinearOpMode {
         cameras[2] = new AprilTagCamera(hardwareMap.get(WebcamName.class, "Right"), 8, Math.toRadians(-70), Math.toRadians(45));
 
         waitForStart();
-
+//ryan is a silly goofy fella
 
         while (!isStopRequested()) {
-            drive.update(); // MUST be calld every loop cycle so that RoadRunner calculates the pose correctly
+            drive.update(); // MUST be called every loop cycle so that RoadRunner calculates the pose correctly
             // Read pose
             Pose2d poseEstimate = drive.getPoseEstimate();
 
@@ -57,7 +57,6 @@ public class TeleOp extends LinearOpMode {
             } else {
                 // Close pixel hand servo
             }
-
             if (gamepad1.right_bumper && gamepad1.left_bumper && getRuntime() >= 85) { // technically endgame is 90sec, we let them launch a little early just in case
                 // Launch the airplane
             }
@@ -69,4 +68,5 @@ public class TeleOp extends LinearOpMode {
 
 
     }
+//deus pater omnipotens domine fili unigenite jesu christe domini domine deus agnus agnus dei filius agnus dei filius patris quitolis pecca tamundi misere renobis agunus quitolis pecca tamundi misere renobis suscipe deprecationemnostram quise des ad teram patris misere misere misere renobis
 }

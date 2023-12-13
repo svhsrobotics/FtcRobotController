@@ -19,7 +19,7 @@ import java.util.List;
 
 @Config
 public class AprilTagLocalizer {
-    public static double APRILTAG_CUTOFF = 4 * 12;
+    public static double APRILTAG_CUTOFF = 6 * 12;
 
     private final VisionPortal visionPortal;
     private final AprilTagProcessor aprilTag;
@@ -144,7 +144,10 @@ public class AprilTagLocalizer {
 
         if (cameraPose != null) {
             android.util.Log.i("APRILTAG", "TRANSLATING POSE");
-            return camera.translatePose(cameraPose);
+            Pose2d translated = camera.translatePose(cameraPose);
+            android.util.Log.i("APRILTAG", translated.toString());
+            return translated;
+
         }
         android.util.Log.i("APRILTAG", "NULL POSE");
         return null;
