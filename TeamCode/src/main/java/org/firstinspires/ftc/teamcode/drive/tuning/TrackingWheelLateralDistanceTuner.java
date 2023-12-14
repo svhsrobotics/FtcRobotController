@@ -8,8 +8,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.RobotLog;
 
-import org.firstinspires.ftc.teamcode.drive.testbot.TestBotDrive;
-import org.firstinspires.ftc.teamcode.drive.testbot.StandardTrackingWheelLocalizer;
+import org.firstinspires.ftc.teamcode.drive.panthera.PantheraDrive;
+import org.firstinspires.ftc.teamcode.drive.panthera.StandardTrackingWheelLocalizer;
 
 /**
  * Opmode designed to assist the user in tuning the `StandardTrackingWheelLocalizer`'s
@@ -64,13 +64,13 @@ import org.firstinspires.ftc.teamcode.drive.testbot.StandardTrackingWheelLocaliz
  */
 @Config
 @TeleOp(group = "drive")
-@Disabled
+
 public class TrackingWheelLateralDistanceTuner extends LinearOpMode {
     public static int NUM_TURNS = 10;
 
     @Override
     public void runOpMode() throws InterruptedException {
-        TestBotDrive drive = new TestBotDrive(hardwareMap);
+        PantheraDrive drive = new PantheraDrive(hardwareMap);
 
         if (!(drive.getLocalizer() instanceof StandardTrackingWheelLocalizer)) {
             RobotLog.setGlobalErrorMsg("StandardTrackingWheelLocalizer is not being set in the "
