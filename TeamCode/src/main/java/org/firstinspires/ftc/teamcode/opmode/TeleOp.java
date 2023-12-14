@@ -3,13 +3,10 @@ package org.firstinspires.ftc.teamcode.opmode;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.drive.testbot.TestBotDrive;
+import org.firstinspires.ftc.teamcode.drive.Robot;
+import org.firstinspires.ftc.teamcode.drive.psi.PsiDrive;
 import org.firstinspires.ftc.teamcode.util.GlobalOpMode;
-import org.firstinspires.ftc.teamcode.vision.AprilTagCamera;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp
 public class TeleOp extends LinearOpMode {
@@ -17,15 +14,21 @@ public class TeleOp extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         GlobalOpMode.opMode = this;
-        TestBotDrive drive = new TestBotDrive(hardwareMap);
+        // CHANGE THIS HERE TO CHANGE THE BOT TYPE
+        PsiDrive drive = new PsiDrive(hardwareMap);
+        Robot robot = new Robot(hardwareMap);
+        if (robot.botType != Robot.BotType.PSI) {
+            telemetry.addData("Error", "This opmode is only compatible with the PSI bot");
+            telemetry.update();
+            return;
+        }
 
-        AprilTagCamera[] cameras = new AprilTagCamera[3];
-        cameras[0] = new AprilTagCamera(hardwareMap.get(WebcamName.class, "Left"), 8, Math.toRadians(70), Math.toRadians(-45));
-        cameras[1] = new AprilTagCamera(hardwareMap.get(WebcamName.class, "Center"), 7, Math.toRadians(90), Math.toRadians(0));
-        cameras[2] = new AprilTagCamera(hardwareMap.get(WebcamName.class, "Right"), 8, Math.toRadians(-70), Math.toRadians(45));
+//        AprilTagCamera[] cameras = new AprilTagCamera[3];
+//        cameras[0] = new AprilTagCamera(hardwareMap.get(WebcamName.class, "Left"), 8, Math.toRadians(70), Math.toRadians(-45));
+//        cameras[1] = new AprilTagCamera(hardwareMap.get(WebcamName.class, "Center"), 7, Math.toRadians(90), Math.toRadians(0));
+//        cameras[2] = new AprilTagCamera(hardwareMap.get(WebcamName.class, "Right"), 8, Math.toRadians(-70), Math.toRadians(45));
 
         waitForStart();
-//ryan is a silly goofy fella
 
         while (!isStopRequested()) {
             drive.update(); // MUST be called every loop cycle so that RoadRunner calculates the pose correctly
@@ -68,5 +71,4 @@ public class TeleOp extends LinearOpMode {
 
 
     }
-//deus pater omnipotens domine fili unigenite jesu christe domini domine deus agnus agnus dei filius agnus dei filius patris quitolis pecca tamundi misere renobis agunus quitolis pecca tamundi misere renobis suscipe deprecationemnostram quise des ad teram patris misere misere misere renobis
 }
