@@ -3,21 +3,27 @@ package org.firstinspires.ftc.teamcode.opmode;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.teamcode.drive.Robot;
+import org.firstinspires.ftc.teamcode.drive.panthera.PantheraDrive;
 import org.firstinspires.ftc.teamcode.drive.psi.PsiDrive;
 import org.firstinspires.ftc.teamcode.util.GlobalOpMode;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp
 public class TeleOp extends LinearOpMode {
-
+    DcMotorEx barHangMotor;
     @Override
     public void runOpMode() throws InterruptedException {
         GlobalOpMode.opMode = this;
         // CHANGE THIS HERE TO CHANGE THE BOT TYPE
-        PsiDrive drive = new PsiDrive(hardwareMap);
+        PantheraDrive drive = new PantheraDrive(hardwareMap);
         Robot robot = new Robot(hardwareMap);
-        if (robot.botType != Robot.BotType.PSI) {
+        barHangMotor = hardwareMap.get(DcMotorEx.class, "hangMotor");
+        barHangMotor.setTargetPosition(barHangMotor.getCurrentPosition());
+        barHangMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        if (robot.botType != Robot.BotType.ROBOTICA) {
             telemetry.addData("Error", "This opmode is only compatible with the PSI bot");
             telemetry.update();
             return;
@@ -66,9 +72,24 @@ public class TeleOp extends LinearOpMode {
 
             // Set bar hang motor power to gamepad1.right_trigger - gamepad1.left_trigger for analog control
 
+//            if (gamepad1.right_trigger >.1 && barHangMotor.getTargetPosition() < 538 ) {
+//
+//            }
+            if (gamepad1.y) {
+                barHang();
+            }
+
         }
 
 
+
+
+
+    }
+    void barHang() {
+
+        barHangMotor.setTargetPosition(538);
+        barHangMotor.setPower(0.2);
 
     }
 }
