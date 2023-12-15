@@ -6,6 +6,7 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.drive.panthera.PantheraDrive;
 import org.firstinspires.ftc.teamcode.util.GlobalOpMode;
@@ -16,11 +17,14 @@ public class TeleOp extends LinearOpMode {
     DcMotorEx barHangMotor;
     DcMotorEx flipperMotor;
     DcMotorEx intakeMotor;
+    Servo purpleServo;
 
     double ispeed = 0;
 
     public static double FLIPPER_POWER = 0.6;
     public static int FLIPPER_POS = -475;
+
+
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -29,6 +33,7 @@ public class TeleOp extends LinearOpMode {
         barHangMotor = hardwareMap.get(DcMotorEx.class, "hangMotor");
         intakeMotor = hardwareMap.get(DcMotorEx.class, "pdw_intake");
         flipperMotor = hardwareMap.get( DcMotorEx.class,"flipper");
+        purpleServo = hardwareMap.get(Servo.class, "purple");
 
         barHangMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         flipperMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -82,6 +87,14 @@ public class TeleOp extends LinearOpMode {
             } else {
                 ispeed = 0;
             }
+
+            if (gamepad1.dpad_left) {
+                purpleServo.setPosition(0.5);
+            } else if (gamepad1.dpad_right) {
+                purpleServo.setPosition(1);
+            }
+
+
 
             intakeMotor.setPower(ispeed);
             telemetry.addData("ispeed", ispeed);

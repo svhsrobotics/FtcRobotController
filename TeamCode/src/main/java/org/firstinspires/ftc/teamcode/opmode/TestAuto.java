@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.apache.commons.math3.stat.inference.OneWayAnova;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.drive.testbot.TestBotDrive;
+import org.firstinspires.ftc.teamcode.drive.panthera.PantheraDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.trajectorysequence.sequencesegment.WaitSegment;
 import org.firstinspires.ftc.teamcode.util.GlobalOpMode;
@@ -21,6 +21,7 @@ import org.firstinspires.ftc.teamcode.vision.AprilTagCamera;
 import org.firstinspires.ftc.teamcode.vision.AprilTagLocalizer;
 import org.firstinspires.ftc.teamcode.vision.PropellerDetection1;
 import org.firstinspires.ftc.teamcode.vision.TensorFlowDetection;
+import org.firstinspires.ftc.vision.VisionPortal;
 import org.tensorflow.lite.Tensor;
 
 @Autonomous
@@ -53,65 +54,59 @@ public class TestAuto extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         GlobalOpMode.opMode = this;
-        TestBotDrive drive = new TestBotDrive(hardwareMap);
+        PantheraDrive drive = new PantheraDrive(hardwareMap);
 
         AprilTagCamera[] cameras = new AprilTagCamera[3];
         cameras[0] = new AprilTagCamera(hardwareMap.get(WebcamName.class, "Left"), 8, Math.toRadians(LEFTSEVENTY), Math.toRadians(LEFTFORTYFIVE));
         cameras[1] = new AprilTagCamera(hardwareMap.get(WebcamName.class, "Center"), 7, Math.toRadians(90), Math.toRadians(0));
         cameras[2] = new AprilTagCamera(hardwareMap.get(WebcamName.class, "Right"), 8, Math.toRadians(RIGHTSEVENTY), Math.toRadians(RIGHTFORTYFIVE));
 
-
-        //TensorFlowDetection tensor = new TensorFlowDetection(cameras[1].webcamName);
-        TensorFlowDetection tensor = null;
-        Log.i("PROGRESS", "I did this!");
-//        while (!isStopRequested()) {
-//            tensor.getPropPosition();
-//          android.util.Log.w("LOCATION", "tensor result " + tensor.getPropPosition());
-//        }
-
-
-
-
-//        TensorFlowDetection.PropPosition tensorPos = TensorFlowDetection.PropPosition.LEFT;
-
-
-
+        // Search for AprilTags across the three cameras, until we find one or init ends
         AprilTagLocalizer aprilTag = new AprilTagLocalizer(cameras);
         Pose2d startPose = null;
-        Log.i("PROGRESS", "here?");
-        while(opModeInInit() && !isStopRequested() ) {
-            Log.i("PROGRESS", "before");
+        while(opModeInInit() && startPose == null) {
+            Log.i("AUTO", "Waiting for AprilTag detection...");
             startPose = estimateWithAllCameras(cameras, aprilTag);
-            Log.i("PROGRESS", "after");
-            if (startPose != null) {
-                drive.setPoseEstimate(startPose);
-                drive.update();
-            }
         }
+
+        // If we found an AprilTag, then close down the AprilTag Localizer and look for the prop
+        TensorFlowDetection.PropPosition tensorPos = TensorFlowDetection.PropPosition.CENTER;
+        if (startPose != null) {
+            Log.i("AUTO", "Found AprilTag, starting Tensorflow");
+            aprilTag.close();
+            // use the center camera
+            TensorFlowDetection tensor = new TensorFlowDetection(cameras[1].webcamName);
+            tensorPos = tensor.getPropPosition();
+            telemetry.log().add("Tensorflow detected: " + tensorPos);
+            if (tensorPos == null) {
+                telemetry.log().add("Unable to detect prop");
+                tensorPos = TensorFlowDetection.PropPosition.CENTER;
+            }
+        } else {
+            telemetry.log().add("Didn't see AprilTag in init");
+            Log.w("AUTO", "Didn't see AprilTag in init, so we didn't look for the prop");
+        }
+
         waitForStart();
-        Log.i("PROGRESS", "Maybe?");
+
+        // We didn't find one in init... try once more in start, then give up
         if (startPose == null) {
             // Check one more time
-            Log.w("APRILTAG", "Did not find AprilTag in init, trying again");
+            Log.w("AUTO", "Did not find AprilTag in init, trying one last time");
             startPose = estimateWithAllCameras(cameras, aprilTag);
         }
 
+        // Can't find any AprilTags... guess wildly
         if (startPose == null) {
-            // Give up
-            //startPose = new Pose2d(0, 0, 0);
-            throw new RuntimeException("Could not find AprilTag to determine start pose");
+            telemetry.log().add("APRILTAG NOT DETECTED");
+            return;
         }
-        Log.i("PROGRESS", "may as well check");
+
         TrajectorySequence traj = null;
 
+        // Tell RoadRunner about the pose we got from the AprilTags
+        startPose = new Pose2d(startPose.getX(), startPose.getY(), startPose.getHeading() + Math.toRadians(180));
         drive.setPoseEstimate(startPose);
-        Log.i("PROGRESS", "Im here too!");
-
-        TensorFlowDetection.PropPosition tensorPos = tensor.getPropPosition();
-        if (tensorPos == null) {
-            tensorPos = TensorFlowDetection.PropPosition.CENTER;
-        }
-
 
         switch (AprilTagLocalizer.whichQuadrant(startPose)) {
             case RED_BOARD:

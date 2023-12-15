@@ -110,9 +110,12 @@ public class TensorFlowDetection {
 
     public PropPosition getPropPosition() {
         List<Recognition> currentRecognitions = tfod.getRecognitions();
-        while(currentRecognitions.size() < 1 && !GlobalOpMode.opMode.isStopRequested()) {
+        while(currentRecognitions.size() < 1 && GlobalOpMode.opMode.opModeInInit()) {
             //android.util.Log.w("TENSORFLOW", "Spinning for current recognitions...");
             currentRecognitions = tfod.getRecognitions();
+        }
+        if (currentRecognitions.size() < 1) {
+            return null;
         }
         Recognition recognition = currentRecognitions.get(0);
 //        while (recognition.getWidth() > 300 && !GlobalOpMode.opMode.isStopRequested()) {
@@ -126,6 +129,8 @@ public class TensorFlowDetection {
         // GET MORE CURRENT RECOGNITIONS?
 //        }
         //visionPortal.close();
+
+
 
         double centerX = (recognition.getLeft() + recognition.getRight()) / 2 ;
         if (centerX < 214) {
@@ -142,4 +147,5 @@ public class TensorFlowDetection {
 
 
     }
+
 }
