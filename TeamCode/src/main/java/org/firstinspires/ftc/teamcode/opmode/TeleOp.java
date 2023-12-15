@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.opmode;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.teamcode.drive.Robot;
 import org.firstinspires.ftc.teamcode.drive.psi.PsiDrive;
@@ -10,6 +12,7 @@ import org.firstinspires.ftc.teamcode.util.GlobalOpMode;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp
 public class TeleOp extends LinearOpMode {
+    DcMotorEx flipperMotor;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -28,7 +31,12 @@ public class TeleOp extends LinearOpMode {
 //        cameras[1] = new AprilTagCamera(hardwareMap.get(WebcamName.class, "Center"), 7, Math.toRadians(90), Math.toRadians(0));
 //        cameras[2] = new AprilTagCamera(hardwareMap.get(WebcamName.class, "Right"), 8, Math.toRadians(-70), Math.toRadians(45));
 
+        flipperMotor = hardwareMap.get( DcMotorEx.class,"flipper");
+        flipperMotor.setTargetPosition(flipperMotor.getCurrentPosition());
+        flipperMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
         waitForStart();
+
 
         while (!isStopRequested()) {
             drive.update(); // MUST be called every loop cycle so that RoadRunner calculates the pose correctly
@@ -57,8 +65,13 @@ public class TeleOp extends LinearOpMode {
             if (gamepad1.b) {
                 // Move pixel hand servo to release 1 pixel
                 // TODO: Do we need to debounce and count presses? Svit mentioned a "pixel cassette" that drops multiple pixels
+                throwPixel();
             } else {
                 // Close pixel hand servo
+                //resetFlipper();
+            }
+            if (gamepad1.a) {
+                resetFlipper();
             }
             if (gamepad1.right_bumper && gamepad1.left_bumper && getRuntime() >= 85) { // technically endgame is 90sec, we let them launch a little early just in case
                 // Launch the airplane
@@ -70,5 +83,31 @@ public class TeleOp extends LinearOpMode {
 
 
 
+
     }
+    int startFlipperTicks=0;
+
+    void throwPixel() {
+        int flipperTicks = flipperMotor.getCurrentPosition();
+        if (startFlipperTicks==0) {
+           startFlipperTicks=flipperTicks;
+        }
+        flipperMotor.setTargetPosition(flipperTicks-475);
+        flipperMotor.setPower(0.1);
+        //flipperMotor.
+        telemetry.addData("flipper ticks", flipperTicks);
+        telemetry.update();
+
+    }
+    void resetFlipper() {
+        flipperMotor.setTargetPosition(startFlipperTicks);
+    }
+    //alelluia deus omnipotens confitor deo omnipotenti
+
+    //in nomine patris, et fili, et spiritu sancti
+
+
+
 }
+
+
