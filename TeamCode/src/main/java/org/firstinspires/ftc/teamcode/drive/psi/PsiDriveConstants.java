@@ -63,9 +63,9 @@ public class PsiDriveConstants {
      * motor encoders or have elected not to use them for velocity control, these values should be
      * empirically tuned.
      */
-    public static double kV = 0.021;
-    public static double kA = 0.002;
-    public static double kStatic = 0.01;
+    public static double kV = 0.014129716300132542;
+    public static double kA = 0.0032;
+    public static double kStatic = 0;
 
     /*
      * These values are used to generate the trajectories for you robot. To ensure proper operation,
@@ -95,8 +95,8 @@ public class PsiDriveConstants {
      * You are free to raise this on your own if you would like. It is best determined through experimentation.
      
      */
-    public static double MAX_VEL = 19.7112162466021;
-    public static double MAX_ACCEL = 19.7112162466021;
+    public static double MAX_VEL = ((MAX_RPM / 60) * GEAR_RATIO * WHEEL_RADIUS * 2 * Math.PI) * 0.85;
+    public static double MAX_ACCEL = MAX_VEL;
     public static double MAX_ANG_VEL = Math.toRadians(99.31612066788206);
     public static double MAX_ANG_ACCEL = Math.toRadians(80.66924999999999);
 

@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.drive.testbot.TestBotDrive;
+import org.firstinspires.ftc.teamcode.drive.panthera.PantheraDrive;
 
 import java.util.Objects;
 
@@ -25,7 +25,7 @@ import java.util.Objects;
 
 @Config
 @Autonomous(group = "drive")
-@Disabled
+//@Disabled
 public class MaxAngularVeloTuner extends LinearOpMode {
     public static double RUNTIME = 4.0;
 
@@ -34,7 +34,7 @@ public class MaxAngularVeloTuner extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        TestBotDrive drive = new TestBotDrive(hardwareMap);
+        PantheraDrive drive = new PantheraDrive(hardwareMap);
 
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 

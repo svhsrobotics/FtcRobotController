@@ -12,8 +12,8 @@ import com.qualcomm.robotcore.util.MovingStatistics;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.internal.system.Misc;
-import org.firstinspires.ftc.teamcode.drive.testbot.DriveConstants;
-import org.firstinspires.ftc.teamcode.drive.testbot.TestBotDrive;
+import org.firstinspires.ftc.teamcode.drive.panthera.PantheraDriveConstants;
+import org.firstinspires.ftc.teamcode.drive.panthera.PantheraDrive;
 
 /*
  * This routine determines the effective track width. The procedure works by executing a point turn
@@ -26,7 +26,7 @@ import org.firstinspires.ftc.teamcode.drive.testbot.TestBotDrive;
  */
 @Config
 @Autonomous(group = "drive")
-@Disabled
+//@Disabled
 public class TrackWidthTuner extends LinearOpMode {
     public static double ANGLE = 180; // deg
     public static int NUM_TRIALS = 5;
@@ -36,7 +36,7 @@ public class TrackWidthTuner extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         Telemetry telemetry = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        TestBotDrive drive = new TestBotDrive(hardwareMap);
+        PantheraDrive drive = new PantheraDrive(hardwareMap);
         // TODO: if you haven't already, set the localizer to something that doesn't depend on
         // drive encoders for computing the heading
 
@@ -70,7 +70,7 @@ public class TrackWidthTuner extends LinearOpMode {
                 drive.update();
             }
 
-            double trackWidth = DriveConstants.TRACK_WIDTH * Math.toRadians(ANGLE) / headingAccumulator;
+            double trackWidth = PantheraDriveConstants.TRACK_WIDTH * Math.toRadians(ANGLE) / headingAccumulator;
             trackWidthStats.add(trackWidth);
 
             sleep(DELAY);
