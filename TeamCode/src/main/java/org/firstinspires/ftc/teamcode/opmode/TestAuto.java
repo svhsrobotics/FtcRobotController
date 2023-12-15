@@ -122,11 +122,10 @@ public class TestAuto extends LinearOpMode {
 
                             })
 
-                            .splineToSplineHeading(new Pose2d(11, -36, Math.toRadians(180)), Math.toRadians(180))
 
                             .turn(Math.toRadians(180))
 
-                            .splineToSplineHeading(new Pose2d(3 * 12 + 5, -3 * 12, 0), 0)
+                            .splineTo(new Vector2d(3 * 12 + 5, -3 * 12), 0)
                             .turn(Math.toRadians(90))
                             .lineTo(new Vector2d(startPose.getX(), startPose.getY()))
                             .build();
@@ -140,7 +139,7 @@ public class TestAuto extends LinearOpMode {
                                 Log.i("DROP", "drop");
                             })
                                 .lineTo(new Vector2d(startPose.getX(), startPose.getY()))
-                            .splineToSplineHeading(new Pose2d(3 * 12 + 5, -3 * 12, 0), 0)
+                            .splineTo(new Vector2d(3 * 12 + 5, -3 * 12), 0)
                             .build();
                     break;
                     case CENTER:
@@ -153,7 +152,7 @@ public class TestAuto extends LinearOpMode {
 
                                 })
                                 .turn(Math.toRadians(90))
-                                .splineToSplineHeading(new Pose2d(3 * 12 + 5, -3 * 12, 0), 0)
+                                .splineTo(new Vector2d(3 * 12 + 5, -3 * 12), 0)
                                 .build();
                     break;
                 }
@@ -176,7 +175,7 @@ public class TestAuto extends LinearOpMode {
                             .turn(Math.toRadians(-180))
 
                             //.splineToSplineHeading(new Pose2d(3*12 + 5, -3*12, 0), 0)
-                            .lineToSplineHeading(new Pose2d(2 * 12, -3 * 12 + 2, Math.toRadians(90)))
+                            .lineToSplineHeading(new Pose2d(2 * 12, -3 * 12 + 2, Math.toRadians(0)))
                             .lineToSplineHeading(new Pose2d(3 * 12 + 5, -3 * 12 + 2, 0))
                             .build();
 
@@ -191,7 +190,7 @@ public class TestAuto extends LinearOpMode {
                                 })
                                 .lineTo(new Vector2d(startPose.getX(), startPose.getY()))
                                 //.splineToSplineHeading(new Pose2d(3*12 + 5, -3*12, 0), 0)
-                                .lineToSplineHeading(new Pose2d(2 * 12, -3 * 12 + 2, Math.toRadians(90)))
+                                .lineToSplineHeading(new Pose2d(2 * 12, -3 * 12 + 2, Math.toRadians(0)))
                                 .lineToSplineHeading(new Pose2d(3 * 12 + 5, -3 * 12 + 2, 0))
                                 .build();
                     break;
@@ -204,7 +203,7 @@ public class TestAuto extends LinearOpMode {
                                 })
                                 .turn(Math.toRadians(90))
                                 //.splineToSplineHeading(new Pose2d(3*12 + 5, -3*12, 0), 0)
-                                .lineToSplineHeading(new Pose2d(2 * 12, -3 * 12 + 2, Math.toRadians(90)))
+                                .lineToSplineHeading(new Pose2d(2 * 12, -3 * 12 + 2, Math.toRadians(0)))
                                 .lineToSplineHeading(new Pose2d(3 * 12 + 5, -3 * 12 + 2, 0))
                                 .build();
                     break;
@@ -220,7 +219,7 @@ public class TestAuto extends LinearOpMode {
                                     //PIXEL DROP
                                     Log.i("ARM", "drop");
                                 })
-                                .lineToSplineHeading(new Pose2d(2 * 12, 3 * 12 + 2, Math.toRadians(90)))
+                                .lineToSplineHeading(new Pose2d(2 * 12, 3 * 12 + 2, Math.toRadians(0)))
                                 .lineToSplineHeading(new Pose2d(3 * 12 + 5, 3 * 12 + 2, 0))
                                 .build();
 
@@ -236,7 +235,7 @@ public class TestAuto extends LinearOpMode {
                                 })
                                 .lineTo(new Vector2d(startPose.getX(),startPose.getY()))
                                 .turn(Math.toRadians(180))
-                                .lineToSplineHeading(new Pose2d(2 * 12, 3 * 12 + 2, Math.toRadians(90)))
+                                .lineToSplineHeading(new Pose2d(2 * 12, 3 * 12 + 2, Math.toRadians(0)))
                                 .lineToSplineHeading(new Pose2d(3 * 12 + 5, 3 * 12 + 2, 0))
                                 .build();
                     break;
@@ -249,7 +248,7 @@ public class TestAuto extends LinearOpMode {
                                     Log.i("DROP", "drop");
                                 })
                                 .turn(Math.toRadians(90))
-                                .lineToSplineHeading(new Pose2d(2 * 12, 3 * 12 + 2, Math.toRadians(90)))
+                                .lineToSplineHeading(new Pose2d(2 * 12, 3 * 12 + 2, Math.toRadians(0)))
                                 .lineToSplineHeading(new Pose2d(3 * 12 + 5, 3 * 12 + 2, 0))
                                 .build();
                     break;
@@ -270,7 +269,7 @@ public class TestAuto extends LinearOpMode {
                                     Log.i("DROP", "drop");
                                 })
 
-                                .splineToSplineHeading(new Pose2d(3 * 12 + 5, 3 * 12, 0), 0)
+                                .splineTo(new Vector2d(3 * 12 + 5, 3 * 12), 0)
                                 .build();
                     break;
                     case RIGHT:
@@ -283,7 +282,7 @@ public class TestAuto extends LinearOpMode {
                                 })
                                 .lineTo(new Vector2d(startPose.getX(),startPose.getY()))
                                 .turn(Math.toRadians(180))
-                                .splineToSplineHeading(new Pose2d(3 * 12 + 5, 3 * 12, 0), 0)
+                                .splineTo(new Vector2d(3 * 12 + 5, 3 * 12), 0)
                                 .build();
                     break;
                     case CENTER:
@@ -295,7 +294,7 @@ public class TestAuto extends LinearOpMode {
                                     Log.i("DROP", "drop");
                                 })
                                 .turn(Math.toRadians(90))
-                                .splineToSplineHeading(new Pose2d(3 * 12 + 5, 3 * 12, 0), 0)
+                                .splineToSplineHeading(new Pose2d(3 * 12 + 5, 3 * 12, Math.toRadians(180)), Math.toRadians(180))
                                 .build();
                     break;
                 }

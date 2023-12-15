@@ -21,7 +21,7 @@ public class AprilTagCamera {
         this.angle = angle;
     }
 
-    public Pose2d translatePose(Pose2d inputPose) {
+    public Pose2d translatePoseOld(Pose2d inputPose) {
         double thetaNeed = Math.toRadians(180) - angle - inputPose.getHeading() + orientation;
         android.util.Log.e("APRILTAG", "MAGIC ANGLE: " + Math.toDegrees(thetaNeed));
 
@@ -44,7 +44,7 @@ public class AprilTagCamera {
      * @param inputPose Pose2d to translate
      * @return translated Pose2d
      */
-    public Pose2d translatePoseFudged(Pose2d inputPose) {
+    public Pose2d translatePose(Pose2d inputPose) {
         // 6.5: Distance from left camera to center of robot
         // -6.5: Distance from right camera to center of robot
         // 5: distance from center of robot to cameras (forward)

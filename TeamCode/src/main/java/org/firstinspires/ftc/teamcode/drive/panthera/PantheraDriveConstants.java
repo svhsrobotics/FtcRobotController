@@ -95,8 +95,8 @@ public class PantheraDriveConstants {
      * You are free to raise this on your own if you would like. It is best determined through experimentation.
      
      */
-    public static double MAX_VEL = 76.37211740876788;
-    public static double MAX_ACCEL = 76.37211740876788;
+    public static double MAX_VEL = 30;
+    public static double MAX_ACCEL = 30;
     public static double MAX_ANG_VEL = Math.toRadians(290);
     public static double MAX_ANG_ACCEL = Math.toRadians(360);
 
