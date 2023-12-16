@@ -99,7 +99,7 @@ public class PantheraDrive extends MecanumDrive {
                 PantheraDriveConstants.LOGO_FACING_DIR, PantheraDriveConstants.USB_FACING_DIR));
         imu.initialize(parameters);
 
-        leftFront = hardwareMap.get(DcMotorEx.class, "ldw_lf");
+        leftFront = hardwareMap.get(DcMotorEx.class, "lf_ldw");
         leftRear = hardwareMap.get(DcMotorEx.class, "lb");
         rightRear = hardwareMap.get(DcMotorEx.class, "rdw_rb");
         rightFront = hardwareMap.get(DcMotorEx.class, "rf");

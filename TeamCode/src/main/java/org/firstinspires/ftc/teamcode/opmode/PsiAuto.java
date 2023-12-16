@@ -74,9 +74,10 @@ public class PsiAuto extends LinearOpMode {
             TensorFlowDetection tensor = new TensorFlowDetection(cameras[1].webcamName);
             tensorPos = tensor.getPropPosition();
             telemetry.log().add("Tensorflow detected: " + tensorPos);
+            Log.i("AUTO", "LOCATION: " + tensorPos);
             if (tensorPos == null) {
                 telemetry.log().add("Unable to detect prop");
-                tensorPos = TensorFlowDetection.PropPosition.CENTER;
+                tensorPos = TensorFlowDetection.PropPosition.RIGHT;
             }
         } else {
             telemetry.log().add("Didn't see AprilTag in init");
@@ -106,66 +107,85 @@ public class PsiAuto extends LinearOpMode {
 
         switch (AprilTagLocalizer.whichQuadrant(startPose)) {
             case RED_BOARD:
+                Vector2d Red_BOARD_CENTER_LINE = new Vector2d(12, -24.5);
+                Vector2d BOT_DROPPER_OFFSET = new Vector2d(4,4.5);
+                Vector2d RED_PARK = new Vector2d(48, -48);
+                Vector2d RED_BOARD_RIGHT_LINE = new Vector2d(23, -30);
                 switch (tensorPos) {
                     case LEFT: // TODO
-                    traj = drive.trajectorySequenceBuilder(startPose)
-                            .lineTo(new Vector2d(10, -36))
-                            .turn(Math.toRadians(90))
-                            .addTemporalMarker(() ->{
-                                Log.i("DROP", "Drop");
-                                purpleServo.setPosition(1);
-                            })
+                        traj = drive.trajectorySequenceBuilder(startPose)
+                                .lineTo(new Vector2d(10, -36))
+                                .turn(Math.toRadians(90))
+                                .addTemporalMarker(() ->{
+                                    android.util.Log.i("DROP", "Drop");
+                                    purpleServo.setPosition(.3);
+                                })
 
 
-                            .turn(Math.toRadians(180))
+                                .turn(Math.toRadians(180))
 
-                            .splineTo(new Vector2d(3 * 12 + 5, -3 * 12), 0)
-                            .turn(Math.toRadians(90))
-                            .lineTo(new Vector2d(startPose.getX(), startPose.getY()))
-                            .build();
-                    break;
+                                .splineTo(new Vector2d(3 * 12 + 5, -3 * 12), 0)
+                                .turn(Math.toRadians(90))
+                                .lineTo(new Vector2d(startPose.getX(), startPose.getY()))
+                                .build();
+                        break;
                     case RIGHT:// TODO
                         traj = drive.trajectorySequenceBuilder(startPose)
-                        .lineTo(new Vector2d(16, -36))
-                            .turn(Math.toRadians(-90))
-                            .addTemporalMarker(() ->{
-                                //ARM DROPS PIXEL
-                                Log.i("DROP", "drop");
-                                purpleServo.setPosition(1);
-                            })
-                                .lineTo(new Vector2d(startPose.getX(), startPose.getY()))
-                            .splineTo(new Vector2d(3 * 12 + 5, -3 * 12), 0)
-                            .build();
-                    break;
+//                                .lineTo(new Vector2d(16, -36))
+//                                .turn(Math.toRadians(-90))
+//                                .addTemporalMarker(() ->{
+//                                    //ARM DROPS PIXEL
+//                                    Log.i("DROP", "drop");
+//                                    purpleServo.setPosition(.3);
+//                                })
+//                                .lineTo(new Vector2d(startPose.getX(), startPose.getY()))
+//                                //.splineTo(new Vector2d(3 * 12 + 5, -3 * 12), 0)
+//                                .build();
+                                .lineTo(new Vector2d(RED_BOARD_RIGHT_LINE.getX() - BOT_DROPPER_OFFSET.getX(), RED_BOARD_RIGHT_LINE.getY() + BOT_DROPPER_OFFSET.getY()))
+                                // Drop the pixel
+                                .addTemporalMarker(()->{
+                                    //PIXEL DROP
+                                    Log.i("DROP", "dropping purple");
+                                    purpleServo.setPosition(.3);
+                                })
+                                .waitSeconds(1.0)
+                                // Back up to the BLUE PARK Y coord
+                                .lineTo(new Vector2d(RED_BOARD_RIGHT_LINE.getX(), RED_PARK.getY()))
+                                // Face forwards
+                                .turn(Math.toRadians(90))
+                                // Park
+                                .lineTo(RED_PARK)
+                                .build();
+                        break;
                     case CENTER: // TODO
 
                         // MOVED TO BLUE
-                    break;
+                        break;
                 }
-            break;
+                break;
             case RED_AUDIENCE:
                 switch (tensorPos) {
                     case LEFT: // TODO
-                    traj = drive.trajectorySequenceBuilder(startPose)
-                            .lineTo(new Vector2d(-34, -3 * 12 + 2)) // drive forward to prevent the spline from cutting through the poles
+                        traj = drive.trajectorySequenceBuilder(startPose)
+                                .lineTo(new Vector2d(-34, -3 * 12 + 2)) // drive forward to prevent the spline from cutting through the poles
 
-                            .turn(Math.toRadians(90))
+                                .turn(Math.toRadians(90))
 
-                            .addTemporalMarker(() -> {
-                                //PIXEL DROP
+                                .addTemporalMarker(() -> {
+                                    //PIXEL DROP
 
-                                Log.i("DROP", "drop");
+                                    Log.i("DROP", "drop");
 
-                            })
-                            .waitSeconds(1)
-                            .turn(Math.toRadians(-180))
+                                })
+                                .waitSeconds(1)
+                                .turn(Math.toRadians(-180))
 
-                            //.splineToSplineHeading(new Pose2d(3*12 + 5, -3*12, 0), 0)
-                            .lineToSplineHeading(new Pose2d(2 * 12, -3 * 12 + 2, Math.toRadians(0)))
-                            .lineToSplineHeading(new Pose2d(3 * 12 + 5, -3 * 12 + 2, 0))
-                            .build();
+                                //.splineToSplineHeading(new Pose2d(3*12 + 5, -3*12, 0), 0)
+                                .lineToSplineHeading(new Pose2d(2 * 12, -3 * 12 + 2, Math.toRadians(0)))
+                                .lineToSplineHeading(new Pose2d(3 * 12 + 5, -3 * 12 + 2, 0))
+                                .build();
 
-                    break;
+                        break;
                     case RIGHT: // TODO
                         traj = drive.trajectorySequenceBuilder(startPose)
                                 .lineTo(new Vector2d(startPose.getX(), -3 * 12 + 2))
@@ -179,22 +199,22 @@ public class PsiAuto extends LinearOpMode {
                                 .lineToSplineHeading(new Pose2d(2 * 12, -3 * 12 + 2, Math.toRadians(0)))
                                 .lineToSplineHeading(new Pose2d(3 * 12 + 5, -3 * 12 + 2, 0))
                                 .build();
-                    break;
+                        break;
                     case CENTER:
                         traj = drive.trajectorySequenceBuilder(startPose)
                                 .lineTo(new Vector2d(startPose.getX(), -2*12 - 3))
                                 .addTemporalMarker(() -> {
                                     Log.i("DROP", "dropping purple");
-                                    purpleServo.setPosition(1);
+                                    purpleServo.setPosition(.3);
                                 })
                                 .waitSeconds(1)
                                 .lineTo(new Vector2d(startPose.getX(), -5 * 12+3))
                                 .turn(Math.toRadians(90))
                                 .lineTo(new Vector2d(3*12+7, -5*12+4))
                                 .build();
-                    break;
+                        break;
                 }
-            break;
+                break;
             case BLUE_AUDIENCE:
                 switch (tensorPos) {
                     case LEFT: // TODO
@@ -210,7 +230,7 @@ public class PsiAuto extends LinearOpMode {
                                 .build();
 
 
-                    break;
+                        break;
                     case RIGHT: // TODO
                         traj = drive.trajectorySequenceBuilder(startPose)
                                 .lineTo(new Vector2d(startPose.getX(), 3*12-2))
@@ -224,7 +244,7 @@ public class PsiAuto extends LinearOpMode {
                                 .lineToSplineHeading(new Pose2d(2 * 12, 3 * 12 + 2, Math.toRadians(0)))
                                 .lineToSplineHeading(new Pose2d(3 * 12 + 5, 3 * 12 + 2, 0))
                                 .build();
-                    break;
+                        break;
                     case CENTER: // TODO
                         traj = drive.trajectorySequenceBuilder(startPose)
                                 .lineTo(new Vector2d(startPose.getX(), 3*12-2))
@@ -237,27 +257,38 @@ public class PsiAuto extends LinearOpMode {
                                 .lineToSplineHeading(new Pose2d(2 * 12, 3 * 12 + 2, Math.toRadians(0)))
                                 .lineToSplineHeading(new Pose2d(3 * 12 + 5, 3 * 12 + 2, 0))
                                 .build();
-                    break;
+                        break;
 
 
                 }
-            break;
+                break;
 
 
             case BLUE_BOARD:
+                Vector2d BLUE_BOARD_CENTER_LINE = new Vector2d(12, 24.5);
+                Vector2d BOT_DROPPER_OFFSET_BLUE = new Vector2d(4,4.5);
+                Vector2d BLUE_PARK = new Vector2d(48, 48);
+                Vector2d BLUE_BOARD_LEFT_LINE = new Vector2d(23, 30);
+
                 switch (tensorPos) {
-                    case LEFT: // TODO
+                    case LEFT:
                         traj = drive.trajectorySequenceBuilder(startPose)
-                                .lineTo(new Vector2d(startPose.getX(), 36))
-                                .turn(Math.toRadians(90))
+                                .lineTo(new Vector2d(BLUE_BOARD_LEFT_LINE.getX() - BOT_DROPPER_OFFSET_BLUE.getX(), BLUE_BOARD_LEFT_LINE.getY() + BOT_DROPPER_OFFSET_BLUE.getY()))
+                                // Drop the pixel
                                 .addTemporalMarker(()->{
                                     //PIXEL DROP
-                                    Log.i("DROP", "drop");
+                                    Log.i("DROP", "dropping purple");
+                                    purpleServo.setPosition(.3);
                                 })
-
-                                .splineTo(new Vector2d(3 * 12 + 5, 3 * 12), 0)
+                                .waitSeconds(1.0)
+                                // Back up to the BLUE PARK Y coord
+                                .lineTo(new Vector2d(BLUE_BOARD_LEFT_LINE.getX(), BLUE_PARK.getY()))
+                                // Face forwards
+                                .turn(Math.toRadians(90))
+                                // Park
+                                .lineTo(BLUE_PARK)
                                 .build();
-                    break;
+                        break;
                     case RIGHT:
                         traj = drive.trajectorySequenceBuilder(startPose)
                                 .lineTo(new Vector2d(startPose.getX(), 3*12-2))
@@ -267,26 +298,32 @@ public class PsiAuto extends LinearOpMode {
                                 .addTemporalMarker(()->{
                                     //PIXEL DROP
                                     Log.i("DROP", "dropping purple");
-                                    purpleServo.setPosition(1);
+                                    purpleServo.setPosition(.3);
                                 })
                                 .lineTo(new Vector2d(3*12+7, 3*12-2))
                                 .build();
-                    break;
+                        break;
                     case CENTER:
                         traj = drive.trajectorySequenceBuilder(startPose)
-                                .lineTo(new Vector2d(startPose.getX(), 26))
+                                // Pull over the CENTER line
+                                .lineTo(new Vector2d(BLUE_BOARD_CENTER_LINE.getX(), BLUE_BOARD_CENTER_LINE.getY() + BOT_DROPPER_OFFSET_BLUE.getY()))
+                                // Drop the pixel
                                 .addTemporalMarker(()->{
                                     //PIXEL DROP
                                     Log.i("DROP", "dropping purple");
-                                    purpleServo.setPosition(1);
+                                    purpleServo.setPosition(.3);
                                 })
-                                .lineTo(new Vector2d(startPose.getX(), 36))
+                                .waitSeconds(1.0)
+                                // Back up to the BLUE PARK Y coord
+                                .lineTo(new Vector2d(BLUE_BOARD_CENTER_LINE.getX(), BLUE_PARK.getY()))
+                                // Face forwards
                                 .turn(Math.toRadians(90))
-                                .lineTo(new Vector2d(3*12+7, 3*12))
+                                // Park
+                                .lineTo(BLUE_PARK)
                                 .build();
-                    break;
+                        break;
                 }
-            break;
+                break;
         }
 
         if (!isStopRequested())

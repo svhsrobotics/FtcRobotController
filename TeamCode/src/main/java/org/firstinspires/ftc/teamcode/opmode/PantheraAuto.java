@@ -134,7 +134,7 @@ public class PantheraAuto extends LinearOpMode {
                                 purpleServo.setPosition(1);
                             })
                                 .lineTo(new Vector2d(startPose.getX(), startPose.getY()))
-                            .splineTo(new Vector2d(3 * 12 + 5, -3 * 12), 0)
+                            //.splineTo(new Vector2d(3 * 12 + 5, -3 * 12), 0)
                             .build();
                     break;
                     case CENTER: // TODO

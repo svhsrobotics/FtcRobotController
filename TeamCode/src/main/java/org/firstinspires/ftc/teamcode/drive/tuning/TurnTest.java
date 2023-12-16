@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.drive.panthera.PantheraDrive;
+import org.firstinspires.ftc.teamcode.drive.psi.PsiDrive;
 
 /*
  * This is a simple routine to test turning capabilities.
@@ -18,7 +18,7 @@ public class TurnTest extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        PantheraDrive drive = new PantheraDrive(hardwareMap);
+        PsiDrive drive = new PsiDrive(hardwareMap);
 
         waitForStart();
 

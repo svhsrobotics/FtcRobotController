@@ -30,13 +30,15 @@ public class PsiTeleOp extends LinearOpMode {
     public static int FLIPPER_POS = -475;
     public static double PIVOT_VALUE = .575;
     public static double DOWN_VALUE = .49;
+//    public static double PURPLE1 = .3;
+//    public static double PURPLE2 = .6;
 
 
     @Override
     public void runOpMode() throws InterruptedException {
         GlobalOpMode.opMode = this;
         PsiDrive drive = new PsiDrive(hardwareMap);
-        barHangMotor = hardwareMap.get(DcMotorEx.class, "bar");
+        //barHangMotor = hardwareMap.get(DcMotorEx.class, "bar");
         intakeMotor = hardwareMap.get(DcMotorEx.class, "intake");
         //flipperMotor = hardwareMap.get( DcMotorEx.class,"flipper");
         purpleServo = hardwareMap.get(Servo.class, "purple");
@@ -117,6 +119,11 @@ public class PsiTeleOp extends LinearOpMode {
             } else if (gamepad1.dpad_right) {
                 armBedRotate.setPosition(.55);
             }
+//            if (gamepad1.dpad_left) {
+//                purpleServo.setPosition(PURPLE1);
+//            } else if (gamepad1.dpad_right) {
+//                purpleServo.setPosition(PURPLE2);
+//            }
 
             if (gamepad1.y && !yPressed) {
                 yPressed = true;

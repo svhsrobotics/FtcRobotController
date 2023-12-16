@@ -55,7 +55,7 @@ public class PsiDriveConstants {
      */
     public static double WHEEL_RADIUS = 1.8898; // in
     public static double GEAR_RATIO = 1; // output (wheel) speed / input (motor) speed
-    public static double TRACK_WIDTH = 15.5; // in
+    public static double TRACK_WIDTH = 15.96; // in
 
     /*
      * These are the feedforward parameters used to model the drive motor behavior. If you are using
@@ -97,7 +97,7 @@ public class PsiDriveConstants {
      */
     public static double MAX_VEL = ((MAX_RPM / 60) * GEAR_RATIO * WHEEL_RADIUS * 2 * Math.PI) * 0.85;
     public static double MAX_ACCEL = MAX_VEL;
-    public static double MAX_ANG_VEL = Math.toRadians(99.31612066788206);
+    public static double MAX_ANG_VEL = Math.toRadians(127.260357);
     public static double MAX_ANG_ACCEL = Math.toRadians(80.66924999999999);
 
 
