@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmode;
 
+import android.util.Log;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
@@ -18,12 +20,16 @@ public class PsiTeleOp extends LinearOpMode {
     DcMotorEx flipperMotor;
     DcMotorEx intakeMotor;
     Servo purpleServo;
+    Servo fallServo;
+    Servo armBedRotate;
+    Servo pivotServo;
 
     double ispeed = 0;
 
     public static double FLIPPER_POWER = 0.6;
     public static int FLIPPER_POS = -475;
-
+    public static double PIVOT_VALUE = .575;
+    public static double DOWN_VALUE = .49;
 
 
     @Override
@@ -35,6 +41,11 @@ public class PsiTeleOp extends LinearOpMode {
         //flipperMotor = hardwareMap.get( DcMotorEx.class,"flipper");
         purpleServo = hardwareMap.get(Servo.class, "purple");
         purpleServo.setPosition(0.5);
+        fallServo = hardwareMap.get(Servo.class, "fall");
+        armBedRotate = hardwareMap.get(Servo.class, "flipperPsi");
+        pivotServo = hardwareMap.get(Servo.class, "pivot");
+
+
 
 
         //barHangMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -50,10 +61,16 @@ public class PsiTeleOp extends LinearOpMode {
 
         Toggle intakeToggle = new Toggle();
 
+
+
+        boolean yPressed = false;
+
         while (!isStopRequested()) {
             drive.update(); // MUST be called every loop cycle so that RoadRunner calculates the pose correctly
             // Read pose
             Pose2d poseEstimate = drive.getPoseEstimate();
+            pivotServo.setPosition(PIVOT_VALUE);
+
 
             // Create a vector from the gamepad x/y inputs
             // Then, rotate that vector by the inverse of that heading
@@ -86,20 +103,38 @@ public class PsiTeleOp extends LinearOpMode {
 //                barHangMotor.setPower(0);
 //            }
 
-//            intakeToggle.update(gamepad1.dpad_up);
-//            if (intakeToggle.state) {
-//                intakeMotor.setPower(0.6);
-//            } else if (gamepad1.dpad_down) {
-//                intakeMotor.setPower(-0.6);
-//            } else {
-//                intakeMotor.setPower(0);
-//            }
+            intakeToggle.update(gamepad1.dpad_up);
+            if (intakeToggle.state) {
+                intakeMotor.setPower(0.6);
+            } else if (gamepad1.dpad_down) {
+                intakeMotor.setPower(-0.6);
+            } else {
+                intakeMotor.setPower(0);
+            }
 
-//            if (gamepad1.dpad_left) {
-//                purpleServo.setPosition(0.5);
-//            } else if (gamepad1.dpad_right) {
-//                purpleServo.setPosition(1);// open
-//            }
+            if (gamepad1.dpad_left) {
+                armBedRotate.setPosition(DOWN_VALUE);
+            } else if (gamepad1.dpad_right) {
+                armBedRotate.setPosition(.55);
+            }
+
+            if (gamepad1.y && !yPressed) {
+                yPressed = true;
+                Log.i("SERVO", "y was pressed");
+                if (fallServo.getPosition() == 1) {
+                    fallServo.setPosition(.5);
+                    Log.i("SERVO", fallServo.getPosition() + "");
+                    Log.i("SERVO", "should be at .5");
+                } else {
+                    fallServo.setPosition(1);
+                    Log.i("SERVO", fallServo.getPosition() + "");
+                    Log.i("SERVO", "should be at 1");
+                }
+            } else if (!gamepad1.y) {
+                yPressed = false;
+            }
+
+
 
 
 

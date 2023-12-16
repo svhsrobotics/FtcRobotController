@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.util.Toggle;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp
 @Config
-public class TeleOp extends LinearOpMode {
+public class PantheraTeleOp extends LinearOpMode {
     DcMotorEx barHangMotor;
     DcMotorEx flipperMotor;
     DcMotorEx intakeMotor;
