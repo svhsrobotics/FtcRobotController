@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.drive.panthera.PantheraDrive;
 import org.firstinspires.ftc.teamcode.util.GlobalOpMode;
+import org.firstinspires.ftc.teamcode.util.Toggle;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp
 @Config
@@ -34,6 +35,7 @@ public class TeleOp extends LinearOpMode {
         intakeMotor = hardwareMap.get(DcMotorEx.class, "pdw_intake");
         flipperMotor = hardwareMap.get( DcMotorEx.class,"flipper");
         purpleServo = hardwareMap.get(Servo.class, "purple");
+        purpleServo.setPosition(0.5);
 
 
         barHangMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -47,6 +49,8 @@ public class TeleOp extends LinearOpMode {
 
         waitForStart();
 
+        Toggle intakeToggle = new Toggle();
+
         while (!isStopRequested()) {
             drive.update(); // MUST be called every loop cycle so that RoadRunner calculates the pose correctly
             // Read pose
@@ -54,11 +58,11 @@ public class TeleOp extends LinearOpMode {
 
             // Create a vector from the gamepad x/y inputs
             // Then, rotate that vector by the inverse of that heading
-            Vector2d input = new Vector2d(-gamepad1.left_stick_y, -gamepad1.left_stick_x).rotated(-poseEstimate.getHeading());
+            Vector2d input = new Vector2d(-gamepad1.left_stick_y * 0.5, -gamepad1.left_stick_x * 0.5).rotated(-poseEstimate.getHeading());
 
             // Pass in the rotated input + right stick value for rotation
             // Rotation is not part of the rotated input thus must be passed in separately
-            drive.setWeightedDrivePower(new Pose2d(input.getX(), input.getY(), -gamepad1.right_stick_x));
+            drive.setWeightedDrivePower(new Pose2d(input.getX(), input.getY(), -gamepad1.right_stick_x * 0.5));
 
             if (gamepad1.x) {
                 drive.setPoseEstimate(new Pose2d(poseEstimate.getX(), poseEstimate.getY(), 0));
@@ -83,10 +87,13 @@ public class TeleOp extends LinearOpMode {
                 barHangMotor.setPower(0);
             }
 
-            if (gamepad1.dpad_up) {
-                ispeed = 0.6;
+            intakeToggle.update(gamepad1.dpad_up);
+            if (intakeToggle.state) {
+                intakeMotor.setPower(0.6);
+            } else if (gamepad1.dpad_down) {
+                intakeMotor.setPower(-0.6);
             } else {
-                ispeed = 0;
+                intakeMotor.setPower(0);
             }
 
             if (gamepad1.dpad_left) {
@@ -97,7 +104,6 @@ public class TeleOp extends LinearOpMode {
 
 
 
-            intakeMotor.setPower(ispeed);
             telemetry.addData("ispeed", ispeed);
             telemetry.addData("bar hang", barHangMotor.getCurrentPosition());
             telemetry.addData("flipper ticks", flipperMotor.getCurrentPosition());
