@@ -249,11 +249,13 @@ public class PantheraAuto extends LinearOpMode {
                 Vector2d BOT_DROPPER_OFFSET = new Vector2d(4,4.5);
                 Vector2d BLUE_PARK = new Vector2d(48, 48);
                 Vector2d BLUE_BOARD_LEFT_LINE = new Vector2d(23, 30);
+                Vector2d BLUE_BOARD_RIGHT_LINE = new Vector2d(1, 30);
+
 
                 switch (tensorPos) {
                     case LEFT:
                         traj = drive.trajectorySequenceBuilder(startPose)
-                                .lineTo(new Vector2d(BLUE_BOARD_LEFT_LINE.getX() - BOT_DROPPER_OFFSET.getY(), BLUE_BOARD_LEFT_LINE.getY() + BOT_DROPPER_OFFSET.getY()))
+                                .lineTo(new Vector2d(BLUE_BOARD_LEFT_LINE.getX() - BOT_DROPPER_OFFSET.getX(), BLUE_BOARD_LEFT_LINE.getY() + BOT_DROPPER_OFFSET.getY()))
                                 // Drop the pixel
                                 .addTemporalMarker(()->{
                                     //PIXEL DROP
@@ -271,16 +273,19 @@ public class PantheraAuto extends LinearOpMode {
                     break;
                     case RIGHT:
                         traj = drive.trajectorySequenceBuilder(startPose)
-                                .lineTo(new Vector2d(startPose.getX(), 3*12-2))
+                                .lineTo(new Vector2d(BLUE_BOARD_CENTER_LINE.getX(), BLUE_BOARD_RIGHT_LINE.getY() + BOT_DROPPER_OFFSET.getY()))
                                 .turn(Math.toRadians(-90))
-
-                                .lineTo(new Vector2d(1, 3*12-2))
+                                .lineTo(new Vector2d(BLUE_BOARD_RIGHT_LINE.getX() + BOT_DROPPER_OFFSET.getX(), BLUE_BOARD_RIGHT_LINE.getY() + BOT_DROPPER_OFFSET.getY()))
+                                // Drop the pixel
                                 .addTemporalMarker(()->{
                                     //PIXEL DROP
                                     Log.i("DROP", "dropping purple");
                                     purpleServo.setPosition(1);
                                 })
-                                .lineTo(new Vector2d(3*12+7, 3*12-2))
+                                .waitSeconds(1.0)
+                                .forward(10)
+                                // Park
+                                .lineTo(BLUE_PARK)
                                 .build();
                     break;
                     case CENTER:
