@@ -168,7 +168,7 @@ public class TestAuto extends LinearOpMode {
                     break;
                     case RIGHT:
                         traj = drive.trajectorySequenceBuilder(startPose)
-                                .lineTo(new Vector2d(startPose.getX(), -3 * 12 + 2)) // drive forward to prevent the spline from cutting through the poles
+                                .lineTo(new Vector2d(startPose.getX(), -3 * 12 + 2))
                                 .turn(Math.toRadians(-90))
                                 .addDisplacementMarker(() -> {
                                     //PIXEL DROP
@@ -182,15 +182,15 @@ public class TestAuto extends LinearOpMode {
                     break;
                     case CENTER:
                         traj = drive.trajectorySequenceBuilder(startPose)
-                                .lineTo(new Vector2d(startPose.getX(), -3 * 12 + 2)) // drive forward to prevent the spline from cutting through the poles
+                                .lineTo(new Vector2d(startPose.getX(), -2*12 - 3))
                                 .addTemporalMarker(() -> {
-                                    //PIXEL DROP
-                                    Log.i("DROP", "drop");
+                                    Log.i("DROP", "dropping purple");
+                                    purpleServo.setPosition(1);
                                 })
+                                // TODO: WAIT FOR IT TO OPEN FOR A SEC
+                                .lineTo(new Vector2d(startPose.getX(), -5 * 12 + 2))
                                 .turn(Math.toRadians(90))
-                                //.splineToSplineHeading(new Pose2d(3*12 + 5, -3*12, 0), 0)
-                                .lineToSplineHeading(new Pose2d(2 * 12, -3 * 12 + 2, Math.toRadians(0)))
-                                .lineToSplineHeading(new Pose2d(3 * 12 + 5, -3 * 12 + 2, 0))
+                                .lineTo(new Vector2d(3*12+7, -5*12+2))
                                 .build();
                     break;
                 }
@@ -260,15 +260,16 @@ public class TestAuto extends LinearOpMode {
                     break;
                     case RIGHT:
                         traj = drive.trajectorySequenceBuilder(startPose)
-                                .lineTo(new Vector2d(startPose.getX(), 36))
+                                .lineTo(new Vector2d(startPose.getX(), 3*12-2))
                                 .turn(Math.toRadians(-90))
+
+                                .lineTo(new Vector2d(1, 3*12-2))
                                 .addTemporalMarker(()->{
                                     //PIXEL DROP
-                                    Log.i("DROP", "drop");
+                                    Log.i("DROP", "dropping purple");
+                                    purpleServo.setPosition(1);
                                 })
-                                .lineTo(new Vector2d(startPose.getX(),startPose.getY()))
-                                .turn(Math.toRadians(180))
-                                .splineTo(new Vector2d(3 * 12 + 5, 3 * 12), 0)
+                                .lineTo(new Vector2d(3*12+7, 3*12-2))
                                 .build();
                     break;
                     case CENTER:
@@ -281,7 +282,7 @@ public class TestAuto extends LinearOpMode {
                                 })
                                 .lineTo(new Vector2d(startPose.getX(), 36))
                                 .turn(Math.toRadians(90))
-                                .lineTo(new Vector2d(3*12+5, 3*12))
+                                .lineTo(new Vector2d(3*12+7, 3*12))
                                 .build();
                     break;
                 }
