@@ -107,7 +107,7 @@ public class TestAuto extends LinearOpMode {
         switch (AprilTagLocalizer.whichQuadrant(startPose)) {
             case RED_BOARD:
                 switch (tensorPos) {
-                    case LEFT:
+                    case LEFT: // TODO
                     traj = drive.trajectorySequenceBuilder(startPose)
                             .lineTo(new Vector2d(10, -36))
                             .turn(Math.toRadians(90))
@@ -124,7 +124,7 @@ public class TestAuto extends LinearOpMode {
                             .lineTo(new Vector2d(startPose.getX(), startPose.getY()))
                             .build();
                     break;
-                    case RIGHT:
+                    case RIGHT:// TODO
                         traj = drive.trajectorySequenceBuilder(startPose)
                         .lineTo(new Vector2d(16, -36))
                             .turn(Math.toRadians(-90))
@@ -137,7 +137,7 @@ public class TestAuto extends LinearOpMode {
                             .splineTo(new Vector2d(3 * 12 + 5, -3 * 12), 0)
                             .build();
                     break;
-                    case CENTER:
+                    case CENTER: // TODO
 
                         // MOVED TO BLUE
                     break;
@@ -145,7 +145,7 @@ public class TestAuto extends LinearOpMode {
             break;
             case RED_AUDIENCE:
                 switch (tensorPos) {
-                    case LEFT:
+                    case LEFT: // TODO
                     traj = drive.trajectorySequenceBuilder(startPose)
                             .lineTo(new Vector2d(-34, -3 * 12 + 2)) // drive forward to prevent the spline from cutting through the poles
 
@@ -166,7 +166,7 @@ public class TestAuto extends LinearOpMode {
                             .build();
 
                     break;
-                    case RIGHT:
+                    case RIGHT: // TODO
                         traj = drive.trajectorySequenceBuilder(startPose)
                                 .lineTo(new Vector2d(startPose.getX(), -3 * 12 + 2))
                                 .turn(Math.toRadians(-90))
@@ -187,17 +187,17 @@ public class TestAuto extends LinearOpMode {
                                     Log.i("DROP", "dropping purple");
                                     purpleServo.setPosition(1);
                                 })
-                                // TODO: WAIT FOR IT TO OPEN FOR A SEC
-                                .lineTo(new Vector2d(startPose.getX(), -5 * 12 + 2))
+                                .waitSeconds(1)
+                                .lineTo(new Vector2d(startPose.getX(), -5 * 12+3))
                                 .turn(Math.toRadians(90))
-                                .lineTo(new Vector2d(3*12+7, -5*12+2))
+                                .lineTo(new Vector2d(3*12+7, -5*12+4))
                                 .build();
                     break;
                 }
             break;
             case BLUE_AUDIENCE:
                 switch (tensorPos) {
-                    case LEFT:
+                    case LEFT: // TODO
                         traj = drive.trajectorySequenceBuilder(startPose)
                                 .lineTo(new Vector2d(startPose.getX(), 3*12-2))
                                 .turn(Math.toRadians(90))
@@ -211,7 +211,7 @@ public class TestAuto extends LinearOpMode {
 
 
                     break;
-                    case RIGHT:
+                    case RIGHT: // TODO
                         traj = drive.trajectorySequenceBuilder(startPose)
                                 .lineTo(new Vector2d(startPose.getX(), 3*12-2))
                                 .turn(Math.toRadians(-90))
@@ -225,7 +225,7 @@ public class TestAuto extends LinearOpMode {
                                 .lineToSplineHeading(new Pose2d(3 * 12 + 5, 3 * 12 + 2, 0))
                                 .build();
                     break;
-                    case CENTER:
+                    case CENTER: // TODO
                         traj = drive.trajectorySequenceBuilder(startPose)
                                 .lineTo(new Vector2d(startPose.getX(), 3*12-2))
                                 .addTemporalMarker(()->{
@@ -246,7 +246,7 @@ public class TestAuto extends LinearOpMode {
 
             case BLUE_BOARD:
                 switch (tensorPos) {
-                    case LEFT:
+                    case LEFT: // TODO
                         traj = drive.trajectorySequenceBuilder(startPose)
                                 .lineTo(new Vector2d(startPose.getX(), 36))
                                 .turn(Math.toRadians(90))

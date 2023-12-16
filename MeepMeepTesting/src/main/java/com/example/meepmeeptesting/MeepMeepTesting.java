@@ -20,9 +20,9 @@ public class MeepMeepTesting {
                                     //Log.i("DROP", "dropping purple");
                                     //purpleServo.setPosition(1);
                                 })
-                                .lineTo(new Vector2d(startPose.getX(), -5 * 12 + 2))
+                                .lineTo(new Vector2d(startPose.getX(), -5 * 12 +4))
                                 .turn(Math.toRadians(90))
-                                .lineTo(new Vector2d(3*12+7, -5*12+2))
+                                .lineTo(new Vector2d(3*12+7, -5*12+4))
                                 .build()
                         );
 
