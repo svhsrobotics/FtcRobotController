@@ -245,17 +245,28 @@ public class PantheraAuto extends LinearOpMode {
 
 
             case BLUE_BOARD:
+                Vector2d BLUE_BOARD_CENTER_LINE = new Vector2d(12, 24.5);
+                Vector2d BOT_DROPPER_OFFSET = new Vector2d(4,4.5);
+                Vector2d BLUE_PARK = new Vector2d(48, 48);
+                Vector2d BLUE_BOARD_LEFT_LINE = new Vector2d(23, 30);
+
                 switch (tensorPos) {
-                    case LEFT: // TODO
+                    case LEFT:
                         traj = drive.trajectorySequenceBuilder(startPose)
-                                .lineTo(new Vector2d(startPose.getX(), 36))
-                                .turn(Math.toRadians(90))
+                                .lineTo(new Vector2d(BLUE_BOARD_LEFT_LINE.getX() - BOT_DROPPER_OFFSET.getY(), BLUE_BOARD_LEFT_LINE.getY() + BOT_DROPPER_OFFSET.getY()))
+                                // Drop the pixel
                                 .addTemporalMarker(()->{
                                     //PIXEL DROP
-                                    Log.i("DROP", "drop");
+                                    Log.i("DROP", "dropping purple");
+                                    purpleServo.setPosition(1);
                                 })
-
-                                .splineTo(new Vector2d(3 * 12 + 5, 3 * 12), 0)
+                                .waitSeconds(1.0)
+                                // Back up to the BLUE PARK Y coord
+                                .lineTo(new Vector2d(BLUE_BOARD_LEFT_LINE.getX(), BLUE_PARK.getY()))
+                                // Face forwards
+                                .turn(Math.toRadians(90))
+                                // Park
+                                .lineTo(BLUE_PARK)
                                 .build();
                     break;
                     case RIGHT:
@@ -274,15 +285,21 @@ public class PantheraAuto extends LinearOpMode {
                     break;
                     case CENTER:
                         traj = drive.trajectorySequenceBuilder(startPose)
-                                .lineTo(new Vector2d(startPose.getX(), 26))
+                                // Pull over the CENTER line
+                                .lineTo(new Vector2d(BLUE_BOARD_CENTER_LINE.getX(), BLUE_BOARD_CENTER_LINE.getY() + BOT_DROPPER_OFFSET.getY()))
+                                // Drop the pixel
                                 .addTemporalMarker(()->{
                                     //PIXEL DROP
                                     Log.i("DROP", "dropping purple");
                                     purpleServo.setPosition(1);
                                 })
-                                .lineTo(new Vector2d(startPose.getX(), 36))
+                                .waitSeconds(1.0)
+                                // Back up to the BLUE PARK Y coord
+                                .lineTo(new Vector2d(BLUE_BOARD_CENTER_LINE.getX(), BLUE_PARK.getY()))
+                                // Face forwards
                                 .turn(Math.toRadians(90))
-                                .lineTo(new Vector2d(3*12+7, 3*12))
+                                // Park
+                                .lineTo(BLUE_PARK)
                                 .build();
                     break;
                 }
