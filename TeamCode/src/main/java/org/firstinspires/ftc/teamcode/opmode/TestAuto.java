@@ -7,22 +7,15 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.Servo;
 
-import org.apache.commons.math3.stat.inference.OneWayAnova;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.drive.panthera.PantheraDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
-import org.firstinspires.ftc.teamcode.trajectorysequence.sequencesegment.WaitSegment;
 import org.firstinspires.ftc.teamcode.util.GlobalOpMode;
-import org.firstinspires.ftc.teamcode.util.Timeout;
 import org.firstinspires.ftc.teamcode.vision.AprilTagCamera;
 import org.firstinspires.ftc.teamcode.vision.AprilTagLocalizer;
-import org.firstinspires.ftc.teamcode.vision.PropellerDetection1;
 import org.firstinspires.ftc.teamcode.vision.TensorFlowDetection;
-import org.firstinspires.ftc.vision.VisionPortal;
-import org.tensorflow.lite.Tensor;
 
 @Autonomous
 @Config
@@ -61,6 +54,8 @@ public class TestAuto extends LinearOpMode {
         cameras[1] = new AprilTagCamera(hardwareMap.get(WebcamName.class, "Center"), 7, Math.toRadians(90), Math.toRadians(0));
         cameras[2] = new AprilTagCamera(hardwareMap.get(WebcamName.class, "Right"), 8, Math.toRadians(RIGHTSEVENTY), Math.toRadians(RIGHTFORTYFIVE));
 
+        Servo purpleServo = hardwareMap.get(Servo.class, "purple");
+
         // Search for AprilTags across the three cameras, until we find one or init ends
         AprilTagLocalizer aprilTag = new AprilTagLocalizer(cameras);
         Pose2d startPose = null;
@@ -73,6 +68,7 @@ public class TestAuto extends LinearOpMode {
         TensorFlowDetection.PropPosition tensorPos = TensorFlowDetection.PropPosition.CENTER;
         if (startPose != null) {
             Log.i("AUTO", "Found AprilTag, starting Tensorflow");
+            telemetry.log().add("Found AprilTag");
             aprilTag.close();
             // use the center camera
             TensorFlowDetection tensor = new TensorFlowDetection(cameras[1].webcamName);
@@ -115,11 +111,9 @@ public class TestAuto extends LinearOpMode {
                     traj = drive.trajectorySequenceBuilder(startPose)
                             .lineTo(new Vector2d(10, -36))
                             .turn(Math.toRadians(90))
-
                             .addTemporalMarker(() ->{
-                                //ARM DROPS PIXEL
                                 android.util.Log.i("DROP", "Drop");
-
+                                purpleServo.setPosition(1);
                             })
 
 
@@ -137,6 +131,7 @@ public class TestAuto extends LinearOpMode {
                             .addTemporalMarker(() ->{
                                 //ARM DROPS PIXEL
                                 Log.i("DROP", "drop");
+                                purpleServo.setPosition(1);
                             })
                                 .lineTo(new Vector2d(startPose.getX(), startPose.getY()))
                             .splineTo(new Vector2d(3 * 12 + 5, -3 * 12), 0)
@@ -144,16 +139,7 @@ public class TestAuto extends LinearOpMode {
                     break;
                     case CENTER:
 
-                        traj = drive.trajectorySequenceBuilder(startPose)
-                                .lineTo(new Vector2d(16, -36))
-                                .addTemporalMarker(() -> {
-                                    //ARM DROPS PIXEL
-                                    Log.i("DROP", "drop");
-
-                                })
-                                .turn(Math.toRadians(90))
-                                .splineTo(new Vector2d(3 * 12 + 5, -3 * 12), 0)
-                                .build();
+                        // MOVED TO BLUE
                     break;
                 }
             break;
@@ -287,27 +273,26 @@ public class TestAuto extends LinearOpMode {
                     break;
                     case CENTER:
                         traj = drive.trajectorySequenceBuilder(startPose)
-                                .lineTo(new Vector2d(startPose.getX(), 36))
-
+                                .lineTo(new Vector2d(startPose.getX(), 26))
                                 .addTemporalMarker(()->{
                                     //PIXEL DROP
-                                    Log.i("DROP", "drop");
+                                    Log.i("DROP", "dropping purple");
+                                    purpleServo.setPosition(1);
                                 })
+                                .lineTo(new Vector2d(startPose.getX(), 36))
                                 .turn(Math.toRadians(90))
-                                .splineToSplineHeading(new Pose2d(3 * 12 + 5, 3 * 12, Math.toRadians(180)), Math.toRadians(180))
+                                .lineTo(new Vector2d(3*12+5, 3*12))
                                 .build();
                     break;
                 }
             break;
         }
-        Log.i("PROGRESS", "I got here???");
 
         if (!isStopRequested())
             drive.followTrajectorySequence(traj);
 
         //aprilTag.centerOnTag(cameras[1], drive, 5);
 
-        Log.i("PROGRESS", "whatttttt");
     }
 }
 

@@ -35,6 +35,7 @@ public class TeleOp extends LinearOpMode {
         flipperMotor = hardwareMap.get( DcMotorEx.class,"flipper");
         purpleServo = hardwareMap.get(Servo.class, "purple");
 
+
         barHangMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         flipperMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
@@ -91,7 +92,7 @@ public class TeleOp extends LinearOpMode {
             if (gamepad1.dpad_left) {
                 purpleServo.setPosition(0.5);
             } else if (gamepad1.dpad_right) {
-                purpleServo.setPosition(1);
+                purpleServo.setPosition(1);// open
             }
 
 
