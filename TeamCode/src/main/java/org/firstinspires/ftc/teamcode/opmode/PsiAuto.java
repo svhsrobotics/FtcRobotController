@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.drive.panthera.PantheraDrive;
+import org.firstinspires.ftc.teamcode.drive.psi.PsiDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.util.GlobalOpMode;
 import org.firstinspires.ftc.teamcode.vision.AprilTagCamera;
@@ -19,20 +19,20 @@ import org.firstinspires.ftc.teamcode.vision.TensorFlowDetection;
 
 @Autonomous
 @Config
-public class TestAuto extends LinearOpMode {
+public class PsiAuto extends LinearOpMode {
     private Pose2d estimateWithAllCameras(AprilTagCamera[] cameras, AprilTagLocalizer aprilTag) {
-        android.util.Log.i("PROGRESS", "log1");
+        Log.i("PROGRESS", "log1");
         Pose2d pose = null;
-        android.util.Log.i("PROGRESS", "log2");
+        Log.i("PROGRESS", "log2");
         for (AprilTagCamera camera : cameras) {
-            android.util.Log.i("PROGRESS", "trying to get pose");
+            Log.i("PROGRESS", "trying to get pose");
             pose = aprilTag.estimateRobotPoseFromAprilTags(camera);
             if (pose != null) {
-                android.util.Log.i("PROGRESS", "break");
+                Log.i("PROGRESS", "break");
                 break;
             }
         }
-        android.util.Log.i("PROGRESS", "returning");
+        Log.i("PROGRESS", "returning");
         return pose;
     }
 
@@ -47,7 +47,7 @@ public class TestAuto extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         GlobalOpMode.opMode = this;
-        PantheraDrive drive = new PantheraDrive(hardwareMap);
+        PsiDrive drive = new PsiDrive(hardwareMap);
 
         AprilTagCamera[] cameras = new AprilTagCamera[3];
         cameras[0] = new AprilTagCamera(hardwareMap.get(WebcamName.class, "Left"), 8, Math.toRadians(LEFTSEVENTY), Math.toRadians(LEFTFORTYFIVE));
@@ -112,7 +112,7 @@ public class TestAuto extends LinearOpMode {
                             .lineTo(new Vector2d(10, -36))
                             .turn(Math.toRadians(90))
                             .addTemporalMarker(() ->{
-                                android.util.Log.i("DROP", "Drop");
+                                Log.i("DROP", "Drop");
                                 purpleServo.setPosition(1);
                             })
 
