@@ -22,6 +22,8 @@ public class PantheraTeleOp extends LinearOpMode {
 
     double ispeed = 0;
 
+    public static double INTAKE_POWER = 0.7;
+
     public static double FLIPPER_POWER = 0.6;
     public static int FLIPPER_POS = -475;
 
@@ -89,9 +91,9 @@ public class PantheraTeleOp extends LinearOpMode {
 
             intakeToggle.update(gamepad1.dpad_up);
             if (intakeToggle.state) {
-                intakeMotor.setPower(0.6);
+                intakeMotor.setPower(INTAKE_POWER);
             } else if (gamepad1.dpad_down) {
-                intakeMotor.setPower(-0.6);
+                intakeMotor.setPower(-INTAKE_POWER);
             } else {
                 intakeMotor.setPower(0);
             }

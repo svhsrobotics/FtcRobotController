@@ -1,10 +1,11 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @TeleOp
-//@Disabled
+@Disabled
 public class AnalogTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
