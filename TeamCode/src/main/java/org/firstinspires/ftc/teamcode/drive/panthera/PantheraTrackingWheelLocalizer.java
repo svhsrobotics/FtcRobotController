@@ -50,7 +50,7 @@ public class PantheraTrackingWheelLocalizer extends ThreeTrackingWheelLocalizer 
         lastEncPositions = lastTrackingEncPositions;
         lastEncVels = lastTrackingEncVels;
 
-        leftEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "lf_ldw"));
+        leftEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "ldw_lf"));
         rightEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "rdw_rb"));
         frontEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "pdw_intake"));
 

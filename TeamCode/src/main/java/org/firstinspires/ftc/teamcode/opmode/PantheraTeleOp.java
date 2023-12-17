@@ -80,9 +80,9 @@ public class PantheraTeleOp extends LinearOpMode {
 //            }
 
             if (gamepad1.right_trigger > 0.1 && barHangMotor.getCurrentPosition() > -8490) {
-                barHangMotor.setPower(-gamepad1.right_trigger * 0.5);
+                barHangMotor.setPower(-gamepad1.right_trigger * 1);
             } else if (gamepad1.left_trigger > 0.1 && barHangMotor.getCurrentPosition() < -50) {
-                barHangMotor.setPower(gamepad1.left_trigger * 0.5);
+                barHangMotor.setPower(gamepad1.left_trigger * 1);
             } else {
                 barHangMotor.setPower(0);
             }
