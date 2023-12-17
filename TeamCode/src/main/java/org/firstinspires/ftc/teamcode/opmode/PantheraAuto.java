@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.vision.AprilTagCamera;
 import org.firstinspires.ftc.teamcode.vision.AprilTagLocalizer;
 import org.firstinspires.ftc.teamcode.vision.TensorFlowDetection;
 
-@Autonomous
+@Autonomous(name="Robotica Auto", group="A")
 @Config
 public class PantheraAuto extends LinearOpMode {
     private Pose2d estimateWithAllCameras(AprilTagCamera[] cameras, AprilTagLocalizer aprilTag) {
@@ -106,6 +106,7 @@ public class PantheraAuto extends LinearOpMode {
 
         switch (AprilTagLocalizer.whichQuadrant(startPose)) {
             case RED_BOARD:
+                if (true) return;
                 switch (tensorPos) {
                     case LEFT: // TODO
                     traj = drive.trajectorySequenceBuilder(startPose)
@@ -146,7 +147,8 @@ public class PantheraAuto extends LinearOpMode {
             case RED_AUDIENCE:
                 switch (tensorPos) {
                     case LEFT: // TODO
-                    traj = drive.trajectorySequenceBuilder(startPose)
+                        if (true) return;
+                        traj = drive.trajectorySequenceBuilder(startPose)
                             .lineTo(new Vector2d(-34, -3 * 12 + 2)) // drive forward to prevent the spline from cutting through the poles
 
                             .turn(Math.toRadians(90))
@@ -167,6 +169,7 @@ public class PantheraAuto extends LinearOpMode {
 
                     break;
                     case RIGHT: // TODO
+                        if (true) return;
                         traj = drive.trajectorySequenceBuilder(startPose)
                                 .lineTo(new Vector2d(startPose.getX(), -3 * 12 + 2))
                                 .turn(Math.toRadians(-90))
@@ -196,6 +199,7 @@ public class PantheraAuto extends LinearOpMode {
                 }
             break;
             case BLUE_AUDIENCE:
+                if (true) return;
                 switch (tensorPos) {
                     case LEFT: // TODO
                         traj = drive.trajectorySequenceBuilder(startPose)

@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.drive.panthera.PantheraDrive;
 import org.firstinspires.ftc.teamcode.util.GlobalOpMode;
 import org.firstinspires.ftc.teamcode.util.Toggle;
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "Robotica TeleOp", group = "A")
 @Config
 public class PantheraTeleOp extends LinearOpMode {
     DcMotorEx barHangMotor;
