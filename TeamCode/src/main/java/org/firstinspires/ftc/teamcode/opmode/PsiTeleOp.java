@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.drive.psi.PsiDrive;
 import org.firstinspires.ftc.teamcode.util.GlobalOpMode;
 import org.firstinspires.ftc.teamcode.util.Toggle;
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "Psi TeleOp", group = "A")
 @Config
 public class PsiTeleOp extends LinearOpMode {
     DcMotorEx barHangMotor;

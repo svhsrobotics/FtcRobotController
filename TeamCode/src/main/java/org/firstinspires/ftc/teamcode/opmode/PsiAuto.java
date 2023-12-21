@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.vision.AprilTagCamera;
 import org.firstinspires.ftc.teamcode.vision.AprilTagLocalizer;
 import org.firstinspires.ftc.teamcode.vision.TensorFlowDetection;
 
-@Autonomous
+@Autonomous(name = "Psi Auto", group = "A")
 @Config
 public class PsiAuto extends LinearOpMode {
     private Pose2d estimateWithAllCameras(AprilTagCamera[] cameras, AprilTagLocalizer aprilTag) {

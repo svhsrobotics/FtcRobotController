@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.drive.panthera.PantheraDrive;
 import org.firstinspires.ftc.teamcode.util.GlobalOpMode;
 import org.firstinspires.ftc.teamcode.util.Toggle;
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "Robotica TeleOp", group = "A")
 @Config
 public class PantheraTeleOp extends LinearOpMode {
     DcMotorEx barHangMotor;
@@ -21,6 +21,8 @@ public class PantheraTeleOp extends LinearOpMode {
     Servo purpleServo;
 
     double ispeed = 0;
+
+    public static double INTAKE_POWER = 0.7;
 
     public static double FLIPPER_POWER = 0.6;
     public static int FLIPPER_POS = -475;
@@ -80,18 +82,18 @@ public class PantheraTeleOp extends LinearOpMode {
 //            }
 
             if (gamepad1.right_trigger > 0.1 && barHangMotor.getCurrentPosition() > -8490) {
-                barHangMotor.setPower(-gamepad1.right_trigger * 0.5);
+                barHangMotor.setPower(-gamepad1.right_trigger * 1);
             } else if (gamepad1.left_trigger > 0.1 && barHangMotor.getCurrentPosition() < -50) {
-                barHangMotor.setPower(gamepad1.left_trigger * 0.5);
+                barHangMotor.setPower(gamepad1.left_trigger * 1);
             } else {
                 barHangMotor.setPower(0);
             }
 
             intakeToggle.update(gamepad1.dpad_up);
             if (intakeToggle.state) {
-                intakeMotor.setPower(0.6);
+                intakeMotor.setPower(INTAKE_POWER);
             } else if (gamepad1.dpad_down) {
-                intakeMotor.setPower(-0.6);
+                intakeMotor.setPower(-INTAKE_POWER);
             } else {
                 intakeMotor.setPower(0);
             }
