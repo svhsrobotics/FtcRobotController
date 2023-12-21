@@ -9,7 +9,9 @@ import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 public class MeepMeepTesting {
     public static void main(String[] args) {
         MeepMeep meepMeep = new MeepMeep(800);
-        Pose2d startPose = new Pose2d(12,-62, Math.toRadians(270));
+        //Pose2d startPose = new Pose2d(12,-62, Math.toRadians(270)); // RED_BOARD
+        Pose2d startPose = new Pose2d(12,62, Math.toRadians(90)); // BLUE_BOARD
+
 
         Vector2d BLUE_BOARD_CENTER_LINE = new Vector2d(12, 24.5);
         Vector2d BOT_DROPPER_OFFSET = new Vector2d(4,4.5);
@@ -28,7 +30,7 @@ public class MeepMeepTesting {
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                         .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(startPose)
-                                .lineTo(new Vector2d(RED_BOARD_RIGHT_LINE.getX() - BOT_DROPPER_OFFSET.getX(), RED_BOARD_RIGHT_LINE.getY() + BOT_DROPPER_OFFSET.getY()))
+                                .lineTo(new Vector2d(BLUE_BOARD_LEFT_LINE.getX() - BOT_DROPPER_OFFSET.getX(), BLUE_BOARD_LEFT_LINE.getY() + BOT_DROPPER_OFFSET.getY()))
                                 // Drop the pixel
                                 .addTemporalMarker(()->{
                                     //PIXEL DROP
@@ -37,11 +39,11 @@ public class MeepMeepTesting {
                                 })
                                 .waitSeconds(1.0)
                                 // Back up to the BLUE PARK Y coord
-                                .lineTo(new Vector2d(RED_BOARD_RIGHT_LINE.getX(), RED_PARK.getY()))
+                                .lineTo(new Vector2d(BLUE_BOARD_LEFT_LINE.getX(), BLUE_PARK.getY()))
                                 // Face forwards
                                 .turn(Math.toRadians(90))
                                 // Park
-                                .lineTo(RED_PARK)
+                                .lineTo(BLUE_PARK)
                                 .build()
                         );
 

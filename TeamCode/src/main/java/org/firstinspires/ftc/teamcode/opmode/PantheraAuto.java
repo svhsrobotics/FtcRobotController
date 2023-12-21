@@ -64,6 +64,23 @@ public class PantheraAuto extends LinearOpMode {
             startPose = estimateWithAllCameras(cameras, aprilTag);
         }
 
+
+
+        waitForStart();
+
+        // We didn't find one in init... try once more in start, then give up
+        if (startPose == null) {
+            // Check one more time
+            Log.w("AUTO", "Did not find AprilTag in init, trying one last time");
+            startPose = estimateWithAllCameras(cameras, aprilTag);
+        }
+
+        // Can't find any AprilTags... guess wildly
+        if (startPose == null) {
+            telemetry.log().add("APRILTAG NOT DETECTED");
+            return;
+        }
+
         // If we found an AprilTag, then close down the AprilTag Localizer and look for the prop
         TensorFlowDetection.PropPosition tensorPos = TensorFlowDetection.PropPosition.CENTER;
         if (startPose != null) {
@@ -83,26 +100,16 @@ public class PantheraAuto extends LinearOpMode {
             Log.w("AUTO", "Didn't see AprilTag in init, so we didn't look for the prop");
         }
 
-        waitForStart();
-
-        // We didn't find one in init... try once more in start, then give up
-        if (startPose == null) {
-            // Check one more time
-            Log.w("AUTO", "Did not find AprilTag in init, trying one last time");
-            startPose = estimateWithAllCameras(cameras, aprilTag);
-        }
-
-        // Can't find any AprilTags... guess wildly
-        if (startPose == null) {
-            telemetry.log().add("APRILTAG NOT DETECTED");
-            return;
-        }
-
         TrajectorySequence traj = null;
 
         // Tell RoadRunner about the pose we got from the AprilTags
         startPose = new Pose2d(startPose.getX(), startPose.getY(), startPose.getHeading() + Math.toRadians(180));
         drive.setPoseEstimate(startPose);
+
+        // TODO: Other paths
+        // TODO: Different ending position? (more forward)
+        // TODO: Skip parking, only purple pixel?
+        // TODO: Gold pixel offload on board
 
         switch (AprilTagLocalizer.whichQuadrant(startPose)) {
             case RED_BOARD:
