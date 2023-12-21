@@ -23,6 +23,7 @@ public class PsiTeleOp extends LinearOpMode {
     Servo fallServo;
     Servo armBedRotate;
     Servo pivotServo;
+    Servo droneServo;
 
     double ispeed = 0;
 
@@ -46,6 +47,7 @@ public class PsiTeleOp extends LinearOpMode {
         fallServo = hardwareMap.get(Servo.class, "fall");
         armBedRotate = hardwareMap.get(Servo.class, "flipperPsi");
         pivotServo = hardwareMap.get(Servo.class, "pivot");
+        droneServo =hardwareMap.get(Servo.class, "plane");
 
 
 
@@ -107,7 +109,7 @@ public class PsiTeleOp extends LinearOpMode {
 
             intakeToggle.update(gamepad1.dpad_up);
             if (intakeToggle.state) {
-                intakeMotor.setPower(0.6);
+                intakeMotor.setPower(0.7);
             } else if (gamepad1.dpad_down) {
                 intakeMotor.setPower(-0.6);
             } else {
@@ -139,6 +141,13 @@ public class PsiTeleOp extends LinearOpMode {
                 }
             } else if (!gamepad1.y) {
                 yPressed = false;
+            }
+
+            if (gamepad2.x ) {
+                droneServo.setPosition(.4);
+            }
+            if (gamepad2.a) {
+                droneServo.setPosition(0);
             }
 
 

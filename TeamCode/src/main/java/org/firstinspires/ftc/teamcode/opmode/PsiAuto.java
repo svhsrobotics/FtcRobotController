@@ -37,12 +37,12 @@ public class PsiAuto extends LinearOpMode {
     }
 
 
-
-
     public static double LEFTFORTYFIVE = -45;
     public static double LEFTSEVENTY = 70;
     public static double RIGHTFORTYFIVE = 45;
     public static double RIGHTSEVENTY = -70;
+    Servo droneServo;
+
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -83,10 +83,10 @@ public class PsiAuto extends LinearOpMode {
             telemetry.log().add("Didn't see AprilTag in init");
             Log.w("AUTO", "Didn't see AprilTag in init, so we didn't look for the prop");
         }
-
+        droneServo = hardwareMap.get(Servo.class, "plane");
         waitForStart();
 
-        // We didn't find one in init... try once more in start, then give up
+         //We didn't find one in init... try once more in start, then give up
         if (startPose == null) {
             // Check one more time
             Log.w("AUTO", "Did not find AprilTag in init, trying one last time");
@@ -131,16 +131,16 @@ public class PsiAuto extends LinearOpMode {
                         break;
                     case RIGHT:// TODO
                         traj = drive.trajectorySequenceBuilder(startPose)
-//                                .lineTo(new Vector2d(16, -36))
-//                                .turn(Math.toRadians(-90))
-//                                .addTemporalMarker(() ->{
-//                                    //ARM DROPS PIXEL
-//                                    Log.i("DROP", "drop");
-//                                    purpleServo.setPosition(.3);
-//                                })
-//                                .lineTo(new Vector2d(startPose.getX(), startPose.getY()))
-//                                //.splineTo(new Vector2d(3 * 12 + 5, -3 * 12), 0)
-//                                .build();
+////                                .lineTo(new Vector2d(16, -36))
+////                                .turn(Math.toRadians(-90))
+////                                .addTemporalMarker(() ->{
+////                                    //ARM DROPS PIXEL
+////                                    Log.i("DROP", "drop");
+////                                    purpleServo.setPosition(.3);
+////                                })
+////                                .lineTo(new Vector2d(startPose.getX(), startPose.getY()))
+////                                //.splineTo(new Vector2d(3 * 12 + 5, -3 * 12), 0)
+////                                .build();
                                 .lineTo(new Vector2d(RED_BOARD_RIGHT_LINE.getX() - BOT_DROPPER_OFFSET.getX(), RED_BOARD_RIGHT_LINE.getY() + BOT_DROPPER_OFFSET.getY()))
                                 // Drop the pixel
                                 .addTemporalMarker(()->{
@@ -266,9 +266,9 @@ public class PsiAuto extends LinearOpMode {
 
             case BLUE_BOARD:
                 Vector2d BLUE_BOARD_CENTER_LINE = new Vector2d(12, 24.5);
-                Vector2d BOT_DROPPER_OFFSET_BLUE = new Vector2d(4,4.5);
+                Vector2d BOT_DROPPER_OFFSET_BLUE = new Vector2d(0,4);
                 Vector2d BLUE_PARK = new Vector2d(48, 48);
-                Vector2d BLUE_BOARD_LEFT_LINE = new Vector2d(23, 30);
+                Vector2d BLUE_BOARD_LEFT_LINE = new Vector2d(23, 28);
 
                 switch (tensorPos) {
                     case LEFT:
@@ -332,7 +332,8 @@ public class PsiAuto extends LinearOpMode {
         //aprilTag.centerOnTag(cameras[1], drive, 5);
 
     }
-}
+    }
+
 
 
 
