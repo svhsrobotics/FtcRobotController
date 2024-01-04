@@ -107,6 +107,7 @@ public class PsiTeleOp extends LinearOpMode {
 //                barHangMotor.setPower(0);
 //            }
 
+
             intakeToggle.update(gamepad1.dpad_up);
             if (intakeToggle.state) {
                 intakeMotor.setPower(0.7);

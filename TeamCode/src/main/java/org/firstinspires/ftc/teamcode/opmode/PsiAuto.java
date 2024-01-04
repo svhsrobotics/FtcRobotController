@@ -13,9 +13,12 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.drive.psi.PsiDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.util.GlobalOpMode;
+import org.firstinspires.ftc.teamcode.util.Timeout;
 import org.firstinspires.ftc.teamcode.vision.AprilTagCamera;
 import org.firstinspires.ftc.teamcode.vision.AprilTagLocalizer;
 import org.firstinspires.ftc.teamcode.vision.TensorFlowDetection;
+
+import java.util.Timer;
 
 @Autonomous(name = "Psi Auto", group = "A")
 @Config
@@ -64,29 +67,9 @@ public class PsiAuto extends LinearOpMode {
             startPose = estimateWithAllCameras(cameras, aprilTag);
         }
 
-        // If we found an AprilTag, then close down the AprilTag Localizer and look for the prop
-        TensorFlowDetection.PropPosition tensorPos = TensorFlowDetection.PropPosition.CENTER;
-        if (startPose != null) {
-            Log.i("AUTO", "Found AprilTag, starting Tensorflow");
-            telemetry.log().add("Found AprilTag");
-            aprilTag.close();
-            // use the center camera
-            TensorFlowDetection tensor = new TensorFlowDetection(cameras[1].webcamName);
-            tensorPos = tensor.getPropPosition();
-            telemetry.log().add("Tensorflow detected: " + tensorPos);
-            Log.i("AUTO", "LOCATION: " + tensorPos);
-            if (tensorPos == null) {
-                telemetry.log().add("Unable to detect prop");
-                tensorPos = TensorFlowDetection.PropPosition.RIGHT;
-            }
-        } else {
-            telemetry.log().add("Didn't see AprilTag in init");
-            Log.w("AUTO", "Didn't see AprilTag in init, so we didn't look for the prop");
-        }
-        droneServo = hardwareMap.get(Servo.class, "plane");
         waitForStart();
 
-         //We didn't find one in init... try once more in start, then give up
+        //We didn't find one in init... try once more in start, then give up
         if (startPose == null) {
             // Check one more time
             Log.w("AUTO", "Did not find AprilTag in init, trying one last time");
@@ -99,6 +82,31 @@ public class PsiAuto extends LinearOpMode {
             return;
         }
 
+        // If we found an AprilTag, then close down the AprilTag Localizer and look for the prop
+        TensorFlowDetection.PropPosition tensorPos = TensorFlowDetection.PropPosition.CENTER;
+        if (startPose != null) {
+            Log.i("AUTO", "Found AprilTag, starting Tensorflow");
+            telemetry.log().add("Found AprilTag");
+            Timeout j = new Timeout(5);
+            aprilTag.close();
+            // use the center camera
+            TensorFlowDetection tensor = new TensorFlowDetection(cameras[1].webcamName);
+            while (!j.expired()) {
+                tensorPos = tensor.getPropPosition();
+            }
+            telemetry.log().add("Tensorflow detected: " + tensorPos);
+            Log.i("AUTO", "LOCATION: " + tensorPos);
+            if (tensorPos == null) {
+                telemetry.log().add("Unable to detect prop");
+                tensorPos = TensorFlowDetection.PropPosition.CENTER;
+            }
+        } else {
+            telemetry.log().add("Didn't see AprilTag in init");
+            Log.w("AUTO", "Didn't see AprilTag in init, so we didn't look for the prop");
+        }
+        droneServo = hardwareMap.get(Servo.class, "plane");
+
+
         TrajectorySequence traj = null;
 
         // Tell RoadRunner about the pose we got from the AprilTags
@@ -108,7 +116,7 @@ public class PsiAuto extends LinearOpMode {
         switch (AprilTagLocalizer.whichQuadrant(startPose)) {
             case RED_BOARD:
                 Vector2d Red_BOARD_CENTER_LINE = new Vector2d(12, -24.5);
-                Vector2d BOT_DROPPER_OFFSET = new Vector2d(4,4.5);
+                Vector2d BOT_DROPPER_OFFSET = new Vector2d(4,4);
                 Vector2d RED_PARK = new Vector2d(48, -48);
                 Vector2d RED_BOARD_RIGHT_LINE = new Vector2d(23, -30);
                 switch (tensorPos) {
