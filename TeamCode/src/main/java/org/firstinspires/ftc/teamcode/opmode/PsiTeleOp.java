@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.util.Toggle;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "Psi TeleOp", group = "A")
 @Config
-public class PsiTeleOp extends LinearOpMode {
+public class    PsiTeleOp extends LinearOpMode {
     DcMotorEx barHangMotor;
     DcMotorEx flipperMotor;
     DcMotorEx intakeMotor;
@@ -87,7 +87,9 @@ public class PsiTeleOp extends LinearOpMode {
             if (gamepad1.x) {
                 drive.setPoseEstimate(new Pose2d(poseEstimate.getX(), poseEstimate.getY(), 0));
             }
-            // TODO: Add controls to gamepad 2 as well
+            if (gamepad2.x){
+                drive.setPoseEstimate(new Pose2d(poseEstimate.getX(), poseEstimate.getY(), 0));
+            }
 
 //            if (gamepad1.b) {
 //                throwPixel();
@@ -116,10 +118,23 @@ public class PsiTeleOp extends LinearOpMode {
             } else {
                 intakeMotor.setPower(0);
             }
+            intakeToggle.update(gamepad2.dpad_up);
+            if (intakeToggle.state) {
+                intakeMotor.setPower(0.7);
+            } else if (gamepad1.dpad_down) {
+                intakeMotor.setPower(-0.6);
+            } else {
+                intakeMotor.setPower(0);
+            }
 
             if (gamepad1.dpad_left) {
                 armBedRotate.setPosition(DOWN_VALUE);
             } else if (gamepad1.dpad_right) {
+                armBedRotate.setPosition(.55);
+            }
+            if (gamepad2.dpad_left) {
+                armBedRotate.setPosition(DOWN_VALUE);
+            } else if (gamepad2.dpad_right) {
                 armBedRotate.setPosition(.55);
             }
 //            if (gamepad1.dpad_left) {
@@ -143,11 +158,32 @@ public class PsiTeleOp extends LinearOpMode {
             } else if (!gamepad1.y) {
                 yPressed = false;
             }
+            if (gamepad2.y && !yPressed) {
+                yPressed = true;
+                Log.i("SERVO", "y was pressed");
+                if (fallServo.getPosition() == 1) {
+                    fallServo.setPosition(.5);
+                    Log.i("SERVO", fallServo.getPosition() + "");
+                    Log.i("SERVO", "should be at .5");
+                } else {
+                    fallServo.setPosition(1);
+                    Log.i("SERVO", fallServo.getPosition() + "");
+                    Log.i("SERVO", "should be at 1");
+                }
+            } else if (!gamepad2.y) {
+                yPressed = false;
+            }
 
-            if (gamepad2.x ) {
+            if (gamepad2.right_stick_button ) {
                 droneServo.setPosition(.4);
             }
             if (gamepad2.a) {
+                droneServo.setPosition(0);
+            }
+            if (gamepad1.right_stick_button ) {
+                droneServo.setPosition(.4);
+            }
+            if (gamepad1.a) {
                 droneServo.setPosition(0);
             }
 
