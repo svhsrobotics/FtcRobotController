@@ -30,7 +30,8 @@ public class RoboticaBot extends Robot {
     public static double kV = 0.014129716300132542;
     public static double kA = 0.0032;
     public static double kStatic = 0;
-    protected RoboticaBot(HardwareMap hardwareMap) {
+
+    public RoboticaBot(HardwareMap hardwareMap) {
         super(hardwareMap);
         // TODO: Reverse Motors, encoders & such
         drive = new TrajectoryDrive(
