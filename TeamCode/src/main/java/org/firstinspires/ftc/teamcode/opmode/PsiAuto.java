@@ -9,16 +9,14 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.drive.psi.PsiDrive;
+import org.firstinspires.ftc.teamcode.drive.PsiBot;
+import org.firstinspires.ftc.teamcode.drive.TrajectoryDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.util.GlobalOpMode;
 import org.firstinspires.ftc.teamcode.util.Timeout;
 import org.firstinspires.ftc.teamcode.vision.AprilTagCamera;
 import org.firstinspires.ftc.teamcode.vision.AprilTagLocalizer;
 import org.firstinspires.ftc.teamcode.vision.TensorFlowDetection;
-
-import java.util.Timer;
 
 @Autonomous(name = "Psi Auto", group = "A")
 @Config
@@ -39,25 +37,18 @@ public class PsiAuto extends LinearOpMode {
         return pose;
     }
 
-
-    public static double LEFTFORTYFIVE = -45;
-    public static double LEFTSEVENTY = 70;
-    public static double RIGHTFORTYFIVE = 45;
-    public static double RIGHTSEVENTY = -70;
     Servo droneServo;
 
 
     @Override
     public void runOpMode() throws InterruptedException {
         GlobalOpMode.opMode = this;
-        PsiDrive drive = new PsiDrive(hardwareMap);
+        PsiBot bot = new PsiBot(hardwareMap);
+        TrajectoryDrive drive = bot.getDrive();
+        //PsiDrive drive = new PsiDrive(hardwareMap);
 
-        AprilTagCamera[] cameras = new AprilTagCamera[3];
-        cameras[0] = new AprilTagCamera(hardwareMap.get(WebcamName.class, "Left"), 8, Math.toRadians(LEFTSEVENTY), Math.toRadians(LEFTFORTYFIVE));
-        cameras[1] = new AprilTagCamera(hardwareMap.get(WebcamName.class, "Center"), 7, Math.toRadians(90), Math.toRadians(0));
-        cameras[2] = new AprilTagCamera(hardwareMap.get(WebcamName.class, "Right"), 8, Math.toRadians(RIGHTSEVENTY), Math.toRadians(RIGHTFORTYFIVE));
+        AprilTagCamera[] cameras = bot.getCameras();
 
-        Servo purpleServo = hardwareMap.get(Servo.class, "purple");
 
         // Search for AprilTags across the three cameras, until we find one or init ends
         AprilTagLocalizer aprilTag = new AprilTagLocalizer(cameras);
@@ -126,7 +117,8 @@ public class PsiAuto extends LinearOpMode {
                                 .turn(Math.toRadians(90))
                                 .addTemporalMarker(() ->{
                                     android.util.Log.i("DROP", "Drop");
-                                    purpleServo.setPosition(.3);
+                                    bot.dropPurplePixel(true);
+                                    //purpleServo.setPosition(.3);
                                 })
 
 
@@ -154,7 +146,8 @@ public class PsiAuto extends LinearOpMode {
                                 .addTemporalMarker(()->{
                                     //PIXEL DROP
                                     Log.i("DROP", "dropping purple");
-                                    purpleServo.setPosition(.3);
+                                    bot.dropPurplePixel(true);
+                                    //purpleServo.setPosition(.3);
                                 })
                                 .waitSeconds(1.0)
                                 // Back up to the BLUE PARK Y coord
@@ -213,7 +206,8 @@ public class PsiAuto extends LinearOpMode {
                                 .lineTo(new Vector2d(startPose.getX(), -2*12 - 3))
                                 .addTemporalMarker(() -> {
                                     Log.i("DROP", "dropping purple");
-                                    purpleServo.setPosition(.3);
+                                    bot.dropPurplePixel(true);
+                                    //purpleServo.setPosition(.3);
                                 })
                                 .waitSeconds(1)
                                 .lineTo(new Vector2d(startPose.getX(), -5 * 12+3))
@@ -286,7 +280,8 @@ public class PsiAuto extends LinearOpMode {
                                 .addTemporalMarker(()->{
                                     //PIXEL DROP
                                     Log.i("DROP", "dropping purple");
-                                    purpleServo.setPosition(.3);
+                                    bot.dropPurplePixel(true);
+                                    //purpleServo.setPosition(.3);
                                 })
                                 .waitSeconds(1.0)
                                 // Back up to the BLUE PARK Y coord
@@ -306,7 +301,8 @@ public class PsiAuto extends LinearOpMode {
                                 .addTemporalMarker(()->{
                                     //PIXEL DROP
                                     Log.i("DROP", "dropping purple");
-                                    purpleServo.setPosition(.3);
+                                    bot.dropPurplePixel(true);
+                                    //purpleServo.setPosition(.3);
                                 })
                                 .lineTo(new Vector2d(3*12+7, 3*12-2))
                                 .build();
@@ -319,7 +315,8 @@ public class PsiAuto extends LinearOpMode {
                                 .addTemporalMarker(()->{
                                     //PIXEL DROP
                                     Log.i("DROP", "dropping purple");
-                                    purpleServo.setPosition(.3);
+                                    bot.dropPurplePixel(true);
+                                    //purpleServo.setPosition(.3);
                                 })
                                 .waitSeconds(1.0)
                                 // Back up to the BLUE PARK Y coord

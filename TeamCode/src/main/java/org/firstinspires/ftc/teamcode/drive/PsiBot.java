@@ -1,10 +1,21 @@
 package org.firstinspires.ftc.teamcode.drive;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
+import com.qualcomm.robotcore.hardware.Servo;
 
-public class PsiBot extends Robot{
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.vision.AprilTagCamera;
+
+@Config
+public class PsiBot extends Robot {
+    public static double LEFTFORTYFIVE = -45;
+    public static double LEFTSEVENTY = 70;
+    public static double RIGHTFORTYFIVE = 45;
+    public static double RIGHTSEVENTY = -70;
+    private final AprilTagCamera[] cameras;
     public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(8, 0, 0);
     public static PIDCoefficients HEADING_PID = new PIDCoefficients(8, 0, 0);
     private final TrajectoryDrive drive;
@@ -29,8 +40,18 @@ public class PsiBot extends Robot{
     public static double kV = 0.014129716300132542;
     public static double kA = 0.0032;
     public static double kStatic = 0;
-    protected PsiBot(HardwareMap hardwareMap) {
+
+    private final Servo purpleServo;
+
+    public PsiBot(HardwareMap hardwareMap) {
         super(hardwareMap);
+        cameras = new AprilTagCamera[3];
+        cameras[0] = new AprilTagCamera(hardwareMap.get(WebcamName.class, "Left"), 8, Math.toRadians(LEFTSEVENTY), Math.toRadians(LEFTFORTYFIVE));
+        cameras[1] = new AprilTagCamera(hardwareMap.get(WebcamName.class, "Center"), 7, Math.toRadians(90), Math.toRadians(0));
+        cameras[2] = new AprilTagCamera(hardwareMap.get(WebcamName.class, "Right"), 8, Math.toRadians(RIGHTSEVENTY), Math.toRadians(RIGHTFORTYFIVE));
+
+        purpleServo = hardwareMap.get(Servo.class, "purple");
+
         // TODO: Reverse Motors, encoders & such
         drive = new TrajectoryDrive(
                 hardwareMap,
@@ -52,31 +73,25 @@ public class PsiBot extends Robot{
                 kA,
                 kV,
                 kStatic
-
-
-
-
-
-
-
-
-
-
-
         );
-
-
     }
 
+    @Override
+    public AprilTagCamera[] getCameras() {
+        return cameras;
+    }
 
-
-
+    @Override
+    public void dropPurplePixel(boolean state) {
+        if (state) {
+            purpleServo.setPosition(0.3);
+        } else {
+            purpleServo.setPosition(0.5);
+        }
+    }
 
     @Override
     public TrajectoryDrive getDrive() {
         return drive;
     }
-
-
-
 }
