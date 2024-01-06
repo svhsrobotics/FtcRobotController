@@ -3,6 +3,9 @@ package org.firstinspires.ftc.teamcode.opmode;
 import static org.firstinspires.ftc.teamcode.drive.panthera.PantheraDriveConstants.MAX_ANG_ACCEL;
 import static org.firstinspires.ftc.teamcode.drive.panthera.PantheraDriveConstants.MAX_ANG_VEL;
 
+import static org.firstinspires.ftc.teamcode.vision.AprilTagLocalizer.Quadrant.*;
+import static org.firstinspires.ftc.teamcode.vision.TensorFlowDetection.PropPosition.*;
+
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 
@@ -88,29 +91,29 @@ public class AutoPaths {
                 PantheraDrive.VEL_CONSTRAINT, PantheraDrive.ACCEL_CONSTRAINT,
                 MAX_ANG_VEL, MAX_ANG_ACCEL
         );
-//        // If we're on the RED side, flip the offset
-//        if (quadrant == RED_BOARD || quadrant == RED_AUDIENCE) {
-//            BOT_DROPPER_OFFSET = BOT_DROPPER_OFFSET.times(-1);
-//        }
-//        // If it's a CENTER prop, move forward to the coords
-//        if (prop == CENTER) {
-//            trajBuilder.lineTo(lineCoords(quadrant, prop));
-//        }
-////        builder.lineTo(new Vector2d(BLUE_BOARD_LEFT_LINE.getX() - BOT_DROPPER_OFFSET.getX(), BLUE_BOARD_LEFT_LINE.getY() + BOT_DROPPER_OFFSET.getY()))
-////                // Drop the pixel
-////                .addTemporalMarker(()->{
-////                    //PIXEL DROP
-////                    Log.i("DROP", "dropping purple");
-////                    purpleServo.setPosition(1);
-////                })
-//        trajBuilder.waitSeconds(1.0)
-//                // Back up to the BLUE PARK Y coord
-//                .lineTo(new Vector2d(BLUE_BOARD_LEFT_LINE.getX(), BLUE_PARK.getY()))
-//                // Face forwards
-//                .turn(Math.toRadians(90))
-//                // Park
-//                .lineTo(BLUE_PARK)
-//                .build();
-        return null;
+        // If we're on the RED side, flip the offset
+        if (quadrant == RED_BOARD || quadrant == RED_AUDIENCE) {
+            BOT_DROPPER_OFFSET = BOT_DROPPER_OFFSET.times(-1);
+        }
+        // If it's a CENTER prop, move forward to the coords
+        if (prop == CENTER) {
+            trajBuilder.lineTo(lineCoords(quadrant, prop));
+        }
+//        builder.lineTo(new Vector2d(BLUE_BOARD_LEFT_LINE.getX() - BOT_DROPPER_OFFSET.getX(), BLUE_BOARD_LEFT_LINE.getY() + BOT_DROPPER_OFFSET.getY()))
+//                // Drop the pixel
+//                .addTemporalMarker(()->{
+//                    //PIXEL DROP
+//                    Log.i("DROP", "dropping purple");
+//                    purpleServo.setPosition(1);
+//                })
+        trajBuilder.waitSeconds(1.0)
+                // Back up to the BLUE PARK Y coord
+                .lineTo(new Vector2d(BLUE_BOARD_LEFT_LINE.getX(), BLUE_PARK.getY()))
+                // Face forwards
+                .turn(Math.toRadians(90))
+                // Park
+                .lineTo(BLUE_PARK)
+                .build();
+        return trajBuilder.build();
     }
 }
