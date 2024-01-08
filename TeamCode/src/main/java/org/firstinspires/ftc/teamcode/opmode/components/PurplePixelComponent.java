@@ -100,21 +100,21 @@ public class PurplePixelComponent extends Component {
             }
         } else if (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.RED_BOARD) {
             if (propPosition == TensorFlowDetection.PropPosition.LEFT) {
-                trajB = trajB.lineTo(new Vector2d(RED_AUDIENCE_TAPE_MARKS.getX(), RED_AUDIENCE_TAPE_MARKS.getY()))
+                trajB = trajB.lineTo(new Vector2d(RED_BOARD_TAPE_MARKS.getX(), RED_BOARD_TAPE_MARKS.getY()))
                         .lineTo(new Vector2d(currentPose.getX() - 12, currentPose.getY()))
                         .addTemporalMarker(() -> {
                             getRobot().dropPurplePixel(true);
                         });
 
             } else if (propPosition == TensorFlowDetection.PropPosition.RIGHT) {
-                trajB = trajB.lineTo(new Vector2d(RED_AUDIENCE_TAPE_MARKS.getX(), RED_AUDIENCE_TAPE_MARKS.getY()))
+                trajB = trajB.lineTo(new Vector2d(RED_BOARD_TAPE_MARKS.getX(), RED_BOARD_TAPE_MARKS.getY()))
                         .lineTo(new Vector2d(currentPose.getX() + 12, currentPose.getY()))
                         .addTemporalMarker(() -> {
                             getRobot().dropPurplePixel(true);
                         });
 
             } else {
-                trajB = trajB.lineTo(new Vector2d(RED_AUDIENCE_TAPE_MARKS.getX(), RED_AUDIENCE_TAPE_MARKS.getY()))
+                trajB = trajB.lineTo(new Vector2d(RED_BOARD_TAPE_MARKS.getX(), RED_BOARD_TAPE_MARKS.getY()))
                         .lineTo(new Vector2d(currentPose.getX(), currentPose.getY() + 8))
                         .addTemporalMarker(() -> {
                             getRobot().dropPurplePixel(true);
