@@ -19,38 +19,25 @@ public class ParkingIn extends Component{
 
     @Override
     public void drive() {
-        getRobot().getDrive().getClass();
-    }
-
-    public void parkInner() {
         //getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.BLUE_BOARD
 
         Pose2d currentPose = getRobot().getDrive().getPoseEstimate();
-        TrajectorySequence traj = null;
+        TrajectorySequenceBuilder trajB = getRobot().getDrive().trajectorySequenceBuilder(currentPose);
 
         if (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.RED_AUDIENCE) {
-            traj = getRobot().getDrive().trajectorySequenceBuilder(currentPose)
-                    .lineTo(new Vector2d(currentPose.getX(), -6))
-                    .lineTo(new Vector2d(currentPose.getX(), -5 * 12 + 3))
-                    .turn(Math.toRadians(90))
-                    .lineTo(new Vector2d(3 * 12 + 7, -6))
-                    .build();
+            trajB = trajB.lineTo(new Vector2d(currentPose.getX(), -12))
+                    .lineTo(new Vector2d(6 * 12 + 14, -12));
         } else if (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.RED_BOARD) {
-            traj = getRobot().getDrive().trajectorySequenceBuilder(currentPose)
-                    .lineTo(new Vector2d(currentPose.getX(), -6))
-                    .lineTo(new Vector2d(currentPose.getX(), -5 * 12 + 3))
-                    .turn(Math.toRadians(90))
-                    .lineTo(new Vector2d(3 * 12 + 7, -6))
-                    .build();
+            trajB = trajB.lineTo(new Vector2d(currentPose.getX(), -12))
+                    .lineTo(new Vector2d(6 * 12 + 14, -12));
         } else if (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.BLUE_BOARD) {
-            traj = getRobot().getDrive().trajectorySequenceBuilder(currentPose)
-                    .lineTo(new Vector2d(currentPose.getX(), 6))
-                    .lineTo(new Vector2d(currentPose.getX(), 5 * 12 + 3))
-                    .turn(Math.toRadians(90))
-                    .lineTo(new Vector2d(3 * 12 + 7, 6))
-                    .build();
+            trajB = trajB.lineTo(new Vector2d(currentPose.getX(), 12))
+                    .lineTo(new Vector2d(6 * 12 + 14, 12));
 
         }
+
+        TrajectorySequence traj = trajB.build();
+
 
     }
 
