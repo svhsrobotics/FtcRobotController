@@ -37,7 +37,7 @@ public class ParkingIn extends Component{
         }
 
         TrajectorySequence traj = trajB.build();
-
+        getRobot().getDrive().followTrajectorySequence(traj);
 
     }
 
