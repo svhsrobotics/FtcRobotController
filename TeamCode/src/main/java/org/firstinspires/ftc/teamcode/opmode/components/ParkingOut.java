@@ -41,6 +41,6 @@ public class ParkingOut extends Component{
         TrajectorySequence traj = trajB.build();
         getRobot().getDrive().followTrajectorySequence(traj);
     }
-//ryan i had to fix ur code it didn't copy ParkingIn correctly
+//ryan i had to fix ur code it didn't copy ParkingIn correctly - not the values just formatting
 }
 
