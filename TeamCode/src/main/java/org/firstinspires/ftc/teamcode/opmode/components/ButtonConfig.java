@@ -27,8 +27,28 @@ public class ButtonConfig extends LinearOpMode {
 //                android.util.Log.i("CONFIG", "Robot will drop purple pixel!");
                     telemetry.addData("Config: ", "Robot will drop Purple Pixel.");
                     dropPurplePixel = true;
+                } else {
+                    telemetry.addData("Config: ", "Robot will not drop Purple Pixel.");
+                    dropPurplePixel = false;
                 }
             }
+            if(gamepad1.b) {
+                if (!dropPurplePixel) {
+//                android.util.Log.i("CONFIG", "Robot will drop purple pixel!");
+                    telemetry.addData("Config: ", "Robot will park on the inner spot.");
+                    parkInner = true;
+                    parkOuter = false;
+                } else {
+                    telemetry.addData("Config: ", "Robot will not drop Purple Pixel.");
+                    parkInner = false;
+
+
+                }
+            }
+            if (gamepad1.y) {
+
+            }
+
         }
 
 
