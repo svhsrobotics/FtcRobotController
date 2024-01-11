@@ -5,7 +5,7 @@ import com.noahbres.meepmeep.MeepMeep;
 import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
 import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 
-//import org.firstinspires.ftc.teamcode.opmode.AutoPaths;
+
 
 public class MeepMeepTesting {
     public static void main(String[] args) {
@@ -14,6 +14,7 @@ public class MeepMeepTesting {
         //Pose2d startPose = new Pose2d(-36,-62, Math.toRadians(270)); // RED_AUDIENCE
         //Pose2d startPose = new Pose2d(12,62, Math.toRadians(90)); // BLUE_BOARD
         Pose2d startPose = new Pose2d(-36,62, Math.toRadians(90)); // BLUE_AUDIENCE
+        //Pose2d startPose = new Pose2d(-60,-12, Math.toRadians(90)); //random spot
 
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
@@ -25,8 +26,10 @@ public class MeepMeepTesting {
                     // CHANGE THESE LINES TO RUN ANOTHER COMPONENT
 //                    SampleComponent sampleComponent = new SampleComponent(robot);
 //                    sampleComponent.drive();
-                    PurplePixelComponent purplePixelComponent = new PurplePixelComponent(robot, TensorFlowDetection.PropPosition.CENTER);
-                    purplePixelComponent.drive();
+                    //PurplePixelComponent purplePixelComponent = new PurplePixelComponent(robot, TensorFlowDetection.PropPosition.LEFT);
+                    //purplePixelComponent.drive();
+                    ParkingOut parking = new ParkingOut(robot);
+                    parking.drive();
                     // END CHANGE LINES
 
                     return robot.getCurrentTrajectorySequence(); // This is a dirty hack, and assumes the component only calls followTrajectorySequence once

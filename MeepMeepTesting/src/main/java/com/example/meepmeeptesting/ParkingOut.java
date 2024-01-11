@@ -1,12 +1,9 @@
-package org.firstinspires.ftc.teamcode.opmode.components;
+package com.example.meepmeeptesting;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
-
-import org.firstinspires.ftc.teamcode.drive.Robot;
-import org.firstinspires.ftc.teamcode.drive.TrajectoryDrive;
-import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
-import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceBuilder;
+import com.noahbres.meepmeep.roadrunner.trajectorysequence.TrajectorySequence;
+import com.noahbres.meepmeep.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
 
 public class ParkingOut extends Component{
 
@@ -35,9 +32,9 @@ public class ParkingOut extends Component{
             trajB = trajB.lineTo(new Vector2d(currentPose.getX(), 57))
                     .lineTo(new Vector2d(59, 57));
         } else {
-        trajB = trajB.lineTo(new Vector2d(currentPose.getX(), 57))
-                .lineTo(new Vector2d(59, 57));
-    }
+            trajB = trajB.lineTo(new Vector2d(currentPose.getX(), 57))
+                    .lineTo(new Vector2d(59, 57));
+        }
         TrajectorySequence traj = trajB.build();
         getRobot().getDrive().followTrajectorySequence(traj);
     }
