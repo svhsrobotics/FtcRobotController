@@ -14,6 +14,7 @@ public abstract class Component {
     //static Vector2d RED_AUDIENCE_CENTER_LINE = new Vector2d(12, -24.5);
 
     private final Robot robot;
+
     protected Component(Robot robot) {
         this.robot = robot;
     }
@@ -23,4 +24,5 @@ public abstract class Component {
     }
 
     public abstract void drive();
+
 }
