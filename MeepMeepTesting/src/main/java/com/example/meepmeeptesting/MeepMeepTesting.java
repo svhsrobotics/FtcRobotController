@@ -26,17 +26,23 @@ public class MeepMeepTesting {
                     // CHANGE THESE LINES TO RUN ANOTHER COMPONENT
 //                    SampleComponent sampleComponent = new SampleComponent(robot);
 //                    sampleComponent.drive();
-                    //PurplePixelComponent purplePixelComponent = new PurplePixelComponent(robot, TensorFlowDetection.PropPosition.LEFT);
-                    //purplePixelComponent.drive();
-                    ParkingOut parking = new ParkingOut(robot);
-                    parking.drive();
+                    PurplePixelComponent purplePixelComponent = new PurplePixelComponent(robot, TensorFlowDetection.PropPosition.LEFT);
+
+                    //ParkingOut parking = new ParkingOut(robot);
+//                    GoToBoard placePixel = new GoToBoard(robot);
+                    purplePixelComponent.drive();
+//                    placePixel.drive();
+
                     // END CHANGE LINES
 
                     return robot.getCurrentTrajectorySequence(); // This is a dirty hack, and assumes the component only calls followTrajectorySequence once
                 });
 
 
-        meepMeep.setBackground(MeepMeep.Background.FIELD_CENTERSTAGE_JUICE_LIGHT)
+
+
+
+                    meepMeep.setBackground(MeepMeep.Background.FIELD_CENTERSTAGE_JUICE_LIGHT)
                 .setDarkMode(true)
                 .setBackgroundAlpha(0.95f)
                 .addEntity(myBot)
