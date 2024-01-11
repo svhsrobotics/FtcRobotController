@@ -23,4 +23,6 @@ public abstract class Component {
     }
 
     public abstract void drive();
+
+    public abstract void runOpMode() throws InterruptedException;
 }
