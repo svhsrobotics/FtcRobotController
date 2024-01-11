@@ -33,7 +33,9 @@ public class ParkingIn extends Component{
         } else if (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.BLUE_BOARD) {
             trajB = trajB.lineTo(new Vector2d(currentPose.getX(), 12))
                     .lineTo(new Vector2d(6 * 12 + 14, 12));
-
+        } else {
+            trajB = trajB.lineTo(new Vector2d(currentPose.getX(), 12))
+                    .lineTo(new Vector2d(6 * 12 + 14, 12));
         }
 
         TrajectorySequence traj = trajB.build();
