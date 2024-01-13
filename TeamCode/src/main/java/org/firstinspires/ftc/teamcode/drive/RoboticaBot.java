@@ -34,27 +34,28 @@ public class RoboticaBot extends Robot {
     public RoboticaBot(HardwareMap hardwareMap) {
         super(hardwareMap);
         // TODO: Reverse Motors, encoders & such
-        drive = new TrajectoryDrive(
-                hardwareMap,
-                TRANSLATIONAL_PID,
-                HEADING_PID,
-                LATERAL_MULTIPLIER,
-                "lf_ldw",
-                "lb",
-                "rb_rdw",
-                "rf",
-                MOTOR_VELO_PID,
-                MAX_ACCEL,
-                MAX_ANG_ACCEL,
-                MAX_ANG_VEL,
-                MAX_VEL,
-                false,
-                TRACK_WIDTH,
-                WHEEL_RADIUS * 2 * Math.PI * GEAR_RATIO * (1 / TICKS_PER_REV),
-                kA,
-                kV,
-                kStatic
-        );
+//        drive = new TrajectoryDrive(
+//                hardwareMap,
+//                TRANSLATIONAL_PID,
+//                HEADING_PID,
+//                LATERAL_MULTIPLIER,
+//                "lf_ldw",
+//                "lb",
+//                "rb_rdw",
+//                "rf",
+//                MOTOR_VELO_PID,
+//                MAX_ACCEL,
+//                MAX_ANG_ACCEL,
+//                MAX_ANG_VEL,
+//                MAX_VEL,
+//                false,
+//                TRACK_WIDTH,
+//                WHEEL_RADIUS * 2 * Math.PI * GEAR_RATIO * (1 / TICKS_PER_REV),
+//                kA,
+//                kV,
+//                kStatic
+       // );
+        drive = null;
     }
 
     @Override

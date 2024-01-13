@@ -2,11 +2,13 @@ package org.firstinspires.ftc.teamcode.drive;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.util.Encoder;
 import org.firstinspires.ftc.teamcode.vision.AprilTagCamera;
 
 @Config
@@ -41,7 +43,17 @@ public class TestBot extends Robot {
     public static double kA = 0.002;
     public static double kStatic = 0.01;
 
-    private final Servo purpleServo;
+    public static double DW_TICKS_PER_REV = 2048;
+    public static double DW_WHEEL_RADIUS = 0.944882; // in
+    public static double DW_GEAR_RATIO = 1; // output (wheel) speed / input (encoder) speed
+
+    public static double LATERAL_DISTANCE = 14.863; // in; distance between the left and right wheels
+    public static double FORWARD_OFFSET = -9; // in; offset of the lateral wheel
+
+    public static double X_MULTIPLIER = 88.6/90; // Multiplier in the X direction
+    public static double Y_MULTIPLIER = 88.1/90; // Multiplier in the Y direction
+
+    //private final Servo purpleServo;
 
     public TestBot(HardwareMap hardwareMap) {
         super(hardwareMap);
@@ -50,7 +62,7 @@ public class TestBot extends Robot {
         cameras[1] = new AprilTagCamera(hardwareMap.get(WebcamName.class, "Center"), 7, Math.toRadians(90), Math.toRadians(0));
         cameras[2] = new AprilTagCamera(hardwareMap.get(WebcamName.class, "Center"), 8, Math.toRadians(RIGHTSEVENTY), Math.toRadians(RIGHTFORTYFIVE));
 
-        purpleServo = hardwareMap.get(Servo.class, "purple");
+        //purpleServo = hardwareMap.get(Servo.class, "purple");
 
         // TODO: Reverse Motors, encoders & such
         drive = new TrajectoryDrive(
@@ -58,10 +70,10 @@ public class TestBot extends Robot {
                 TRANSLATIONAL_PID,
                 HEADING_PID,
                 LATERAL_MULTIPLIER,
-                "lf_ldw",
-                "lb",
-                "rb_rdw",
-                "rf",
+                "left_front_left_dw",
+                "left_back",
+                "right_back_right_dw",
+                "right_front",
                 MOTOR_VELO_PID,
                 MAX_ACCEL,
                 MAX_ANG_ACCEL,
@@ -72,8 +84,21 @@ public class TestBot extends Robot {
                 WHEEL_RADIUS * 2 * Math.PI * GEAR_RATIO * (1 / TICKS_PER_REV),
                 kA,
                 kV,
-                kStatic
+                kStatic,
+                "left_front_left_dw",
+                "right_back_right_dw",
+                "no_motor_perp_dw",
+                X_MULTIPLIER,
+                Y_MULTIPLIER,
+                FORWARD_OFFSET,
+                LATERAL_DISTANCE,
+                DW_GEAR_RATIO,
+                DW_WHEEL_RADIUS,
+                DW_TICKS_PER_REV
         );
+        drive.leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        drive.leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
+        ((TrackingWheelLocalizer)drive.getLocalizer()).rightEncoder.setDirection(Encoder.Direction.REVERSE);
     }
 
     @Override
@@ -83,11 +108,11 @@ public class TestBot extends Robot {
 
     @Override
     public void dropPurplePixel(boolean state) {
-        if (state) {
-            purpleServo.setPosition(0.3);
-        } else {
-            purpleServo.setPosition(0.5);
-        }
+//        if (state) {
+//            purpleServo.setPosition(0.3);
+//        } else {
+//            purpleServo.setPosition(0.5);
+//        }
     }
 
     @Override

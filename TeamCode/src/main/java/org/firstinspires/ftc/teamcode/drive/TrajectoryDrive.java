@@ -71,7 +71,7 @@ public class TrajectoryDrive extends MecanumDrive {
 
     private TrajectoryFollower follower;
 
-    private DcMotorEx leftFront, leftRear, rightRear, rightFront;
+    public DcMotorEx leftFront, leftRear, rightRear, rightFront;
     private List<DcMotorEx> motors;
 
     private IMU imu;
@@ -109,7 +109,17 @@ public class TrajectoryDrive extends MecanumDrive {
                            double encoderTicksMultiplier,
                            double kA,
                            double kV,
-                           double kStatic
+                           double kStatic,
+                           String leftEncoderName,
+                           String rightEncoderName,
+                           String perpEncoderName,
+                           double x_mult,
+                           double y_mult,
+                           double forward_offset,
+                           double lateral_distance,
+                           double gear_ratio,
+                           double wheel_radius,
+                           double ticks_per_rev
 
 
 
@@ -170,7 +180,17 @@ public class TrajectoryDrive extends MecanumDrive {
         List<Integer> lastTrackingEncVels = new ArrayList<>();
 
         // TODO: if desired, use setLocalizer() to change the localization method
-        setLocalizer(new PantheraTrackingWheelLocalizer(hardwareMap, lastTrackingEncPositions, lastTrackingEncVels));
+        setLocalizer(new TrackingWheelLocalizer(hardwareMap, lastTrackingEncPositions, lastTrackingEncVels,
+                leftEncoderName,
+                rightEncoderName, perpEncoderName,
+        x_mult,
+        y_mult,
+        forward_offset,
+        lateral_distance,
+        gear_ratio,
+        wheel_radius,
+        ticks_per_rev
+        ));
 
 
 
