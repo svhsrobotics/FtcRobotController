@@ -24,7 +24,6 @@ public class ButtonConfig extends LinearOpMode {
         while (!isStopRequested()) {
             if (gamepad1.a) {
                 if (!dropPurplePixel) {
-//                android.util.Log.i("CONFIG", "Robot will drop purple pixel!");
                     telemetry.addData("Config: ", "Robot will drop Purple Pixel.");
                     dropPurplePixel = true;
                 } else {
@@ -33,20 +32,34 @@ public class ButtonConfig extends LinearOpMode {
                 }
             }
             if(gamepad1.b) {
-                if (!dropPurplePixel) {
-//                android.util.Log.i("CONFIG", "Robot will drop purple pixel!");
+                if (!parkInner) {
                     telemetry.addData("Config: ", "Robot will park on the inner spot.");
                     parkInner = true;
                     parkOuter = false;
                 } else {
-                    telemetry.addData("Config: ", "Robot will not drop Purple Pixel.");
+                    telemetry.addData("Config: ", "Robot will not park on inner spot.");
                     parkInner = false;
-
-
                 }
             }
             if (gamepad1.y) {
+                if (!parkOuter) {
+                    telemetry.addData("Config: ", "Robot will park on the outer spot.");
+                    parkOuter = true;
+                    parkInner = false;
+                } else {
+                    telemetry.addData("Config: ", "Robot will not park on outer spot.");
+                    parkOuter = false;
+                }
+            }
+            if (gamepad1.x) {
+                if (!placePixel) {
+                    telemetry.addData("Config: ", "Robot will place pixel.");
+                    placePixel = true;
 
+                } else {
+                    telemetry.addData("Config: ", "Robot will not place pixel.");
+                    placePixel = false;
+                }
             }
 
         }
