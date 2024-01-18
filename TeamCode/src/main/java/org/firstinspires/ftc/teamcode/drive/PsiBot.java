@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.util.Encoder;
 import org.firstinspires.ftc.teamcode.vision.AprilTagCamera;
 
 @Config
@@ -40,6 +41,16 @@ public class PsiBot extends Robot {
     public static double kV = 0.014129716300132542;
     public static double kA = 0.0032;
     public static double kStatic = 0;
+    public static double DW_TICKS_PER_REV = 2048;
+    public static double DW_WHEEL_RADIUS = 0.944882; // in
+    public static double DW_GEAR_RATIO = 1; // output (wheel) speed / input (encoder) speed
+
+    public static double LATERAL_DISTANCE = 14.863; // in; distance between the left and right wheels
+    public static double FORWARD_OFFSET = -6.5; // in; offset of the lateral wheel
+
+    private Encoder leftEncoder, rightEncoder, frontEncoder;
+    public static double X_MULTIPLIER = 88.6/90; // Multiplier in the X direction
+    public static double Y_MULTIPLIER = 88.1/90; // Multiplier in the Y direction
 
     private final Servo purpleServo;
 
@@ -52,29 +63,38 @@ public class PsiBot extends Robot {
 
         purpleServo = hardwareMap.get(Servo.class, "purple");
 
-        // TODO: Reverse Motors, encoders & such
-//        drive = new TrajectoryDrive(
-//                hardwareMap,
-//                TRANSLATIONAL_PID,
-//                HEADING_PID,
-//                LATERAL_MULTIPLIER,
-//                "lf_ldw",
-//                "lb",
-//                "rb_rdw",
-//                "rf",
-//                MOTOR_VELO_PID,
-//                MAX_ACCEL,
-//                MAX_ANG_ACCEL,
-//                MAX_ANG_VEL,
-//                MAX_VEL,
-//                false,
-//                TRACK_WIDTH,
-//                WHEEL_RADIUS * 2 * Math.PI * GEAR_RATIO * (1 / TICKS_PER_REV),
-//                kA,
-//                kV,
-//                kStatic
-//        );
-        drive = null;
+         //TODO: Reverse Motors, encoders & such
+        drive = new TrajectoryDrive(
+                hardwareMap,
+                TRANSLATIONAL_PID,
+                HEADING_PID,
+                LATERAL_MULTIPLIER,
+                "lf_ldw",
+                "lb",
+                "rb_rdw",
+                "rf",
+                MOTOR_VELO_PID,
+                MAX_ACCEL,
+                MAX_ANG_ACCEL,
+                MAX_ANG_VEL,
+                MAX_VEL,
+                false,
+                TRACK_WIDTH,
+                WHEEL_RADIUS * 2 * Math.PI * GEAR_RATIO * (1 / TICKS_PER_REV),
+                kA,
+                kV,
+                kStatic,
+                "left_front_left_dw",
+                "right_back_right_dw",
+                "no_motor_perp_dw", // TODO: FIX THESE
+                X_MULTIPLIER,
+                Y_MULTIPLIER,
+                FORWARD_OFFSET,
+                LATERAL_DISTANCE,
+                DW_GEAR_RATIO,
+                DW_WHEEL_RADIUS,
+                DW_TICKS_PER_REV
+        );
     }
 
     @Override
