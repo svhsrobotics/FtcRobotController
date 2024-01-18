@@ -83,7 +83,7 @@ public class Configurator extends LinearOpMode {
                 config.park = "outer";
             } else if (placePixel.update(gamepad1.x)) {
                 config.park = "board";
-            } else if (gamepad1.dpad_down){
+            } else if (gamepad1.dpad_down) {
                 config.park = "none";
             }
 
@@ -92,13 +92,7 @@ public class Configurator extends LinearOpMode {
             telemetry.update();
         }
 
-
-
-
-
-
-
-
+        Configurator.save(config);
     }
 
 
