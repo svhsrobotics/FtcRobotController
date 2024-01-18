@@ -35,24 +35,26 @@ public class PurplePixelComponent extends Component {
         } else if (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.RED_BOARD) {
             trajB = trajB.lineTo(new Vector2d(RED_BOARD_TAPE_MARKS.getX(), RED_BOARD_TAPE_MARKS.getY()));
         }
-
+        int turned = 1;
 
         if (getRobot().getClass() == PsiBot.class) {
             trajB = trajB.turn(Math.toRadians(180));
+            turned = -1;
+
             if (propPosition == TensorFlowDetection.PropPosition.LEFT) {
-                trajB = trajB.turn(-90);
+                trajB = trajB.turn(Math.toRadians(90));
             } else if (propPosition == TensorFlowDetection.PropPosition.RIGHT) {
-                trajB = trajB.turn(90);
+                trajB = trajB.turn(Math.toRadians(-90));
             } else {
-                trajB = trajB.turn(180);
+                trajB = trajB.turn(Math.toRadians(-180));
             }
         } else {
             if (propPosition == TensorFlowDetection.PropPosition.LEFT) {
-                trajB = trajB.turn(-90);
+                trajB = trajB.turn(Math.toRadians(90));
             } else if (propPosition == TensorFlowDetection.PropPosition.RIGHT) {
-                trajB = trajB.turn(90);
+                trajB = trajB.turn(Math.toRadians(-90));
             } else {
-                trajB = trajB.turn(180);
+                trajB = trajB.turn(Math.toRadians(-180));
             }
         }
 
@@ -60,8 +62,8 @@ public class PurplePixelComponent extends Component {
 
         if (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.BLUE_BOARD) {
             if (propPosition == TensorFlowDetection.PropPosition.LEFT) {
-                   trajB= trajB     .turn(90)
-                        .strafeLeft(-12)
+                   trajB= trajB
+                        .forward(-12 * turned)
                         .addTemporalMarker(() -> {
                             getRobot().dropPurplePixel(true);
                         })
@@ -69,8 +71,8 @@ public class PurplePixelComponent extends Component {
 
 
             } else if (propPosition == TensorFlowDetection.PropPosition.RIGHT) {
-                trajB= trajB  .turn(90)
-                        .strafeRight(-12)
+                trajB= trajB
+                        .forward(-12 * turned)
                         .addTemporalMarker(() -> {
                             getRobot().dropPurplePixel(true);
                         })
@@ -78,7 +80,7 @@ public class PurplePixelComponent extends Component {
 
 
             } else {
-                trajB= trajB                        .forward(-8)
+                trajB= trajB                        .forward(8 * turned)
                         .addTemporalMarker(() -> {
                             getRobot().dropPurplePixel(true);
                         })
@@ -90,7 +92,7 @@ public class PurplePixelComponent extends Component {
             }
         } else if (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.BLUE_AUDIENCE) {
             if (propPosition == TensorFlowDetection.PropPosition.LEFT) {
-                trajB= trajB                        .strafeLeft(-12)
+                trajB= trajB                        .forward(-12 * turned)
                         .addTemporalMarker(() -> {
                             getRobot().dropPurplePixel(true);
                         })
@@ -99,14 +101,14 @@ public class PurplePixelComponent extends Component {
 
             } else if (propPosition == TensorFlowDetection.PropPosition.RIGHT) {
                 trajB= trajB
-                        .strafeRight(-12)
+                        .forward(-12 * turned)
                         .addTemporalMarker(() -> {
                             getRobot().dropPurplePixel(true);
                         })
                         .lineTo(new Vector2d(BLUE_AUDIENCE_TAPE_MARKS.getX(), BLUE_AUDIENCE_TAPE_MARKS.getY()));
 
             } else {
-                trajB= trajB                        .forward(-8)
+                trajB= trajB.forward(8 * turned)
                         .addTemporalMarker(() -> {
                             getRobot().dropPurplePixel(true);
                         })
@@ -115,23 +117,15 @@ public class PurplePixelComponent extends Component {
             }
         } else if (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.RED_AUDIENCE) {
             if (propPosition == TensorFlowDetection.PropPosition.LEFT) {
-                trajB= trajB                        .strafeLeft(-12)
+                trajB= trajB.forward(-12 * turned)
                         .addTemporalMarker(() -> {
                             getRobot().dropPurplePixel(true);
                         })
                         .lineTo(new Vector2d(RED_AUDIENCE_TAPE_MARKS.getX(), RED_AUDIENCE_TAPE_MARKS.getY()));
 
-
-
-            } else if (propPosition == TensorFlowDetection.PropPosition.RIGHT) {
-                trajB= trajB                        .strafeRight(-12)
-                        .addTemporalMarker(() -> {
-                            getRobot().dropPurplePixel(true);
-                        })
-                        .lineTo(new Vector2d(RED_AUDIENCE_TAPE_MARKS.getX(), RED_AUDIENCE_TAPE_MARKS.getY()));
 
             } else {
-                trajB= trajB                        .forward(-8)
+                trajB= trajB.forward(8 * turned)
                         .addTemporalMarker(() -> {
                             getRobot().dropPurplePixel(true);
                         })
@@ -141,27 +135,27 @@ public class PurplePixelComponent extends Component {
             }
         } else if (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.RED_BOARD) {
             if (propPosition == TensorFlowDetection.PropPosition.LEFT) {
-                trajB= trajB                        .strafeLeft(-12)
+                trajB= trajB.forward(-12 * turned)
                         .addTemporalMarker(() -> {
                             getRobot().dropPurplePixel(true);
                         })
                         .lineTo(new Vector2d(RED_BOARD_TAPE_MARKS.getX(), RED_BOARD_TAPE_MARKS.getY()));
 
             } else if (propPosition == TensorFlowDetection.PropPosition.RIGHT) {
-                trajB= trajB                        .strafeRight(-12)
+                trajB= trajB.forward(-12 * turned)
                         .addTemporalMarker(() -> {
                             getRobot().dropPurplePixel(true);
                         })
                         .lineTo(new Vector2d(RED_BOARD_TAPE_MARKS.getX(), RED_BOARD_TAPE_MARKS.getY()));
-//                        .turn(-90);
+//                        .turn(-Math.toRadians(90));
 
             } else {
-                trajB= trajB                        .forward(-8)
+                trajB= trajB.forward(8 * turned)
                         .addTemporalMarker(() -> {
                             getRobot().dropPurplePixel(true);
                         })
                         .lineTo(new Vector2d(RED_BOARD_TAPE_MARKS.getX(), RED_BOARD_TAPE_MARKS.getY()));
-//                        .turn(-90);
+//                        .turn(-Math.toRadians(90));
 
 
             }
@@ -180,7 +174,7 @@ public class PurplePixelComponent extends Component {
 //                })
 //                .waitSeconds(1)
 //                .lineTo(new Vector2d(startPose.getX(), -5 * 12+3))
-//                .turn(Math.toRadians(90))
+//                .turn(Math.toRadians(Math.toRadians(90)))
 //                .lineTo(new Vector2d(3*12+7, -5*12+4))
 //                .build();
 

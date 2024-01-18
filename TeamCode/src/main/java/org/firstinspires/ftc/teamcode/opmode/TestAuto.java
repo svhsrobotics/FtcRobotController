@@ -23,7 +23,12 @@ public class TestAuto extends LinearOpMode {
         GlobalOpMode.opMode = this;
         TestBot testBot = new TestBot(hardwareMap);
 
-        testBot.getDrive().setPoseEstimate(new Pose2d(-36,-62, Math.toRadians(270)));
+        //Pose2d startPose = new Pose2d(12,-62, Math.toRadians(270)); // RED_BOARD
+        //Pose2d startPose = new Pose2d(-36,-62, Math.toRadians(270)); // RED_AUDIENCE
+        //Pose2d startPose = new Pose2d(12,62, Math.toRadians(90)); // BLUE_BOARD
+         Pose2d startPose = new Pose2d(-36,62, Math.toRadians(90)); // BLUE_AUDIENCE
+
+        testBot.getDrive().setPoseEstimate(startPose);
 
         List<Component> componentList = new ArrayList<>();
         componentList.add(new PurplePixelComponent(testBot, TensorFlowDetection.PropPosition.RIGHT));
