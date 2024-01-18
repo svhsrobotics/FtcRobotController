@@ -23,6 +23,8 @@ public class PurplePixelComponent extends Component {
 
         TrajectorySequenceBuilder trajB = getRobot().getDrive().trajectorySequenceBuilder(getRobot().getDrive().getPoseEstimate());
 
+
+
         if (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.BLUE_BOARD) {
             if (propPosition == TensorFlowDetection.PropPosition.LEFT) {
                 trajB = trajB.lineTo(new Vector2d(BLUE_BOARD_TAPE_MARKS.getX(), BLUE_BOARD_TAPE_MARKS.getY()))
