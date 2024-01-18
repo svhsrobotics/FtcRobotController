@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmode;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -11,6 +13,7 @@ import org.firstinspires.ftc.teamcode.util.Debouncer;
 import org.firstinspires.ftc.teamcode.util.Toggle;
 
 import java.io.File;
+import java.util.Objects;
 
 @TeleOp
 
@@ -65,6 +68,7 @@ public class Configurator extends LinearOpMode {
 
         Configuration config = Configurator.load();
 
+        purpleToggle.state = config.placePixel;
 
 //        Toggle innerParkToggle = new Toggle();
 //        Toggle outerParkToggle = new Toggle();
