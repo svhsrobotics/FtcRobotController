@@ -26,7 +26,8 @@ public class TestAuto extends LinearOpMode {
         testBot.getDrive().setPoseEstimate(new Pose2d(-36,-62, Math.toRadians(270)));
 
         List<Component> componentList = new ArrayList<>();
-        componentList.add(new PurplePixelComponent(testBot, TensorFlowDetection.PropPosition.CENTER));
+        componentList.add(new PurplePixelComponent(testBot, TensorFlowDetection.PropPosition.RIGHT));
+
 
         waitForStart();
         for (Component component : componentList) {
