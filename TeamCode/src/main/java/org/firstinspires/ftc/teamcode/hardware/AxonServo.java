@@ -4,6 +4,8 @@ import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.CRServo;
 
+import org.firstinspires.ftc.teamcode.util.GlobalOpMode;
+
 public class AxonServo {
     public CRServo innerServo;
     public AnalogInput innerAnalog;
@@ -51,6 +53,25 @@ public class AxonServo {
 
     public double getAdjustedPosition() {
         return getCurrentPosition() + counter.getCount() * 360;
+    }
+
+    public void setAdjustedPosition(double position, double power) {
+        if (getAdjustedPosition() < position) {
+            this.innerServo.setPower(-power);
+            while (getAdjustedPosition() < position && !GlobalOpMode.opMode.isStopRequested()) {
+                GlobalOpMode.opMode.telemetry.addData("Extender Axon Servo Position", getAdjustedPosition());
+                GlobalOpMode.opMode.telemetry.update();
+                GlobalOpMode.opMode.sleep(1);
+            }
+        } else if (getAdjustedPosition() > position) {
+            this.innerServo.setPower(power);
+            while (getAdjustedPosition() > position && !GlobalOpMode.opMode.isStopRequested()) {
+                GlobalOpMode.opMode.telemetry.addData("Extender Axon Servo Position", getAdjustedPosition());
+                GlobalOpMode.opMode.telemetry.update();
+                GlobalOpMode.opMode.sleep(1);
+            }
+        }
+        this.innerServo.setPower(0);
     }
 
 
