@@ -15,15 +15,16 @@ public class AxonServo {
         private int count = 0;
 
         public void run() {
+            android.util.Log.w("AXON_THREAD", "Starting thread");
             double lastPosition = getCurrentPosition();
             while (true) {
-                android.util.Log.w("AXON_THREAD", "LOOP");
+                //android.util.Log.w("AXON_THREAD", "LOOP");
                 double currentPosition = getCurrentPosition();
-                // Negative wrap-around from 360 -> 0
+                // Positive wrap-around from 0 -> 360
                 if (currentPosition > 180 && lastPosition < 180 && innerServo.getPower() > 0) {
                     count--;
                 }
-                // Positive wrap-around from 0 -> 360
+                // Negative wrap-around from 360 -> 0
                 if (currentPosition < 180 && lastPosition > 180 && innerServo.getPower() < 0) {
                     count++;
                 }
