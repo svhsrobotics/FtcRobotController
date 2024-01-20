@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceBuilder;
 public class GoToBoard extends Component{
 
-    protected GoToBoard(Robot robot) {
+    public GoToBoard(Robot robot) {
         super(robot);
     }
 
@@ -23,29 +23,28 @@ public class GoToBoard extends Component{
         TrajectorySequenceBuilder trajB = getRobot().getDrive().trajectorySequenceBuilder(startPose);
 
         if (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.RED_AUDIENCE) {
-            trajB = trajB.lineTo(new Vector2d(startPose.getX(), -36))
-                    .lineTo(new Vector2d(50, -36))
+            trajB = trajB.lineTo(new Vector2d(startPose.getX(), -12))
+                    .lineTo(new Vector2d(46, -12))
+                    .lineTo(new Vector2d(46, -36))
             
-            .turn(Math.toRadians(-90-startPose.getHeading()))
-            //TODO:fix error with temporal marker because ryan is a dum dum
             .addTemporalMarker(() -> {
                android.util.Log.i("PLACE PIXEL", "Placed pixel at Red Board");
             });
 
         } else if (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.RED_BOARD) {
-            trajB = trajB.lineTo(new Vector2d(startPose.getX(), -36))
-                    .lineTo(new Vector2d(50, -36))
+            trajB = trajB.lineTo(new Vector2d(startPose.getX(), -12))
+                    .lineTo(new Vector2d(46, -12))
+                    .lineTo(new Vector2d(46, -36))
             
-            .turn(Math.toRadians(-90-startPose.getHeading()))
-            //TODO:fix error with temporal marker because ryan is a dum dum
             .addTemporalMarker(() -> {
                 android.util.Log.i("PLACE PIXEL", "Placed pixel at Red Board");
             });
 
         } else if (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.BLUE_BOARD) {
-            trajB = trajB.lineTo(new Vector2d(startPose.getX(), 36))
-                    .lineTo(new Vector2d(50, 36))
-           
+            trajB = trajB.lineTo(new Vector2d(startPose.getX(), 12))
+                    .lineTo(new Vector2d(46, 12))
+                    .lineTo(new Vector2d(46, 36))
+
             .turn(Math.toRadians(90-startPose.getHeading()))
             //TODO:fix error with temporal marker because ryan is a dum dum
             .addTemporalMarker(() -> {
@@ -53,11 +52,10 @@ public class GoToBoard extends Component{
             });
 
         }else {
-            trajB = trajB.lineTo(new Vector2d(startPose.getX(), 36))
-                    .lineTo(new Vector2d(50, 36))
+            trajB = trajB.lineTo(new Vector2d(startPose.getX(), 12))
+                    .lineTo(new Vector2d(46, 12))
+                    .lineTo(new Vector2d(46, 36))
          
-            .turn(Math.toRadians(90-startPose.getHeading()))
-            //TODO:fix error with temporal marker because ryan is a dum dum
             .addTemporalMarker(() -> {
                 android.util.Log.i("PLACE PIXEL", "Placed pixel at Blue Board");
             });

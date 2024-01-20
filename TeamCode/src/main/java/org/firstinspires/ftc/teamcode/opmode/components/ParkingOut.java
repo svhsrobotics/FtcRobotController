@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceBuild
 
 public class ParkingOut extends Component{
 
-    protected ParkingOut(Robot robot) {
+    public ParkingOut(Robot robot) {
         super(robot);
     }
 
@@ -25,22 +25,22 @@ public class ParkingOut extends Component{
 
 
         if (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.RED_AUDIENCE) {
-            trajB =trajB.lineTo(new Vector2d(currentPose.getX(), -(4*12+9)))
-                    .lineTo(new Vector2d(59, -57));
+            trajB =trajB.lineTo(new Vector2d(currentPose.getX(), -(5*12 + 1)))
+                    .lineTo(new Vector2d(55, -61));
         } else if (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.RED_BOARD) {
-            trajB = trajB.lineTo(new Vector2d(currentPose.getX(), -57))
-                    .lineTo(new Vector2d(59, -57));
+            trajB = trajB.lineTo(new Vector2d(currentPose.getX(), -61))
+                    .lineTo(new Vector2d(55, -61));
 
         } else if (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.BLUE_BOARD) {
-            trajB = trajB.lineTo(new Vector2d(currentPose.getX(), 57))
-                    .lineTo(new Vector2d(59, 57));
+            trajB = trajB.lineTo(new Vector2d(currentPose.getX(), 59))
+                    .lineTo(new Vector2d(55, 59));
         } else {
-        trajB = trajB.lineTo(new Vector2d(currentPose.getX(), 57))
-                .lineTo(new Vector2d(59, 57));
+        trajB = trajB.lineTo(new Vector2d(currentPose.getX(), 59))
+                .lineTo(new Vector2d(55, 59));
     }
         TrajectorySequence traj = trajB.build();
         getRobot().getDrive().followTrajectorySequence(traj);
     }
-//ryan i had to fix ur code it didn't copy ParkingIn correctly - not the values just formatting
+
 }
 

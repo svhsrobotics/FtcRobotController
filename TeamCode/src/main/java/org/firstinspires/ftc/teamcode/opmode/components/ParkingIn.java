@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceBuild
 public class ParkingIn extends Component{
 
 
-    protected ParkingIn(Robot robot) {
+    public ParkingIn(Robot robot) {
         super(robot);
     }
 
@@ -26,16 +26,16 @@ public class ParkingIn extends Component{
 
         if (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.RED_AUDIENCE) {
             trajB = trajB.lineTo(new Vector2d(currentPose.getX(), -12))
-                    .lineTo(new Vector2d(6 * 12 + 14, -12));
+                    .lineTo(new Vector2d(4 * 12 + 6, -12));
         } else if (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.RED_BOARD) {
             trajB = trajB.lineTo(new Vector2d(currentPose.getX(), -12))
-                    .lineTo(new Vector2d(6 * 12 + 14, -12));
+                    .lineTo(new Vector2d(4 * 12 + 6, -12));
         } else if (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.BLUE_BOARD) {
             trajB = trajB.lineTo(new Vector2d(currentPose.getX(), 12))
-                    .lineTo(new Vector2d(6 * 12 + 14, 12));
+                    .lineTo(new Vector2d(4 * 12 + 6, 12));
         } else {
             trajB = trajB.lineTo(new Vector2d(currentPose.getX(), 12))
-                    .lineTo(new Vector2d(6 * 12 + 14, 12));
+                    .lineTo(new Vector2d(4 * 12 + 6, 12));
         }
 
         TrajectorySequence traj = trajB.build();

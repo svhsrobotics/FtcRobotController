@@ -81,17 +81,22 @@ public class Configurator extends LinearOpMode {
 
             config.placePixel = purpleToggle.state;
 
-            if (innerPark.update(gamepad1.b)) {
-                config.park = "inner";
-            } else if (outerPark.update(gamepad1.y)) {
-                config.park = "outer";
-            } else if (placePixel.update(gamepad1.x)) {
-                config.park = "board";
-            } else if (gamepad1.dpad_down) {
+            if (config.placePixel) {
+
+                if (innerPark.update(gamepad1.b)) {
+                    config.park = "inner";
+                } else if (outerPark.update(gamepad1.y)) {
+                    config.park = "outer";
+                } else if (placePixel.update(gamepad1.x)) {
+                    config.park = "board";
+                } else if (gamepad1.dpad_down) {
+                    config.park = "none";
+                }
+
+                telemetry.addData("park", config.park);
+            } else {
                 config.park = "none";
             }
-
-            telemetry.addData("park", config.park);
 
             telemetry.update();
         }

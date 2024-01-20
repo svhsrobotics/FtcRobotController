@@ -63,7 +63,7 @@ public class PurplePixelComponent extends Component {
         if (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.BLUE_BOARD) {
             if (propPosition == TensorFlowDetection.PropPosition.LEFT) {
                    trajB= trajB
-                        .forward(-12 * turned)
+                        .forward(-13 * turned)
                         .addTemporalMarker(() -> {
                             getRobot().dropPurplePixel(true);
                         })
@@ -92,7 +92,7 @@ public class PurplePixelComponent extends Component {
             }
         } else if (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.BLUE_AUDIENCE) {
             if (propPosition == TensorFlowDetection.PropPosition.LEFT) {
-                trajB= trajB                        .forward(-12 * turned)
+                trajB= trajB                        .forward(-13 * turned)
                         .addTemporalMarker(() -> {
                             getRobot().dropPurplePixel(true);
                         })
@@ -117,7 +117,7 @@ public class PurplePixelComponent extends Component {
             }
         } else if (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.RED_AUDIENCE) {
             if (propPosition == TensorFlowDetection.PropPosition.LEFT) {
-                trajB= trajB.forward(-12 * turned)
+                trajB= trajB.forward(-13 * turned)
                         .addTemporalMarker(() -> {
                             getRobot().dropPurplePixel(true);
                         })
@@ -135,7 +135,7 @@ public class PurplePixelComponent extends Component {
             }
         } else if (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.RED_BOARD) {
             if (propPosition == TensorFlowDetection.PropPosition.LEFT) {
-                trajB= trajB.forward(-12 * turned)
+                trajB= trajB.forward(-13 * turned)
                         .addTemporalMarker(() -> {
                             getRobot().dropPurplePixel(true);
                         })
