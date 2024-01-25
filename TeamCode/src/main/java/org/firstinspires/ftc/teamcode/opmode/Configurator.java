@@ -58,17 +58,21 @@ public class Configurator extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         waitForStart();
+        telemetry.addData("CONTROLS", "A: place pixel toggle \nB: inner park \nY: outer park \nX: board park \ndpad_down: no park \ndpad_up: field centric toggle");
 
         Toggle purpleToggle = new Toggle();
+        Toggle fieldCentricToggle = new Toggle();
         Debouncer innerPark = new Debouncer();
         Debouncer outerPark = new Debouncer();
         Debouncer placePixel = new Debouncer();
+
 
         //String park = "none";
 
         Configuration config = Configurator.load();
 
         purpleToggle.state = config.placePixel;
+        fieldCentricToggle.state = config.fieldCentric;
 
 //        Toggle innerParkToggle = new Toggle();
 //        Toggle outerParkToggle = new Toggle();
@@ -80,6 +84,12 @@ public class Configurator extends LinearOpMode {
             telemetry.addData("purple pixel", purpleToggle.state);
 
             config.placePixel = purpleToggle.state;
+
+            fieldCentricToggle.update(gamepad1.dpad_up);
+
+            telemetry.addData("field centric", fieldCentricToggle.state);
+
+            config.fieldCentric = fieldCentricToggle.state;
 
             if (config.placePixel) {
 

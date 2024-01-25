@@ -29,23 +29,23 @@ public class TestAuto extends LinearOpMode {
         TestBot testBot = new TestBot(hardwareMap);
 
         //Pose2d startPose = new Pose2d(12,-62, Math.toRadians(270)); // RED_BOARD
-        //Pose2d startPose = new Pose2d(-36,-62, Math.toRadians(270)); // RED_AUDIENCE
+        Pose2d startPose = new Pose2d(-36,-62, Math.toRadians(270)); // RED_AUDIENCE
         //Pose2d startPose = new Pose2d(12,62, Math.toRadians(90)); // BLUE_BOARD
-        Pose2d startPose = new Pose2d(-36,62, Math.toRadians(90)); // BLUE_AUDIENCE
+        //Pose2d startPose = new Pose2d(-36,62, Math.toRadians(90)); // BLUE_AUDIENCE
 
         testBot.getDrive().setPoseEstimate(startPose);
 
         List<Component> componentList = new ArrayList<>();
         Configuration config = Configurator.load();
         if (config.placePixel) {
-            componentList.add(new PurplePixelComponent(testBot, TensorFlowDetection.PropPosition.LEFT));
+            componentList.add(new PurplePixelComponent(testBot, TensorFlowDetection.PropPosition.RIGHT));
         }
         if (Objects.equals(config.park, "outer")) {
             componentList.add(new ParkingOut(testBot));
         } else if (Objects.equals(config.park, "inner")) {
             componentList.add(new ParkingIn(testBot));
         } else  if (Objects.equals(config.park, "board")) {
-            componentList.add(new GoToBoard(testBot));
+            componentList.add(new GoToBoard(testBot, TensorFlowDetection.PropPosition.RIGHT));
         }
 
         waitForStart();

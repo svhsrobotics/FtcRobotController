@@ -122,6 +122,15 @@ public class PurplePixelComponent extends Component {
                             getRobot().dropPurplePixel(true);
                         })
                         .lineTo(new Vector2d(RED_AUDIENCE_TAPE_MARKS.getX(), RED_AUDIENCE_TAPE_MARKS.getY()));
+            } else if (propPosition == TensorFlowDetection.PropPosition.RIGHT) {
+                trajB= trajB
+                        .forward(-12 * turned)
+                        .addTemporalMarker(() -> {
+                            getRobot().dropPurplePixel(true);
+                        })
+                        .lineTo(new Vector2d(RED_AUDIENCE_TAPE_MARKS.getX(), RED_AUDIENCE_TAPE_MARKS.getY()));
+
+
 
 
             } else {

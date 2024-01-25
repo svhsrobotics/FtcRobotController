@@ -62,6 +62,7 @@ public class GoToBoard extends Component{
             .addTemporalMarker(() -> {
      //           android.util.Log.i("PLACE PIXEL", "Placed pixel at Blue Board");
             });
+                    //.turn
 
         }
 

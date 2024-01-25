@@ -457,6 +457,14 @@ public class TrajectorySequenceBuilder {
         return this;
     }
 
+    public TrajectorySequenceBuilder turnTo(double angle) {
+        return turnTo(angle, currentTurnConstraintMaxAngVel, currentTurnConstraintMaxAngAccel);
+    }
+
+    public TrajectorySequenceBuilder turnTo(double angle, double maxAngVel, double maxAngAccel) {
+        return turn(angle - lastPose.getHeading(), maxAngVel, maxAngAccel);
+    }
+
     public TrajectorySequenceBuilder waitSeconds(double seconds) {
         pushPath();
         sequenceSegments.add(new WaitSegment(lastPose, seconds, Collections.emptyList()));
