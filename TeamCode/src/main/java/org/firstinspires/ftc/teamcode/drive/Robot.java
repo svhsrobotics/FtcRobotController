@@ -11,6 +11,7 @@ public abstract class Robot {
     }
 
     public abstract AprilTagCamera[] getCameras();
+    public abstract AprilTagCamera getPrimaryCamera();
 
     /**
      * Sets the purple pixel on the robot;

@@ -5,7 +5,6 @@ import com.acmerobotics.roadrunner.control.PIDCoefficients;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
-import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.util.Encoder;
@@ -18,6 +17,7 @@ public class TestBot extends Robot {
     public static double RIGHTFORTYFIVE = 45;
     public static double RIGHTSEVENTY = -70;
     private final AprilTagCamera[] cameras;
+    private final AprilTagCamera primaryCamera;
     public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(8, 0, 0);
     public static PIDCoefficients HEADING_PID = new PIDCoefficients(8, 0, 0);
     private final TrajectoryDrive drive;
@@ -57,11 +57,19 @@ public class TestBot extends Robot {
 
     public TestBot(HardwareMap hardwareMap) {
         super(hardwareMap);
-        cameras = new AprilTagCamera[3];
-        cameras[0] = new AprilTagCamera(hardwareMap.get(WebcamName.class, "Center"), 8, Math.toRadians(LEFTSEVENTY), Math.toRadians(LEFTFORTYFIVE));
-        cameras[1] = new AprilTagCamera(hardwareMap.get(WebcamName.class, "Center"), 7, Math.toRadians(90), Math.toRadians(0));
-        cameras[2] = new AprilTagCamera(hardwareMap.get(WebcamName.class, "Center"), 8, Math.toRadians(RIGHTSEVENTY), Math.toRadians(RIGHTFORTYFIVE));
+        if (hardwareMap.tryGet(WebcamName.class, "Left") != null && hardwareMap.tryGet(WebcamName.class, "Right") != null) {
+            cameras = new AprilTagCamera[3];
 
+            cameras[0] = new AprilTagCamera(hardwareMap.get(WebcamName.class, "Left"), 8, Math.toRadians(LEFTSEVENTY), Math.toRadians(LEFTFORTYFIVE));
+            cameras[1] = new AprilTagCamera(hardwareMap.get(WebcamName.class, "Center"), 7, Math.toRadians(90), Math.toRadians(0));
+            cameras[2] = new AprilTagCamera(hardwareMap.get(WebcamName.class, "Right"), 8, Math.toRadians(RIGHTSEVENTY), Math.toRadians(RIGHTFORTYFIVE));
+
+            primaryCamera = cameras[1];
+        } else {
+            cameras = new AprilTagCamera[1];
+            cameras[0] = new AprilTagCamera(hardwareMap.get(WebcamName.class, "Center"), 7, Math.toRadians(90), Math.toRadians(0));
+            primaryCamera = cameras[0];
+        }
         //purpleServo = hardwareMap.get(Servo.class, "purple");
 
         // TODO: Reverse Motors, encoders & such
@@ -101,9 +109,16 @@ public class TestBot extends Robot {
         ((TrackingWheelLocalizer)drive.getLocalizer()).rightEncoder.setDirection(Encoder.Direction.REVERSE);
     }
 
+
+
     @Override
     public AprilTagCamera[] getCameras() {
         return cameras;
+    }
+
+    @Override
+    public AprilTagCamera getPrimaryCamera() {
+        return primaryCamera;
     }
 
     @Override

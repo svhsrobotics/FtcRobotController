@@ -103,6 +103,11 @@ public class PsiBot extends Robot {
     }
 
     @Override
+    public AprilTagCamera getPrimaryCamera() {
+        return null;
+    }
+
+    @Override
     public void dropPurplePixel(boolean state) {
         if (state) {
             purpleServo.setPosition(0.3);

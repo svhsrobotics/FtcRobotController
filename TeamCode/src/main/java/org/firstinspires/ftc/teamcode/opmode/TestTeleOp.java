@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.drive.Robot;
 import org.firstinspires.ftc.teamcode.drive.TestBot;
 import org.firstinspires.ftc.teamcode.drive.TrajectoryDrive;
 import org.firstinspires.ftc.teamcode.util.GlobalOpMode;
+import org.firstinspires.ftc.teamcode.vision.AprilTagLocalizer;
 
 @TeleOp
 public class TestTeleOp extends LinearOpMode {
@@ -16,6 +17,7 @@ public class TestTeleOp extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         GlobalOpMode.opMode = this;
         Robot robot = new TestBot(hardwareMap);
+        AprilTagLocalizer localizer = new AprilTagLocalizer(robot.getCameras());
         TrajectoryDrive drive = robot.getDrive();
         Configuration config = Configurator.load();
 
@@ -48,7 +50,16 @@ public class TestTeleOp extends LinearOpMode {
 
             telemetry.addData("Current Quadrant", drive.currentQuadrant().toString());
 
+            Pose2d pose = localizer.estimateRobotPoseFromAprilTags(robot.getPrimaryCamera());
+            telemetry.addData("AT Pose", pose);
+
             telemetry.update();
+
+
         }
+    }
+
+    public void centerOnTag() {
+
     }
 }
