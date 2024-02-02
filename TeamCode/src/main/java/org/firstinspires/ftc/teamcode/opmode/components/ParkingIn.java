@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.opmode.components;
 
-import android.util.Log;
-
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 
@@ -28,7 +26,7 @@ public class ParkingIn extends Component{
             trajB = trajB.lineTo(new Vector2d(currentPose.getX(), -12))
                     .lineTo(new Vector2d(4 * 12 + 6, -12));
         } else if (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.RED_BOARD) {
-            trajB = trajB.lineTo(new Vector2d(currentPose.getX(), -12))
+            trajB = trajB.lineTo(new Vector2d(currentPose.getX() + 10, -12))
                     .lineTo(new Vector2d(4 * 12 + 6, -12));
         } else if (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.BLUE_BOARD) {
             trajB = trajB.lineTo(new Vector2d(currentPose.getX(), 12))

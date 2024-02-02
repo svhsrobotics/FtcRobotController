@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.drive;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -45,34 +46,35 @@ public class PsiBot extends Robot {
     public static double DW_WHEEL_RADIUS = 0.944882; // in
     public static double DW_GEAR_RATIO = 1; // output (wheel) speed / input (encoder) speed
 
-    public static double LATERAL_DISTANCE = 14.863; // in; distance between the left and right wheels
+    public static double LATERAL_DISTANCE = 8; // in; distance between the left and right wheels
     public static double FORWARD_OFFSET = -6.5; // in; offset of the lateral wheel
 
     private Encoder leftEncoder, rightEncoder, frontEncoder;
     public static double X_MULTIPLIER = 88.6/90; // Multiplier in the X direction
     public static double Y_MULTIPLIER = 88.1/90; // Multiplier in the Y direction
 
-    private final Servo purpleServo;
+    public final Servo purpleServo;
 
     public PsiBot(HardwareMap hardwareMap) {
         super(hardwareMap);
-        cameras = new AprilTagCamera[3];
+        cameras = new AprilTagCamera[1];
         cameras[0] = new AprilTagCamera(hardwareMap.get(WebcamName.class, "Left"), 8, Math.toRadians(LEFTSEVENTY), Math.toRadians(LEFTFORTYFIVE));
-        cameras[1] = new AprilTagCamera(hardwareMap.get(WebcamName.class, "Center"), 7, Math.toRadians(90), Math.toRadians(0));
-        cameras[2] = new AprilTagCamera(hardwareMap.get(WebcamName.class, "Right"), 8, Math.toRadians(RIGHTSEVENTY), Math.toRadians(RIGHTFORTYFIVE));
+        //cameras[1] = new AprilTagCamera(hardwareMap.get(WebcamName.class, "Center"), 7, Math.toRadians(90), Math.toRadians(0));
+        //cameras[2] = new AprilTagCamera(hardwareMap.get(WebcamName.class, "Right"), 8, Math.toRadians(RIGHTSEVENTY), Math.toRadians(RIGHTFORTYFIVE));
 
         purpleServo = hardwareMap.get(Servo.class, "purple");
 
          //TODO: Reverse Motors, encoders & such
+
         drive = new TrajectoryDrive(
                 hardwareMap,
                 TRANSLATIONAL_PID,
                 HEADING_PID,
                 LATERAL_MULTIPLIER,
-                "lf_ldw",
-                "lb",
-                "rb_rdw",
-                "rf",
+                "front_left",
+                "back_left",
+                "back_right_back_pod",
+                "front_right_right_pod",
                 MOTOR_VELO_PID,
                 MAX_ACCEL,
                 MAX_ANG_ACCEL,
@@ -84,9 +86,9 @@ public class PsiBot extends Robot {
                 kA,
                 kV,
                 kStatic,
-                "left_front_left_dw",
-                "right_back_right_dw",
-                "no_motor_perp_dw", // TODO: FIX THESE
+                "left_pod",
+                "front_right_right_pod",
+                "back_right_back_pod", // TODO: FIX THESE
                 X_MULTIPLIER,
                 Y_MULTIPLIER,
                 FORWARD_OFFSET,
@@ -95,6 +97,12 @@ public class PsiBot extends Robot {
                 DW_WHEEL_RADIUS,
                 DW_TICKS_PER_REV
         );
+        drive.leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        drive.leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        ((TrackingWheelLocalizer)drive.getLocalizer()).leftEncoder.setDirection(Encoder.Direction.REVERSE);
+        //((TrackingWheelLocalizer)drive.getLocalizer()).frontEncoder.setDirection(Encoder.Direction.REVERSE);
+        //((TrackingWheelLocalizer)drive.getLocalizer()).rightEncoder.setDirection(Encoder.Direction.REVERSE);
     }
 
     @Override
@@ -104,15 +112,15 @@ public class PsiBot extends Robot {
 
     @Override
     public AprilTagCamera getPrimaryCamera() {
-        return null;
+        return cameras[0];
     }
 
     @Override
     public void dropPurplePixel(boolean state) {
         if (state) {
-            purpleServo.setPosition(0.3);
+            purpleServo.setPosition(1);
         } else {
-            purpleServo.setPosition(0.5);
+            purpleServo.setPosition(0);
         }
     }
 

@@ -5,7 +5,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.drive.Robot;
-import org.firstinspires.ftc.teamcode.drive.TestBot;
 import org.firstinspires.ftc.teamcode.opmode.components.Component;
 import org.firstinspires.ftc.teamcode.opmode.components.GoToBoard;
 import org.firstinspires.ftc.teamcode.opmode.components.ParkingIn;
@@ -26,26 +25,26 @@ public class TestAuto extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         GlobalOpMode.opMode = this;
-        TestBot testBot = new TestBot(hardwareMap);
+        Robot robot = Robot.thisRobot(hardwareMap);
 
-        //Pose2d startPose = new Pose2d(12,-62, Math.toRadians(270)); // RED_BOARD
-        Pose2d startPose = new Pose2d(-36,-62, Math.toRadians(270)); // RED_AUDIENCE
+        Pose2d startPose = new Pose2d(12,-62, Math.toRadians(90)); // RED_BOARD
+        //Pose2d startPose = new Pose2d(-36,-62, Math.toRadians(270)); // RED_AUDIENCE
         //Pose2d startPose = new Pose2d(12,62, Math.toRadians(90)); // BLUE_BOARD
         //Pose2d startPose = new Pose2d(-36,62, Math.toRadians(90)); // BLUE_AUDIENCE
 
-        testBot.getDrive().setPoseEstimate(startPose);
+        robot.getDrive().setPoseEstimate(startPose);
 
         List<Component> componentList = new ArrayList<>();
         Configuration config = Configurator.load();
         if (config.placePixel) {
-            componentList.add(new PurplePixelComponent(testBot, TensorFlowDetection.PropPosition.RIGHT));
+            componentList.add(new PurplePixelComponent(robot, TensorFlowDetection.PropPosition.LEFT));
         }
         if (Objects.equals(config.park, "outer")) {
-            componentList.add(new ParkingOut(testBot));
+            componentList.add(new ParkingOut(robot));
         } else if (Objects.equals(config.park, "inner")) {
-            componentList.add(new ParkingIn(testBot));
+            componentList.add(new ParkingIn(robot));
         } else  if (Objects.equals(config.park, "board")) {
-            componentList.add(new GoToBoard(testBot, TensorFlowDetection.PropPosition.RIGHT));
+            componentList.add(new GoToBoard(robot, TensorFlowDetection.PropPosition.LEFT));
         }
 
         waitForStart();
