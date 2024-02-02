@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opmode.components;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 
 import org.firstinspires.ftc.teamcode.drive.Robot;
+import org.firstinspires.ftc.teamcode.drive.TrajectoryDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceBuilder;
 import org.firstinspires.ftc.teamcode.vision.TensorFlowDetection;
@@ -37,7 +38,7 @@ public class PurplePixelComponent extends Component {
     public void drive() {
 
         TrajectorySequenceBuilder trajB = getRobot().getDrive().trajectorySequenceBuilder(getRobot().getDrive().getPoseEstimate());
-        trajB = trajB.lineTo(currentTapeMarks());
+        trajB.lineTo(currentTapeMarks());
         int driveBackwards = 1;
 
 //        if (getRobot().getClass() == PsiBot.class) {
@@ -46,20 +47,27 @@ public class PurplePixelComponent extends Component {
 //        }
 
         if (propPosition == TensorFlowDetection.PropPosition.LEFT) {
-            trajB = trajB.turn(Math.toRadians(90))
+            trajB.turn(Math.toRadians(90))
                     .forward(8 * driveBackwards); // orig 13
         } else if (propPosition == TensorFlowDetection.PropPosition.RIGHT) {
-            trajB = trajB.turn(Math.toRadians(-90))
+            trajB.turn(Math.toRadians(-90))
                     .forward(12 * driveBackwards);
         } else {
-            trajB = trajB.turn(Math.toRadians(180))
-                    .forward(-8 * driveBackwards);
+            trajB.turn(Math.toRadians(180))
+                    .forward(-14 * driveBackwards);
         }
 
-        trajB = trajB.addTemporalMarker(() -> getRobot().dropPurplePixel(true))
-                .waitSeconds(2)
-                .lineTo(currentTapeMarks());
+        trajB.addTemporalMarker(() -> getRobot().dropPurplePixel(true))
+                .waitSeconds(2);
 
+        // If this is the CENTER line, don't bother going back to the tape marks center (audience only)
+        // (would end up moving the pixel)
+        if (propPosition != TensorFlowDetection.PropPosition.CENTER && (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.BLUE_BOARD || getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.RED_BOARD )) {
+            trajB.lineTo(currentTapeMarks());
+        } else {
+            // CENTER AUDIENCE special case
+            // TODO: BACK UP HERE
+        }
 
         TrajectorySequence traj = trajB.build();
         getRobot().getDrive().followTrajectorySequence(traj);

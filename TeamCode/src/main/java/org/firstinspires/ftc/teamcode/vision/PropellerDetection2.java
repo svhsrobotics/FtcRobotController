@@ -82,7 +82,7 @@ public class PropellerDetection2 extends LinearOpMode {
 
         if (opModeIsActive() || opModeInInit()) {
             while (opModeIsActive() || opModeInInit()) {
-                tfod.getPropPosition();
+                //tfod.getPropPosition();
 //                telemetryTfod();
 //
 //                // Push telemetry to the Driver Station.

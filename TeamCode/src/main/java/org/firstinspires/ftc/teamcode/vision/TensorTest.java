@@ -31,7 +31,7 @@ public class TensorTest extends LinearOpMode {
         TensorFlowDetection tensor = new TensorFlowDetection(cameras[1].webcamName);
 
 
-        TensorFlowDetection.PropPosition tensorPos = tensor.getPropPosition();
+        TensorFlowDetection.PropPosition tensorPos = null;
 
 
         android.util.Log.i("Location", tensorPos + "");
