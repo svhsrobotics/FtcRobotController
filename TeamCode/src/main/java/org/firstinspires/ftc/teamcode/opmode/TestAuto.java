@@ -77,6 +77,7 @@ public class TestAuto extends LinearOpMode {
         waitForStart();
         if (isStopRequested()) {
             android.util.Log.d("AUTO", "STOP requested after waitForStart(), returning early");
+            return;
         }
 
         if (startPose == null) {
