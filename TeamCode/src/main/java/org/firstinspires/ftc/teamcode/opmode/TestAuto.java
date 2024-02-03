@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.opmode;
 
-import android.util.Log;
-
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -25,19 +23,24 @@ import java.util.Objects;
 @Autonomous
 public class TestAuto extends LinearOpMode {
     private Pose2d estimateWithAllCameras(AprilTagCamera[] cameras, AprilTagLocalizer aprilTag) {
-        android.util.Log.i("PROGRESS", "log1");
         Pose2d pose = null;
-        android.util.Log.i("PROGRESS", "log2");
         for (AprilTagCamera camera : cameras) {
-            android.util.Log.i("PROGRESS", "trying to get pose");
             pose = aprilTag.estimateRobotPoseFromAprilTags(camera);
             if (pose != null) {
-                android.util.Log.i("PROGRESS", "break");
                 break;
             }
         }
-        android.util.Log.i("PROGRESS", "returning");
         return pose;
+    }
+
+    private TensorFlowDetection.PropPosition detectProp(Robot robot) {
+        TensorFlowDetection tensor = new TensorFlowDetection(robot.getPrimaryCamera().webcamName);
+        TensorFlowDetection.PropPosition position = tensor.getPropPosition(new Timeout(5));
+        if (position == null) {
+            telemetry.log().add("Unable to detect prop, using CENTER");
+            position = TensorFlowDetection.PropPosition.CENTER;
+        }
+        return position;
     }
 
     @Override
@@ -51,70 +54,54 @@ public class TestAuto extends LinearOpMode {
         //Pose2d startPose = new Pose2d(12,62, Math.toRadians(90)); // BLUE_BOARD
         //Pose2d startPose = new Pose2d(-36,62, Math.toRadians(90)); // BLUE_AUDIENCE
 
-        // Search for AprilTags across the three cameras, until we find one or init ends
         AprilTagLocalizer aprilTag = new AprilTagLocalizer(robot.getCameras());
         Pose2d startPose = null;
         while(opModeInInit() && startPose == null) {
-            Log.i("AUTO", "Waiting for AprilTag detection...");
+            telemetry.log().add("Looking for AprilTag");
+            startPose = estimateWithAllCameras(robot.getCameras(), aprilTag);
+            telemetry.log().add("AprilTag found: " + startPose);
+        }
+
+        TensorFlowDetection.PropPosition tensorPos = null;
+        if (config.tensorFlowInInit && startPose != null) {
+            telemetry.log().add("Running TensorFlow in INIT: FOR DEBUGGING ONLY");
+
+            tensorPos = detectProp(robot);
+            telemetry.log().add("Tensorflow detected: " + tensorPos);
+        }
+
+        waitForStart();
+        if (isStopRequested()) return;
+
+        if (startPose == null) {
+            telemetry.log().add("Trying to find AprilTag again");
             startPose = estimateWithAllCameras(robot.getCameras(), aprilTag);
         }
 
-        if (startPose != null) {
-            Log.i("AUTO", "Found AprilTag, starting Tensorflow");
-            telemetry.log().add("Found AprilTag");
-        }
-
-        // If we're not doing TensorFlow in init, just wait for start here
-        if (!config.tensorFlowInInit) {
-            waitForStart();
-            if (isStopRequested()) return;
-        }
-
-        // We didn't find one in init... try once more in start, then give up
-        if (startPose == null) {
-            // Check one more time
-            Log.w("AUTO", "Did not find AprilTag in init, trying one last time");
-            startPose = estimateWithAllCameras(robot.getCameras(), aprilTag);
-        }
-
-        // Can't find any AprilTags... guess wildly
-        if (startPose == null) {
-            telemetry.log().add("APRILTAG NOT DETECTED");
-            return;
-        }
-
+        if (startPose == null) return;
         robot.getDrive().setPoseEstimate(startPose);
 
-        // If we found an AprilTag, then close down the AprilTag Localizer and look for the prop
-        TensorFlowDetection.PropPosition tensorPos;
-        //Log.i("AUTO", "Found AprilTag, starting Tensorflow");
-        telemetry.log().add("Starting TensorFlow");
-        aprilTag.close();
-        // use the center camera
-        TensorFlowDetection tensor = new TensorFlowDetection(robot.getPrimaryCamera().webcamName);
-        tensorPos = tensor.getPropPosition(new Timeout(5));
-        telemetry.log().add("Tensorflow detected: " + tensorPos);
-        if (tensorPos == null) {
-            telemetry.log().add("Unable to detect prop, using CENTER");
-            tensorPos = TensorFlowDetection.PropPosition.CENTER;
-        }
-
-        // FOR DEBUGGING ONLY
-        if (config.tensorFlowInInit) {
-            waitForStart();
-            if (isStopRequested()) return;
+        if (!config.tensorFlowInInit || tensorPos == null) {
+            tensorPos = detectProp(robot);
+            telemetry.log().add("Tensorflow detected: " + tensorPos);
         }
 
         List<Component> componentList = new ArrayList<>();
+
         if (config.placePixel) {
             componentList.add(new PurplePixelComponent(robot, tensorPos, Objects.equals(config.park, "inner")));
         }
-        if (Objects.equals(config.park, "outer")) {
-            componentList.add(new ParkingOut(robot));
-        } else if (Objects.equals(config.park, "inner")) {
-            componentList.add(new ParkingIn(robot));
-        } else  if (Objects.equals(config.park, "board")) {
-            componentList.add(new GoToBoard(robot, TensorFlowDetection.PropPosition.LEFT));
+
+        switch (config.park) {
+            case "outer":
+                componentList.add(new ParkingOut(robot));
+                break;
+            case "inner":
+                componentList.add(new ParkingIn(robot));
+                break;
+            case "board":
+                componentList.add(new GoToBoard(robot, tensorPos));
+                break;
         }
 
         for (Component component : componentList) {

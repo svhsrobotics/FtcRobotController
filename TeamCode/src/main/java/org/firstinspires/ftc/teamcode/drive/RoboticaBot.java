@@ -90,6 +90,11 @@ public class RoboticaBot extends Robot {
     }
 
     @Override
+    public void launchPlane() {
+        // TODO
+    }
+
+    @Override
     public TrajectoryDrive getDrive() {
         return null;
     }

@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.drive;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
@@ -54,6 +55,8 @@ public class PsiBot extends Robot {
     public static double Y_MULTIPLIER = 88.1/90; // Multiplier in the Y direction
 
     public final Servo purpleServo;
+    public final Servo planeServo;
+    public final DcMotor armMotor;
 
     public PsiBot(HardwareMap hardwareMap) {
         super(hardwareMap);
@@ -63,6 +66,12 @@ public class PsiBot extends Robot {
         cameras[2] = new AprilTagCamera(hardwareMap.get(WebcamName.class, "Right"), 8, Math.toRadians(RIGHTSEVENTY), Math.toRadians(RIGHTFORTYFIVE));
 
         purpleServo = hardwareMap.get(Servo.class, "purple");
+        planeServo = hardwareMap.get(Servo.class, "plane");
+        armMotor = hardwareMap.get(DcMotor.class, "arm");
+
+        armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
          //TODO: Reverse Motors, encoders & such
 
@@ -126,6 +135,11 @@ public class PsiBot extends Robot {
         } else {
             purpleServo.setPosition(0);
         }
+    }
+
+    @Override
+    public void launchPlane() {
+        // TODO: Implement
     }
 
     @Override

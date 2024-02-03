@@ -131,6 +131,11 @@ public class TestBot extends Robot {
     }
 
     @Override
+    public void launchPlane() {
+        // TODO
+    }
+
+    @Override
     public TrajectoryDrive getDrive() {
         return drive;
     }

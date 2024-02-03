@@ -34,4 +34,6 @@ public abstract class Robot {
      * false: closed
      */
     public abstract void dropPurplePixel(boolean state);
+
+    public abstract void launchPlane();
 }

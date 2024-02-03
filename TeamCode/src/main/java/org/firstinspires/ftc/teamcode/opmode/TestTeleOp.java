@@ -27,9 +27,7 @@ public class TestTeleOp extends LinearOpMode {
 
         while (opModeIsActive()) {
             drive.update(); // MUST be called every loop cycle so that RoadRunner calculates the pose correctly
-            // Read pose
             Pose2d poseEstimate = drive.getPoseEstimate();
-
 
             if (config.fieldCentric) {
                 // Create a vector from the gamepad x/y inputs
@@ -44,12 +42,6 @@ public class TestTeleOp extends LinearOpMode {
                     drive.setPoseEstimate(new Pose2d(poseEstimate.getX(), poseEstimate.getY(), 0));
                 }
             } else {
-                // Print odo pod speeds
-                //telemetry.addData("Left Encoder Vel", ((TrackingWheelLocalizer)drive.getLocalizer()).leftEncoder.getCorrectedVelocity());
-                //telemetry.addData("Right Encoder Vel", ((TrackingWheelLocalizer)drive.getLocalizer()).rightEncoder.getCorrectedVelocity());
-                //telemetry.addData("Center Encoder Vel", ((TrackingWheelLocalizer)drive.getLocalizer()).frontEncoder.getCorrectedVelocity());
-                // Set the motor powers to always strafe left as a test
-                //drive.setMotorPowers(0.5, -0.5, 0.5, -0.5);
                 drive.setWeightedDrivePower(new Pose2d(-gamepad1.left_stick_y * 0.5, -gamepad1.left_stick_x * 0.5, -gamepad1.right_stick_x * 0.5));
             }
 
@@ -65,8 +57,8 @@ public class TestTeleOp extends LinearOpMode {
                 purplePose = purplePose + (gamepad1.left_trigger * 0.1) - (gamepad1.right_trigger * 0.1);
                 if (purplePose > 1) purplePose = 1;
                 if (purplePose < 0) purplePose = 0;
-                ((PsiBot) robot).purpleServo.setPosition(purplePose);
-                telemetry.addData("Purple Pose", purplePose);
+                ((PsiBot) robot).planeServo.setPosition(purplePose);
+                telemetry.addData("Plane Pose", purplePose);
             }
 
             telemetry.update();
