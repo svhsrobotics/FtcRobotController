@@ -118,7 +118,11 @@ public class PsiBot extends Robot {
     @Override
     public void dropPurplePixel(boolean state) {
         if (state) {
-            purpleServo.setPosition(1);
+            //purpleServo.setPosition(1);
+            for (double i = 0; i < 0.7; i += 0.1) {
+                purpleServo.setPosition(i);
+                //GlobalOpMode.opMode.sleep(10);
+            }
         } else {
             purpleServo.setPosition(0);
         }
