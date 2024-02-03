@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.drive.Robot;
+import org.firstinspires.ftc.teamcode.drive.RoboticaBot;
 import org.firstinspires.ftc.teamcode.opmode.components.Component;
 import org.firstinspires.ftc.teamcode.opmode.components.GoToBoard;
 import org.firstinspires.ftc.teamcode.opmode.components.ParkingIn;
@@ -84,6 +85,9 @@ public class TestAuto extends LinearOpMode {
         }
 
         if (startPose == null) return;
+        if (robot.getClass() == RoboticaBot.class) {
+            startPose = new Pose2d(startPose.getX(), startPose.getY(), startPose.getHeading() + Math.toRadians(180));
+        }
         robot.getDrive().setPoseEstimate(startPose);
 
         if (!config.tensorFlowInInit || tensorPos == null) {
