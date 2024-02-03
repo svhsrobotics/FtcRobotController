@@ -57,6 +57,7 @@ public class PsiBot extends Robot {
     public final Servo purpleServo;
     public final Servo planeServo;
     public final DcMotor armMotor;
+    public final Servo mosaicServo;
 
     public PsiBot(HardwareMap hardwareMap) {
         super(hardwareMap);
@@ -68,6 +69,7 @@ public class PsiBot extends Robot {
         purpleServo = hardwareMap.get(Servo.class, "purple");
         planeServo = hardwareMap.get(Servo.class, "plane");
         armMotor = hardwareMap.get(DcMotor.class, "arm");
+        mosaicServo = hardwareMap.get(Servo.class, "mosaic");
 
         armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);

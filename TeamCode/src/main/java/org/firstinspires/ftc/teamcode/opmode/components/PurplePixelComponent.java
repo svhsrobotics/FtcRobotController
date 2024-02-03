@@ -59,7 +59,7 @@ public class PurplePixelComponent extends Component {
         } else {
             if (moveTowardsCenter) {
                 trajB.turn(Math.toRadians(180))
-                        .forward(-13 * driveBackwards);
+                        .forward(-16 * driveBackwards);
             } else {
                 trajB.forward(10 * driveBackwards);
             }
@@ -78,5 +78,6 @@ public class PurplePixelComponent extends Component {
 
         TrajectorySequence traj = trajB.build();
         getRobot().getDrive().followTrajectorySequence(traj);
+        getRobot().dropPurplePixel(false);
     }
 }

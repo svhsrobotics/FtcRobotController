@@ -3,7 +3,9 @@ package org.firstinspires.ftc.teamcode.opmode;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.teamcode.drive.PsiBot;
 import org.firstinspires.ftc.teamcode.drive.Robot;
 import org.firstinspires.ftc.teamcode.opmode.components.Component;
 import org.firstinspires.ftc.teamcode.opmode.components.GoToBoard;
@@ -34,6 +36,11 @@ public class TestAuto extends LinearOpMode {
     }
 
     private TensorFlowDetection.PropPosition detectProp(Robot robot, int timeout) {
+        if (robot.getClass() == PsiBot.class) {
+            ((PsiBot) robot).armMotor.setTargetPosition(-109);
+            ((PsiBot) robot).armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            ((PsiBot) robot).armMotor.setPower(.1);
+        }
         TensorFlowDetection tensor = new TensorFlowDetection(robot.getPrimaryCamera().webcamName);
         TensorFlowDetection.PropPosition position = tensor.getPropPosition(new Timeout(timeout));
         if (position == null) {
@@ -61,6 +68,7 @@ public class TestAuto extends LinearOpMode {
             startPose = estimateWithAllCameras(robot.getCameras(), aprilTag);
             telemetry.log().add("AprilTag found: " + startPose);
         }
+
 
         TensorFlowDetection.PropPosition tensorPos = null;
         if (config.tensorFlowInInit && startPose != null) {
@@ -95,7 +103,7 @@ public class TestAuto extends LinearOpMode {
         List<Component> componentList = new ArrayList<>();
 
         if (config.placePixel) {
-            componentList.add(new PurplePixelComponent(robot, tensorPos, Objects.equals(config.park, "inner")));
+            componentList.add(new PurplePixelComponent(robot, tensorPos, Objects.equals(config.park, "inner") || Objects.equals(config.park, "board")));
         }
 
         switch (config.park) {
@@ -113,6 +121,7 @@ public class TestAuto extends LinearOpMode {
         for (Component component : componentList) {
             component.drive();
         }
+
 
     }
 

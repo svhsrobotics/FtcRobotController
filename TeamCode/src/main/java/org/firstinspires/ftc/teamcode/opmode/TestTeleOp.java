@@ -24,7 +24,7 @@ public class TestTeleOp extends LinearOpMode {
 
         waitForStart();
 
-        double purplePose = 0;
+        double purplePose = .5;
 
         while (opModeIsActive()) {
             drive.update(); // MUST be called every loop cycle so that RoadRunner calculates the pose correctly
@@ -55,13 +55,23 @@ public class TestTeleOp extends LinearOpMode {
             telemetry.addData("AT Pose", pose);
 
             if (robot.getClass() == PsiBot.class) {
-               // purplePose = purplePose + (gamepad1.left_trigger * 0.1) - (gamepad1.right_trigger * 0.1);
+
+                if (gamepad1.left_bumper) {
+                    purplePose = purplePose + 0.1;
+                } else if (gamepad1.right_bumper) {
+                    purplePose = purplePose - 0.1;
+                }
                 if (purplePose > 1) purplePose = 1;
                 if (purplePose < 0) purplePose = 0;
                 ((PsiBot) robot).planeServo.setPosition(purplePose);
                 telemetry.addData("Plane Pose", purplePose);
                 ((PsiBot) robot).armMotor.setPower((gamepad1.left_trigger*0.1)-((gamepad1.right_trigger*0.1)));
                 telemetry.addData("Arm location", ((PsiBot) robot).armMotor.getCurrentPosition());
+               if (gamepad1.b) {
+                   ((PsiBot) robot).mosaicServo.setPosition(0);
+               } else if (gamepad1.a) {
+                   ((PsiBot) robot).mosaicServo.setPosition(1);
+               }
             }
 
             telemetry.update();
