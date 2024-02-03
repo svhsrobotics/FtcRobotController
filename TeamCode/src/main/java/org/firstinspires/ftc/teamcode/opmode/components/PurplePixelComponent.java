@@ -1,22 +1,26 @@
 package org.firstinspires.ftc.teamcode.opmode.components;
 
+import static org.firstinspires.ftc.teamcode.util.Units.fi;
+
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 
 import org.firstinspires.ftc.teamcode.drive.Robot;
-import org.firstinspires.ftc.teamcode.drive.TrajectoryDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceBuilder;
 import org.firstinspires.ftc.teamcode.vision.TensorFlowDetection;
 
 public class PurplePixelComponent extends Component {
-    Vector2d RED_AUDIENCE_TAPE_MARKS = new Vector2d(-3 * 12, -2 * 12 - 12);
+    Vector2d RED_AUDIENCE_TAPE_MARKS = new Vector2d(fi(-3,0), fi(-3,0));
     Vector2d BLUE_AUDIENCE_TAPE_MARKS = new Vector2d(-3 * 12, 2 * 12 + 12);
-    Vector2d RED_BOARD_TAPE_MARKS = new Vector2d(12, -2 * 12 - 12);
+    Vector2d RED_BOARD_TAPE_MARKS = new Vector2d(fi(1,0), fi(-3,0));
     Vector2d BLUE_BOARD_TAPE_MARKS = new Vector2d(12, 2 * 12 + 12);
     private final TensorFlowDetection.PropPosition propPosition;
-    public PurplePixelComponent(Robot robot, TensorFlowDetection.PropPosition propPosition) {
+    private final boolean moveTowardsCenter;
+
+    public PurplePixelComponent(Robot robot, TensorFlowDetection.PropPosition propPosition, boolean moveTowardsCenter) {
         super(robot);
         this.propPosition = propPosition;
+        this.moveTowardsCenter = moveTowardsCenter;
     }
 
     private Vector2d currentTapeMarks() {
@@ -53,20 +57,23 @@ public class PurplePixelComponent extends Component {
             trajB.turn(Math.toRadians(-90))
                     .forward(12 * driveBackwards);
         } else {
-            trajB.turn(Math.toRadians(180))
-                    .forward(-14 * driveBackwards);
+            if (moveTowardsCenter) {
+                trajB.turn(Math.toRadians(180))
+                        .forward(-13 * driveBackwards);
+            } else {
+                trajB.forward(10 * driveBackwards);
+            }
         }
 
-        trajB.addTemporalMarker(() -> getRobot().dropPurplePixel(true))
+        trajB.waitSeconds(1)
+                .addTemporalMarker(() -> getRobot().dropPurplePixel(true))
                 .waitSeconds(2);
 
-        // If this is the CENTER line, don't bother going back to the tape marks center (audience only)
-        // (would end up moving the pixel)
-        if (propPosition != TensorFlowDetection.PropPosition.CENTER && (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.BLUE_BOARD || getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.RED_BOARD )) {
-            trajB.lineTo(currentTapeMarks());
+        //if (propPosition == TensorFlowDetection.PropPosition.CENTER && (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.BLUE_AUDIENCE || getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.RED_AUDIENCE )) {
+        if (moveTowardsCenter && propPosition == TensorFlowDetection.PropPosition.CENTER) {
+            trajB.forward(-12);
         } else {
-            // CENTER AUDIENCE special case
-            // TODO: BACK UP HERE
+            trajB.lineTo(currentTapeMarks());
         }
 
         TrajectorySequence traj = trajB.build();

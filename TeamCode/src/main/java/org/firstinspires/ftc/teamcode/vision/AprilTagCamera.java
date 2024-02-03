@@ -45,18 +45,18 @@ public class AprilTagCamera {
      * @return translated Pose2d
      */
     public Pose2d translatePose(Pose2d inputPose) {
-        // 6.5: Distance from left camera to center of robot
+        // 6.5: Distance from left camera to center of robot (now 6)
         // -6.5: Distance from right camera to center of robot
-        // 5: distance from center of robot to cameras (forward)
+        // 5: distance from center of robot to cameras (forward) (now 9)
         switch (AprilTagLocalizer.whichQuadrant(inputPose)) {
             case RED_AUDIENCE:
-                return new Pose2d(inputPose.getX() + 6.5, inputPose.getY() - 5, Math.toRadians(90));
+                return new Pose2d(inputPose.getX() + 6, inputPose.getY() - 9, Math.toRadians(90));
             case RED_BOARD:
-                return new Pose2d(inputPose.getX() - 6.5, inputPose.getY() - 5, Math.toRadians(90));
+                return new Pose2d(inputPose.getX() - 6, inputPose.getY() - 9, Math.toRadians(90));
             case BLUE_AUDIENCE:
-                return new Pose2d(inputPose.getX() + 6.5, inputPose.getY() + 5, Math.toRadians(270));
+                return new Pose2d(inputPose.getX() + 6, inputPose.getY() + 9, Math.toRadians(270));
             case BLUE_BOARD:
-                return new Pose2d(inputPose.getX() - 6.5, inputPose.getY() + 5, Math.toRadians(270));
+                return new Pose2d(inputPose.getX() - 6, inputPose.getY() + 9, Math.toRadians(270));
         }
         return null;
     }

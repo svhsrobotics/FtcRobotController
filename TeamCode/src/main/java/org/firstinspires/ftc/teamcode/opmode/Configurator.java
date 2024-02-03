@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.opmode;
 
-import android.util.Log;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -13,7 +11,6 @@ import org.firstinspires.ftc.teamcode.util.Debouncer;
 import org.firstinspires.ftc.teamcode.util.Toggle;
 
 import java.io.File;
-import java.util.Objects;
 
 @TeleOp
 
@@ -58,10 +55,11 @@ public class Configurator extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         waitForStart();
-        telemetry.addData("CONTROLS", "A: place pixel toggle \nB: inner park \nY: outer park \nX: board park \ndpad_down: no park \ndpad_up: field centric toggle");
+        //telemetry.addData("CONTROLS", "A: place pixel toggle \nB: inner park \nY: outer park \nX: board park \ndpad_down: no park \ndpad_up: field centric toggle");
 
         Toggle purpleToggle = new Toggle();
         Toggle fieldCentricToggle = new Toggle();
+        Toggle tensorflowToggle = new Toggle();
         Debouncer innerPark = new Debouncer();
         Debouncer outerPark = new Debouncer();
         Debouncer placePixel = new Debouncer();
@@ -73,6 +71,7 @@ public class Configurator extends LinearOpMode {
 
         purpleToggle.state = config.placePixel;
         fieldCentricToggle.state = config.fieldCentric;
+        tensorflowToggle.state = config.tensorFlowInInit;
 
 //        Toggle innerParkToggle = new Toggle();
 //        Toggle outerParkToggle = new Toggle();
@@ -80,30 +79,31 @@ public class Configurator extends LinearOpMode {
 
         while (!isStopRequested()) {
             purpleToggle.update(gamepad1.a);
-
-            telemetry.addData("purple pixel", purpleToggle.state);
-
+            telemetry.addData("purple pixel (A)", purpleToggle.state);
             config.placePixel = purpleToggle.state;
 
-            fieldCentricToggle.update(gamepad1.dpad_up);
 
-            telemetry.addData("field centric", fieldCentricToggle.state);
+            tensorflowToggle.update(gamepad1.b);
+            telemetry.addData("TensorFlow in init (B)", tensorflowToggle.state);
+            config.tensorFlowInInit = tensorflowToggle.state;
 
+            fieldCentricToggle.update(gamepad1.x);
+            telemetry.addData("field centric (X)", fieldCentricToggle.state);
             config.fieldCentric = fieldCentricToggle.state;
 
             if (config.placePixel) {
 
-                if (innerPark.update(gamepad1.b)) {
+                if (innerPark.update(gamepad1.dpad_up)) {
                     config.park = "inner";
-                } else if (outerPark.update(gamepad1.y)) {
+                } else if (outerPark.update(gamepad1.dpad_down)) {
                     config.park = "outer";
-                } else if (placePixel.update(gamepad1.x)) {
+                } else if (placePixel.update(gamepad1.dpad_right)) {
                     config.park = "board";
-                } else if (gamepad1.dpad_down) {
+                } else if (gamepad1.dpad_left) {
                     config.park = "none";
                 }
 
-                telemetry.addData("park", config.park);
+                telemetry.addData("park (dpad)", config.park);
             } else {
                 config.park = "none";
             }

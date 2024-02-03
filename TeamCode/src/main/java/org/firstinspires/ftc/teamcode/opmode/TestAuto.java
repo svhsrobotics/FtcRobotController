@@ -44,6 +44,7 @@ public class TestAuto extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         GlobalOpMode.opMode = this;
         Robot robot = Robot.thisRobot(hardwareMap);
+        Configuration config = Configurator.load();
 
         //Pose2d startPose = new Pose2d(12,-62, Math.toRadians(90)); // RED_BOARD
         //Pose2d startPose = new Pose2d(-36,-62, Math.toRadians(270)); // RED_AUDIENCE
@@ -63,7 +64,11 @@ public class TestAuto extends LinearOpMode {
             telemetry.log().add("Found AprilTag");
         }
 
-        //waitForStart();
+        // If we're not doing TensorFlow in init, just wait for start here
+        if (!config.tensorFlowInInit) {
+            waitForStart();
+            if (isStopRequested()) return;
+        }
 
         // We didn't find one in init... try once more in start, then give up
         if (startPose == null) {
@@ -87,20 +92,22 @@ public class TestAuto extends LinearOpMode {
         aprilTag.close();
         // use the center camera
         TensorFlowDetection tensor = new TensorFlowDetection(robot.getPrimaryCamera().webcamName);
-        tensorPos = tensor.getPropPosition(new Timeout(10));
+        tensorPos = tensor.getPropPosition(new Timeout(5));
         telemetry.log().add("Tensorflow detected: " + tensorPos);
         if (tensorPos == null) {
-            telemetry.log().add("Unable to detect prop");
+            telemetry.log().add("Unable to detect prop, using CENTER");
             tensorPos = TensorFlowDetection.PropPosition.CENTER;
         }
 
-        waitForStart(); // INCORRECT
-        if (isStopRequested()) return;
+        // FOR DEBUGGING ONLY
+        if (config.tensorFlowInInit) {
+            waitForStart();
+            if (isStopRequested()) return;
+        }
 
         List<Component> componentList = new ArrayList<>();
-        Configuration config = Configurator.load();
         if (config.placePixel) {
-            componentList.add(new PurplePixelComponent(robot, tensorPos));
+            componentList.add(new PurplePixelComponent(robot, tensorPos, Objects.equals(config.park, "inner")));
         }
         if (Objects.equals(config.park, "outer")) {
             componentList.add(new ParkingOut(robot));
