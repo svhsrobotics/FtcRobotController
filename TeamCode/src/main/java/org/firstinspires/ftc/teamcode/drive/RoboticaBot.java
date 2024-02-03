@@ -56,9 +56,9 @@ public class RoboticaBot extends Robot {
     public RoboticaBot(HardwareMap hardwareMap) {
         super(hardwareMap);
         cameras = new AprilTagCamera[3];
-        cameras[0] = new AprilTagCamera(hardwareMap.get(WebcamName.class, "Left"), 5.5, -8);
+        cameras[0] = new AprilTagCamera(hardwareMap.get(WebcamName.class, "Left"), 5.5, -5.5);
         cameras[1] = new AprilTagCamera(hardwareMap.get(WebcamName.class, "Center"), 0, 0);
-        cameras[2] = new AprilTagCamera(hardwareMap.get(WebcamName.class, "Right"), 5.5, 8);
+        cameras[2] = new AprilTagCamera(hardwareMap.get(WebcamName.class, "Right"), 5.5, 5.5);
 
 
         purpleServo = hardwareMap.get(Servo.class, "purple");
