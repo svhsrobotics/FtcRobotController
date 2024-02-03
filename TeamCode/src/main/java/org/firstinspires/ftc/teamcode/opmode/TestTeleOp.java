@@ -31,7 +31,6 @@ public class TestTeleOp extends LinearOpMode {
             ((RoboticaBot) robot).initializeIntakeSystem();
         }
 
-        double purplePose = 0;
         double wristPose = 0;
         Debouncer iDebouncer = new Debouncer();
         double purplePose = .5;
