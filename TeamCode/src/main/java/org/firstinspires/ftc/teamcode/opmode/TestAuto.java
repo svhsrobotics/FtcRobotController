@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.drive.PsiBot;
 import org.firstinspires.ftc.teamcode.drive.Robot;
+import org.firstinspires.ftc.teamcode.drive.RoboticaBot;
 import org.firstinspires.ftc.teamcode.opmode.components.Component;
 import org.firstinspires.ftc.teamcode.opmode.components.GoToBoard;
 import org.firstinspires.ftc.teamcode.opmode.components.ParkingIn;
@@ -84,6 +85,7 @@ public class TestAuto extends LinearOpMode {
         waitForStart();
         if (isStopRequested()) {
             android.util.Log.d("AUTO", "STOP requested after waitForStart(), returning early");
+            return;
         }
 
         if (startPose == null) {
@@ -92,6 +94,9 @@ public class TestAuto extends LinearOpMode {
         }
 
         if (startPose == null) return;
+        if (robot.getClass() == RoboticaBot.class) {
+            startPose = new Pose2d(startPose.getX(), startPose.getY(), startPose.getHeading() + Math.toRadians(180));
+        }
         robot.getDrive().setPoseEstimate(startPose);
 
         if (!config.tensorFlowInInit || tensorPos == null) {
