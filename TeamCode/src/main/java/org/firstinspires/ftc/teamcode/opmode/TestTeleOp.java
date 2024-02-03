@@ -7,7 +7,9 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.drive.PsiBot;
 import org.firstinspires.ftc.teamcode.drive.Robot;
+import org.firstinspires.ftc.teamcode.drive.RoboticaBot;
 import org.firstinspires.ftc.teamcode.drive.TrajectoryDrive;
+import org.firstinspires.ftc.teamcode.util.Debouncer;
 import org.firstinspires.ftc.teamcode.util.GlobalOpMode;
 import org.firstinspires.ftc.teamcode.vision.AprilTagLocalizer;
 
@@ -21,10 +23,16 @@ public class TestTeleOp extends LinearOpMode {
         TrajectoryDrive drive = robot.getDrive();
         Configuration config = Configurator.load();
 
-
         waitForStart();
 
+        if (robot.getClass() == RoboticaBot.class) {
+            ///((RoboticaBot) robot).extendIntake(true);
+            ((RoboticaBot) robot).initializeIntakeSystem();
+        }
+
         double purplePose = 0;
+        double wristPose = 0;
+        Debouncer iDebouncer = new Debouncer();
 
         while (opModeIsActive()) {
             drive.update(); // MUST be called every loop cycle so that RoadRunner calculates the pose correctly
@@ -51,8 +59,8 @@ public class TestTeleOp extends LinearOpMode {
 
             telemetry.addData("Current Quadrant", drive.currentQuadrant().toString());
 
-            Pose2d pose = localizer.estimateRobotPoseFromAprilTags(robot.getPrimaryCamera());
-            telemetry.addData("AT Pose", pose);
+            //Pose2d pose = localizer.estimateRobotPoseFromAprilTags(robot.getPrimaryCamera());
+            //telemetry.addData("AT Pose", pose);
 
             if (robot.getClass() == PsiBot.class) {
                // purplePose = purplePose + (gamepad1.left_trigger * 0.1) - (gamepad1.right_trigger * 0.1);
@@ -62,6 +70,35 @@ public class TestTeleOp extends LinearOpMode {
                 telemetry.addData("Plane Pose", purplePose);
                 ((PsiBot) robot).armMotor.setPower((gamepad1.left_trigger*0.1)-((gamepad1.right_trigger*0.1)));
                 telemetry.addData("Arm location", ((PsiBot) robot).armMotor.getCurrentPosition());
+            } else if (robot.getClass() == RoboticaBot.class) {
+                RoboticaBot rrobot = (RoboticaBot) robot;
+                if (iDebouncer.update(gamepad1.a)) {
+                     rrobot.readyForIntake();
+                }
+
+                //rrobot.armMotor.setPower((gamepad1.left_trigger*0.5)-((gamepad1.right_trigger*0.5)));
+
+//                if (gamepad1.dpad_up) {
+//                    rrobot.intakeMotor.setPower(0.4);
+//                } else if (gamepad1.dpad_down) {
+//                    rrobot.intakeMotor.setPower(-0.4);
+//                } else {
+//                    rrobot.intakeMotor.setPower(0);
+//                }
+
+//                if (gamepad1.dpad_left) {
+//                    wristPose += 0.05;
+//                } else if (gamepad1.dpad_right) {
+//                    wristPose -= 0.05;
+//                }
+//                if (wristPose < 0) wristPose = 0;
+//                if (wristPose > 1) wristPose = 1;
+//                rrobot.wristServo.setPosition(wristPose);
+                //telemetry.addData("Wrist Pose", wristPose);
+
+                telemetry.addData("Arm Pose", rrobot.armMotor.getCurrentPosition());
+                telemetry.addData("Extend Amount", rrobot.intakeServo.getAdjustedPosition());
+
             }
 
             telemetry.update();
