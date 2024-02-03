@@ -33,9 +33,9 @@ public class TestAuto extends LinearOpMode {
         return pose;
     }
 
-    private TensorFlowDetection.PropPosition detectProp(Robot robot) {
+    private TensorFlowDetection.PropPosition detectProp(Robot robot, int timeout) {
         TensorFlowDetection tensor = new TensorFlowDetection(robot.getPrimaryCamera().webcamName);
-        TensorFlowDetection.PropPosition position = tensor.getPropPosition(new Timeout(5));
+        TensorFlowDetection.PropPosition position = tensor.getPropPosition(new Timeout(timeout));
         if (position == null) {
             telemetry.log().add("Unable to detect prop, using CENTER");
             position = TensorFlowDetection.PropPosition.CENTER;
@@ -66,12 +66,17 @@ public class TestAuto extends LinearOpMode {
         if (config.tensorFlowInInit && startPose != null) {
             telemetry.log().add("Running TensorFlow in INIT: FOR DEBUGGING ONLY");
 
-            tensorPos = detectProp(robot);
+            aprilTag.close();
+
+            tensorPos = detectProp(robot, 30);
             telemetry.log().add("Tensorflow detected: " + tensorPos);
         }
 
+        android.util.Log.i("AUTO", "Waiting for start...");
         waitForStart();
-        if (isStopRequested()) return;
+        if (isStopRequested()) {
+            android.util.Log.d("AUTO", "STOP requested after waitForStart(), returning early");
+        }
 
         if (startPose == null) {
             telemetry.log().add("Trying to find AprilTag again");
@@ -82,7 +87,8 @@ public class TestAuto extends LinearOpMode {
         robot.getDrive().setPoseEstimate(startPose);
 
         if (!config.tensorFlowInInit || tensorPos == null) {
-            tensorPos = detectProp(robot);
+            aprilTag.close();
+            tensorPos = detectProp(robot, 5);
             telemetry.log().add("Tensorflow detected: " + tensorPos);
         }
 

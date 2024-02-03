@@ -21,6 +21,7 @@ public class TestTeleOp extends LinearOpMode {
         TrajectoryDrive drive = robot.getDrive();
         Configuration config = Configurator.load();
 
+
         waitForStart();
 
         double purplePose = 0;
@@ -54,11 +55,13 @@ public class TestTeleOp extends LinearOpMode {
             telemetry.addData("AT Pose", pose);
 
             if (robot.getClass() == PsiBot.class) {
-                purplePose = purplePose + (gamepad1.left_trigger * 0.1) - (gamepad1.right_trigger * 0.1);
+               // purplePose = purplePose + (gamepad1.left_trigger * 0.1) - (gamepad1.right_trigger * 0.1);
                 if (purplePose > 1) purplePose = 1;
                 if (purplePose < 0) purplePose = 0;
                 ((PsiBot) robot).planeServo.setPosition(purplePose);
                 telemetry.addData("Plane Pose", purplePose);
+                ((PsiBot) robot).armMotor.setPower((gamepad1.left_trigger*0.1)-((gamepad1.right_trigger*0.1)));
+                telemetry.addData("Arm location", ((PsiBot) robot).armMotor.getCurrentPosition());
             }
 
             telemetry.update();

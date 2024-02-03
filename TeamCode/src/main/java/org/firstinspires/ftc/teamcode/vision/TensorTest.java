@@ -10,7 +10,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 
 @Autonomous
 @Config
-@Disabled
+
 public class TensorTest extends LinearOpMode {
 
 
