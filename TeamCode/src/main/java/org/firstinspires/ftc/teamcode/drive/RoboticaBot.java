@@ -191,4 +191,23 @@ public class RoboticaBot extends Robot {
         wristServo.setPosition(0.85);
         intakeServo.setAdjustedPosition(-950, 0.1);
     }
+
+    public void dropOff() {
+        intakeServo.setAdjustedPosition(-1350, 0.1);
+        armMotor.setTargetPosition(100);
+        armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        armMotor.setPower(0.1);
+        while (armMotor.getCurrentPosition() < 90) {
+            GlobalOpMode.opMode.sleep(100);
+        }
+        wristServo.setPosition(0.5);
+        // Raise the arm the rest of the way around
+        armMotor.setTargetPosition(300);
+        armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        armMotor.setPower(0.1);
+        while (armMotor.getCurrentPosition() < 290) {
+            GlobalOpMode.opMode.sleep(100);
+        }
+        wristServo.setPosition(0);
+    }
 }
