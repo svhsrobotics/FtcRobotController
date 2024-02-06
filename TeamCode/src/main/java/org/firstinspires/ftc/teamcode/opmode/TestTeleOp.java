@@ -12,7 +12,6 @@ import org.firstinspires.ftc.teamcode.drive.RoboticaBot;
 import org.firstinspires.ftc.teamcode.drive.TrajectoryDrive;
 import org.firstinspires.ftc.teamcode.util.Debouncer;
 import org.firstinspires.ftc.teamcode.util.GlobalOpMode;
-import org.firstinspires.ftc.teamcode.vision.AprilTagLocalizer;
 
 @TeleOp
 public class TestTeleOp extends LinearOpMode {
@@ -20,7 +19,7 @@ public class TestTeleOp extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         GlobalOpMode.opMode = this;
         Robot robot = Robot.thisRobot(hardwareMap);
-        AprilTagLocalizer localizer = new AprilTagLocalizer(robot.getCameras());
+        //AprilTagLocalizer localizer = new AprilTagLocalizer(robot.getCameras());
         TrajectoryDrive drive = robot.getDrive();
         Configuration config = Configurator.load();
 
@@ -108,22 +107,24 @@ public class TestTeleOp extends LinearOpMode {
                 android.util.Log.i("TELEOP", "LOOP2B");
 
                 if (gamepad1.left_trigger > 0.1) {
-                    armPos += (int)(gamepad1.left_trigger * 10);
+                    armPos = rrobot.armMotor.getCurrentPosition() + (int)(gamepad1.left_trigger * 40);
                 } else if (gamepad1.right_trigger > 0.1) {
-                    armPos -= (int)(gamepad1.right_trigger * 10);
+                    armPos = rrobot.armMotor.getCurrentPosition() - (int)(gamepad1.right_trigger * 40);
+                } else {
+                    armPos = rrobot.armMotor.getCurrentPosition();
                 }
 
                 rrobot.armMotor.setTargetPosition(armPos);
                 rrobot.armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                rrobot.armMotor.setPower(0.2);
+                rrobot.armMotor.setPower(0.3);
 
 
                 //rrobot.armMotor.setPower((gamepad1.left_trigger*0.5)-((gamepad1.right_trigger*0.5)));
 
                 if (gamepad1.dpad_up) {
-                    rrobot.intakeMotor.setPower(0.4);
+                    rrobot.intakeMotor.setPower(1);
                 } else if (gamepad1.dpad_down) {
-                    rrobot.intakeMotor.setPower(-0.4);
+                    rrobot.intakeMotor.setPower(-1);
                 } else {
                     rrobot.intakeMotor.setPower(0);
                 }
@@ -132,9 +133,9 @@ public class TestTeleOp extends LinearOpMode {
 
 
                 if (gamepad1.left_bumper) {
-                    wristPose += 0.005;
+                    wristPose += 0.025;
                 } else if (gamepad1.right_bumper) {
-                    wristPose -= 0.005;
+                    wristPose -= 0.025;
                 }
                 if (wristPose < 0) wristPose = 0;
                 if (wristPose > 1) wristPose = 1;
@@ -152,9 +153,9 @@ public class TestTeleOp extends LinearOpMode {
 
                 rrobot.intakeServo.innerServo.setPower(p);
 
-                if (gamepad1.x) {
+                if (gamepad1.x || gamepad2.x) {
                     rrobot.hangMotor.setPower(1);
-                } else if (gamepad1.y) {
+                } else if (gamepad1.y || gamepad2.y) {
                     rrobot.hangMotor.setPower(-1);
                 } else {
                     rrobot.hangMotor.setPower(0);

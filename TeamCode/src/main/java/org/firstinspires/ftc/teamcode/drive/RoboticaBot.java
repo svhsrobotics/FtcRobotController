@@ -177,7 +177,7 @@ public class RoboticaBot extends Robot {
             GlobalOpMode.opMode.sleep(100);
         }
         //extendIntake(true);
-        intakeServo.setAdjustedPosition(-1350, 0.1);
+        //intakeServo.setAdjustedPosition(-1350, 0.1);
     }
 
     public void readyForIntake() {
