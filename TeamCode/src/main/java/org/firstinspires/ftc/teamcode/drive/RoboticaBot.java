@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.drive;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
@@ -55,11 +56,11 @@ public class RoboticaBot extends Robot {
     private final AprilTagCamera[] cameras;
 
     private final Servo purpleServo;
-    public final DcMotor armMotor;
+    public final DcMotorEx armMotor;
     public final Servo wristServo;
     public final AxonServo intakeServo;
     public final Servo droneServo;
-    public final DcMotor hangMotor;
+    public final DcMotorEx hangMotor;
     public final DcMotor intakeMotor;
 
     public RoboticaBot(HardwareMap hardwareMap) {
@@ -71,13 +72,13 @@ public class RoboticaBot extends Robot {
 
 
         purpleServo = hardwareMap.get(Servo.class, "purple");
-        armMotor = hardwareMap.get(DcMotor.class, "arm");
+        armMotor = hardwareMap.get(DcMotorEx.class, "arm");
         armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         wristServo = hardwareMap.get(Servo.class, "cup_pivot");
         intakeServo = new AxonServo("intake_servo", "intake_analog_2", hardwareMap);
         droneServo = hardwareMap.get(Servo.class, "drone");
-        hangMotor = hardwareMap.get(DcMotor.class, "hang");
+        hangMotor = hardwareMap.get(DcMotorEx.class, "hang");
         intakeMotor = hardwareMap.get(DcMotor.class, "intake");
 
         // TODO: Reverse Motors, encoders & such
