@@ -1,8 +1,13 @@
 package org.firstinspires.ftc.teamcode.drive.tuning;
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+
+import org.firstinspires.ftc.teamcode.drive.Robot;
+import org.firstinspires.ftc.teamcode.drive.TrajectoryDrive;
 
 //import org.firstinspires.ftc.teamcode.drive.panthera.PantheraDrive;
 
@@ -14,32 +19,34 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
  * encoder localizer heading may be significantly off if the track width has not been tuned).
  */
 @TeleOp(group = "drive")
-@Disabled
 public class LocalizationTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-//        PantheraDrive drive = new PantheraDrive(hardwareMap);
-//
-//        drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//
-//        waitForStart();
-//
-//        while (!isStopRequested()) {
-//            drive.setWeightedDrivePower(
-//                    new Pose2d(
-//                            -gamepad1.left_stick_y,
-//                            -gamepad1.left_stick_x,
-//                            -gamepad1.right_stick_x
-//                    )
-//            );
-//
-//            drive.update();
-//
-//            Pose2d poseEstimate = drive.getPoseEstimate();
-//            telemetry.addData("x", poseEstimate.getX());
-//            telemetry.addData("y", poseEstimate.getY());
-//            telemetry.addData("heading", poseEstimate.getHeading());
-//            telemetry.update();
-//        }
+        Robot robot = Robot.thisRobot(hardwareMap);
+
+        TrajectoryDrive drive = robot.getDrive();
+        //PantheraDrive drive = new PantheraDrive(hardwareMap);
+
+        drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        waitForStart();
+
+        while (!isStopRequested()) {
+            drive.setWeightedDrivePower(
+                    new Pose2d(
+                            -gamepad1.left_stick_y,
+                            -gamepad1.left_stick_x,
+                            -gamepad1.right_stick_x
+                    )
+            );
+
+            drive.update();
+
+            Pose2d poseEstimate = drive.getPoseEstimate();
+            telemetry.addData("x", poseEstimate.getX());
+            telemetry.addData("y", poseEstimate.getY());
+            telemetry.addData("heading", poseEstimate.getHeading());
+            telemetry.update();
+        }
     }
 }

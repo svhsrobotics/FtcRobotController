@@ -38,7 +38,7 @@ public class PsiBot extends Robot {
     public static double GEAR_RATIO = 1;
     public static double WHEEL_RADIUS = 1.8898;
 //    public static double MAX_VEL = ((MAX_RPM / 60) * GEAR_RATIO * WHEEL_RADIUS * 2 * Math.PI) * 0.85;
-    public static double MAX_VEL = 73.17330064499293;
+    public static double MAX_VEL = 30;
 
     public static double MAX_ACCEL = MAX_VEL;
 //    public static double MAX_ANG_ACCEL = Math.toRadians(80.66924999999999);
@@ -49,23 +49,26 @@ public class PsiBot extends Robot {
 //    public static double TRACK_WIDTH = 15.96;
     public static double TRACK_WIDTH = 16.25;
 
-//    public static double kV = 0.014129716300132542;
-     public static double kV = 0.01161656;
+   // public static double kV = 0.014129716300132542;
+     //public static double kV = 1/(MAX_VEL * GEAR_RATIO * 2 * Math.PI * WHEEL_RADIUS/60.0);
+    public static double kV = 0.0145;
 
 //    public static double kA = 0.0032;
-    public static double kA = 0;
+    public static double kA = 0.003;
     public static double kStatic = 0;
     public static double DW_TICKS_PER_REV = 2048;
     public static double DW_WHEEL_RADIUS = 0.944882; // in
     public static double DW_GEAR_RATIO = 1; // output (wheel) speed / input (encoder) speed
 
-    public static double LATERAL_DISTANCE = 8; // in; distance between the left and right wheels
+    public static double LATERAL_DISTANCE = 8.128; // in; distance between the left and right wheels
     //public static double FORWARD_OFFSET = -6.5; // in; offset of the lateral wheel
     public static double FORWARD_OFFSET = -7.5;
 
     private Encoder leftEncoder, rightEncoder, frontEncoder;
-    public static double X_MULTIPLIER = 88.6/90; // Multiplier in the X direction
-    public static double Y_MULTIPLIER = 88.1/90; // Multiplier in the Y direction
+    public static double X_MULTIPLIER = 96.0/94.8; // Multiplier in the X direction
+    // BAD: 92.8 93.3 92.9
+    public static double Y_MULTIPLIER = 96.0/89.2; // Multiplier in the Y direction
+    // BAD: 87.8 87.2 87.8
 
     public final Servo purpleServo;
     public final Servo planeServo;

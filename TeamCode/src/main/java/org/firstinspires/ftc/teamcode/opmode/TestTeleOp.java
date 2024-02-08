@@ -43,7 +43,7 @@ public class TestTeleOp extends LinearOpMode {
 
         while (opModeIsActive()) {
             android.util.Log.i("TELEOP", "LOOP");
-            //drive.update(); // MUST be called every loop cycle so that RoadRunner calculates the pose correctly
+            drive.update(); // MUST be called every loop cycle so that RoadRunner calculates the pose correctly
             android.util.Log.i("TELEOP", "LOOPA");
 
             Pose2d poseEstimate = drive.getPoseEstimate();
@@ -63,7 +63,7 @@ public class TestTeleOp extends LinearOpMode {
                 android.util.Log.i("TELEOP", "LOOPB");
 
             } else {
-                drive.setWeightedDrivePower(new Pose2d(-gamepad2.left_stick_y * 0.5, -gamepad2.left_stick_x * 0.5, -gamepad2.right_stick_x * 0.5));
+                drive.setWeightedDrivePower(new Pose2d(-gamepad1.left_stick_y * 0.5, -gamepad1.left_stick_x * 0.5, -gamepad1.right_stick_x * 0.5));
                 android.util.Log.i("TELEOP", "LOOPC");
 
             }
