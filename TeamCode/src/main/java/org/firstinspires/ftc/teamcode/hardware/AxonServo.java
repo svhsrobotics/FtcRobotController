@@ -4,6 +4,9 @@ import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.CRServo;
 
+import org.firstinspires.ftc.teamcode.util.GlobalOpMode;
+import org.firstinspires.ftc.teamcode.util.Timeout;
+
 public class AxonServo {
     public CRServo innerServo;
     public AnalogInput innerAnalog;
@@ -15,15 +18,16 @@ public class AxonServo {
         private int count = 0;
 
         public void run() {
+            android.util.Log.w("AXON_THREAD", "Starting thread");
             double lastPosition = getCurrentPosition();
             while (true) {
-                android.util.Log.w("AXON_THREAD", "LOOP");
+                //android.util.Log.w("AXON_THREAD", "LOOP");
                 double currentPosition = getCurrentPosition();
-                // Negative wrap-around from 360 -> 0
+                // Positive wrap-around from 0 -> 360
                 if (currentPosition > 180 && lastPosition < 180 && innerServo.getPower() > 0) {
                     count--;
                 }
-                // Positive wrap-around from 0 -> 360
+                // Negative wrap-around from 360 -> 0
                 if (currentPosition < 180 && lastPosition > 180 && innerServo.getPower() < 0) {
                     count++;
                 }
@@ -50,6 +54,27 @@ public class AxonServo {
 
     public double getAdjustedPosition() {
         return getCurrentPosition() + counter.getCount() * 360;
+    }
+
+    public void setAdjustedPosition(double position, double power) {
+        Timeout timeout = new Timeout(5); // 5 sec max on all operations
+        if (getAdjustedPosition() < position) {
+            this.innerServo.setPower(-power);
+            while (getAdjustedPosition() < position && !GlobalOpMode.opMode.isStopRequested() && !timeout.expired()) {
+                //GlobalOpMode.opMode.telemetry.addData("Extender Axon Servo Position", getAdjustedPosition());
+                //GlobalOpMode.opMode.telemetry.update();
+                //GlobalOpMode.opMode.sleep(1);
+            }
+        } else if (getAdjustedPosition() > position) {
+            this.innerServo.setPower(power);
+            while (getAdjustedPosition() > position && !GlobalOpMode.opMode.isStopRequested() && !timeout.expired()) {
+                //GlobalOpMode.opMode.telemetry.addData("Extender Axon Servo Position", getAdjustedPosition());
+                //GlobalOpMode.opMode.telemetry.update();
+                //GlobalOpMode.opMode.sleep(1);
+            }
+        }
+        this.innerServo.setPower(0);
+        // Override the current position
     }
 
 

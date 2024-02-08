@@ -1,13 +1,9 @@
 package org.firstinspires.ftc.teamcode.drive.tuning;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-
-import org.firstinspires.ftc.teamcode.drive.psi.PsiDrive;
-import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 /*
  * Op mode for preliminary tuning of the follower PID coefficients (located in the drive base
@@ -30,28 +26,28 @@ public class FollowerPIDTuner extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        PsiDrive drive = new PsiDrive(hardwareMap);
-
-        Pose2d startPose = new Pose2d(-DISTANCE / 2, -DISTANCE / 2, 0);
-
-        drive.setPoseEstimate(startPose);
-
-        waitForStart();
-
-        if (isStopRequested()) return;
-
-        while (!isStopRequested()) {
-            TrajectorySequence trajSeq = drive.trajectorySequenceBuilder(startPose)
-                    .forward(DISTANCE)
-                    .turn(Math.toRadians(90))
-                    .forward(DISTANCE)
-                    .turn(Math.toRadians(90))
-                    .forward(DISTANCE)
-                    .turn(Math.toRadians(90))
-                    .forward(DISTANCE)
-                    .turn(Math.toRadians(90))
-                    .build();
-            drive.followTrajectorySequence(trajSeq);
-        }
+//        PsiDrive drive = new PsiDrive(hardwareMap);
+//
+//        Pose2d startPose = new Pose2d(-DISTANCE / 2, -DISTANCE / 2, 0);
+//
+//        drive.setPoseEstimate(startPose);
+//
+//        waitForStart();
+//
+//        if (isStopRequested()) return;
+//
+//        while (!isStopRequested()) {
+//            TrajectorySequence trajSeq = drive.trajectorySequenceBuilder(startPose)
+//                    .forward(DISTANCE)
+//                    .turn(Math.toRadians(90))
+//                    .forward(DISTANCE)
+//                    .turn(Math.toRadians(90))
+//                    .forward(DISTANCE)
+//                    .turn(Math.toRadians(90))
+//                    .forward(DISTANCE)
+//                    .turn(Math.toRadians(90))
+//                    .build();
+//            drive.followTrajectorySequence(trajSeq);
+//        }
     }
 }

@@ -2,10 +2,8 @@ package org.firstinspires.ftc.teamcode.vision;
 
 import android.util.Size;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
-import org.firstinspires.ftc.teamcode.util.GlobalOpMode;
 import org.firstinspires.ftc.teamcode.util.Timeout;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.tfod.TfodProcessor;
@@ -108,9 +106,9 @@ public class TensorFlowDetection {
 
 
 
-    public PropPosition getPropPosition() {
+    public PropPosition getPropPosition(Timeout timeout) {
         List<Recognition> currentRecognitions = tfod.getRecognitions();
-        while(currentRecognitions.size() < 1 && GlobalOpMode.opMode.opModeInInit()) {
+        while(currentRecognitions.size() < 1 && !timeout.expired()) {
             //android.util.Log.w("TENSORFLOW", "Spinning for current recognitions...");
             currentRecognitions = tfod.getRecognitions();
         }

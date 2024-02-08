@@ -1,40 +1,39 @@
 package org.firstinspires.ftc.teamcode.drive;
 
-import com.acmerobotics.roadrunner.drive.MecanumDrive;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.drive.psi.PsiDrive;
-import org.firstinspires.ftc.teamcode.drive.testbot.TestBotDrive;
+import org.firstinspires.ftc.teamcode.vision.AprilTagCamera;
 
-public class Robot {
-    public enum BotType {
-        ROBOTICA,
-        PSI,
-        TEST
-    }
+public abstract class Robot {
+    public abstract TrajectoryDrive getDrive();
 
-    public BotType botType;
-
-    public MecanumDrive drive;
-
-    public Robot(HardwareMap hardwareMap) {
-        // Detect which bot this is:
-        // If there is "pdw_intake" in the hardware map, then this is the robotica bot
-        // If there is just "pdw" in the hardware map, then this is the psi bot
-        // If there is "left_front_left_dw" in the hardware map, then this is the test bot
-        if (hardwareMap.tryGet(DcMotorEx.class, "pdw_intake") != null) {
-            // This is the robotica bot
-            botType = BotType.ROBOTICA;
-            //drive = new RoboticaDrive(hardwareMap);
-        } else if (hardwareMap.tryGet(DcMotorEx.class, "pdw") != null) {
-            // This is the psi bot
-            botType = BotType.PSI;
-            drive = new PsiDrive(hardwareMap);
-        } else if (hardwareMap.tryGet(DcMotorEx.class, "left_front_left_dw") != null) {
-            // This is the test bot
-            botType = BotType.TEST;
-            drive = new TestBotDrive(hardwareMap);
+    public static Robot thisRobot(HardwareMap hardwareMap) {
+        // Set one of the Analog inputs to one of these names so we can tell which bot this is
+        if (hardwareMap.tryGet(AnalogInput.class, "psi_bot") != null) {
+            return new PsiBot(hardwareMap);
+        } else if (hardwareMap.tryGet(AnalogInput.class, "robotica_bot") != null) {
+            return new RoboticaBot(hardwareMap);
+        } else if (hardwareMap.tryGet(AnalogInput.class, "test_bot") != null) {
+            return new TestBot(hardwareMap);
+        } else {
+            return new TestBot(hardwareMap);
         }
     }
+
+    protected Robot(HardwareMap hardwareMap) {
+        // Any shared initialization goes here
+    }
+
+    public abstract AprilTagCamera[] getCameras();
+    public abstract AprilTagCamera getPrimaryCamera();
+
+    /**
+     * Sets the purple pixel on the robot;
+     * true: dropped;
+     * false: closed
+     */
+    public abstract void dropPurplePixel(boolean state);
+
+    public abstract void launchPlane();
 }

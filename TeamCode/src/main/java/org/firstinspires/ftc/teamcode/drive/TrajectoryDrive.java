@@ -1,16 +1,17 @@
-package org.firstinspires.ftc.teamcode.drive.panthera;
+package org.firstinspires.ftc.teamcode.drive;
 
-import static org.firstinspires.ftc.teamcode.drive.testbot.DriveConstants.MAX_ACCEL;
-import static org.firstinspires.ftc.teamcode.drive.testbot.DriveConstants.MAX_ANG_ACCEL;
-import static org.firstinspires.ftc.teamcode.drive.testbot.DriveConstants.MAX_ANG_VEL;
-import static org.firstinspires.ftc.teamcode.drive.testbot.DriveConstants.MAX_VEL;
-import static org.firstinspires.ftc.teamcode.drive.testbot.DriveConstants.MOTOR_VELO_PID;
-import static org.firstinspires.ftc.teamcode.drive.testbot.DriveConstants.RUN_USING_ENCODER;
-import static org.firstinspires.ftc.teamcode.drive.testbot.DriveConstants.TRACK_WIDTH;
-import static org.firstinspires.ftc.teamcode.drive.testbot.DriveConstants.encoderTicksToInches;
-import static org.firstinspires.ftc.teamcode.drive.testbot.DriveConstants.kA;
-import static org.firstinspires.ftc.teamcode.drive.testbot.DriveConstants.kStatic;
-import static org.firstinspires.ftc.teamcode.drive.testbot.DriveConstants.kV;
+//import static org.firstinspires.ftc.teamcode.drive.testbot.DriveConstants.maxAccel;
+//import static org.firstinspires.ftc.teamcode.drive.testbot.DriveConstants.maxAngAccel;
+//import static org.firstinspires.ftc.teamcode.drive.testbot.DriveConstants.maxAngVel;
+//import static org.firstinspires.ftc.teamcode.drive.testbot.DriveConstants.maxVel;
+//import static org.firstinspires.ftc.teamcode.drive.testbot.DriveConstants.MOTOR_VELO_PID;
+//import static org.firstinspires.ftc.teamcode.drive.testbot.DriveConstants.RunUsingEncoder;
+//import static org.firstinspires.ftc.teamcode.drive.testbot.DriveConstants.encoderTicksToInches;
+//import static org.firstinspires.ftc.teamcode.drive.testbot.DriveConstants.kA;
+//import static org.firstinspires.ftc.teamcode.drive.testbot.DriveConstants.kStatic;
+//import static org.firstinspires.ftc.teamcode.drive.testbot.DriveConstants.kV;
+//import static org.firstinspires.ftc.teamcode.drive.testbot.DriveConstants.maxAngAccel;
+//import static org.firstinspires.ftc.teamcode.drive.testbot.DriveConstants.maxAngVel;
 
 import androidx.annotation.NonNull;
 
@@ -30,10 +31,8 @@ import com.acmerobotics.roadrunner.trajectory.constraints.ProfileAccelerationCon
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryAccelerationConstraint;
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
 import com.qualcomm.hardware.lynx.LynxModule;
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
@@ -53,11 +52,11 @@ import java.util.List;
  * Simple mecanum drive hardware implementation for REV hardware.
  */
 @Config
-public class PantheraDrive extends MecanumDrive {
-    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(6, 0, 1.05);
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(4, 0, 0);
+public class TrajectoryDrive extends MecanumDrive {
+    //public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(6, 0, 1.05);
+    //public static PIDCoefficients HEADING_PID = new PIDCoefficients(4, 0, 0);
 
-    public static double LATERAL_MULTIPLIER = 1.05564102564;
+    //public static double lateralMultiplier = 1.05564102564;
 
     public static double VX_WEIGHT = 1;
     public static double VY_WEIGHT = 1;
@@ -65,12 +64,11 @@ public class PantheraDrive extends MecanumDrive {
 
     private TrajectorySequenceRunner trajectorySequenceRunner;
 
-    public static final TrajectoryVelocityConstraint VEL_CONSTRAINT = getVelocityConstraint(MAX_VEL, MAX_ANG_VEL, TRACK_WIDTH);
-    public static final TrajectoryAccelerationConstraint ACCEL_CONSTRAINT = getAccelerationConstraint(MAX_ACCEL);
+
 
     private TrajectoryFollower follower;
 
-    private DcMotorEx leftFront, leftRear, rightRear, rightFront;
+    public DcMotorEx leftFront, leftRear, rightRear, rightFront;
     private List<DcMotorEx> motors;
 
     private IMU imu;
@@ -79,10 +77,59 @@ public class PantheraDrive extends MecanumDrive {
     private List<Integer> lastEncPositions = new ArrayList<>();
     private List<Integer> lastEncVels = new ArrayList<>();
 
-    public PantheraDrive(HardwareMap hardwareMap) {
-        super(kV, kA, kStatic, TRACK_WIDTH, TRACK_WIDTH, LATERAL_MULTIPLIER);
+    private final TrajectoryAccelerationConstraint accelerationConstraint;
+    private final TrajectoryVelocityConstraint velocityConstraint;
 
-        follower = new HolonomicPIDVAFollower(TRANSLATIONAL_PID, TRANSLATIONAL_PID, HEADING_PID,
+    private final double encoderTicksMultiplier;
+    private final double maxAngAccel;
+    private final double maxAngVel;
+
+    public double encoderTicksToInches(double ticks) {
+        return encoderTicksMultiplier * ticks;
+    }
+
+    public TrajectoryDrive(HardwareMap hardwareMap,
+                           PIDCoefficients translationalPid,
+                           PIDCoefficients headingPid,
+                           double lateralMultiplier,
+                           String leftFrontDriveName,
+                           String leftRearDriveName,
+                           String rightRearDriveName,
+                           String rightFrontDriveName,
+                           PIDFCoefficients motorVeloPID,
+                           double maxAccel,
+                           double maxAngAccel,
+                           double maxAngVel,
+                           double maxVel,
+                           boolean runUsingEncoder,
+                           double trackWidth,
+                           double encoderTicksMultiplier,
+                           double kA,
+                           double kV,
+                           double kStatic,
+                           String leftEncoderName,
+                           String rightEncoderName,
+                           String perpEncoderName,
+                           double x_mult,
+                           double y_mult,
+                           double forward_offset,
+                           double lateral_distance,
+                           double gear_ratio,
+                           double wheel_radius,
+                           double ticks_per_rev
+
+
+
+    ) {
+
+        super(kV, kA, kStatic, trackWidth, trackWidth, lateralMultiplier);
+        velocityConstraint = getVelocityConstraint(maxVel, maxAngVel, trackWidth);
+        accelerationConstraint = getAccelerationConstraint(maxAccel);
+        this.encoderTicksMultiplier = encoderTicksMultiplier;
+        this.maxAngAccel = maxAngAccel;
+        this.maxAngVel = maxAngVel;
+
+        follower = new HolonomicPIDVAFollower(translationalPid, translationalPid, headingPid,
                 new Pose2d(0.5, 0.5, Math.toRadians(5.0)), 0.5);
 
         LynxModuleUtil.ensureMinimumFirmwareVersion(hardwareMap);
@@ -94,15 +141,15 @@ public class PantheraDrive extends MecanumDrive {
         }
 
         // TODO: adjust the names of the following hardware devices to match your configuration
-        imu = hardwareMap.get(IMU.class, "imu");
-        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
-                PantheraDriveConstants.LOGO_FACING_DIR, PantheraDriveConstants.USB_FACING_DIR));
-        imu.initialize(parameters);
+        //imu = hardwareMap.get(IMU.class, "imu");
+        //IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
+        //        PantheraDriveConstants.LOGO_FACING_DIR, PantheraDriveConstants.USB_FACING_DIR));
+        //imu.initialize(parameters);
 
-        leftFront = hardwareMap.get(DcMotorEx.class, "ldw_lf");
-        leftRear = hardwareMap.get(DcMotorEx.class, "lb");
-        rightRear = hardwareMap.get(DcMotorEx.class, "rdw_rb");
-        rightFront = hardwareMap.get(DcMotorEx.class, "rf");
+        leftFront = hardwareMap.get(DcMotorEx.class, leftFrontDriveName);
+        leftRear = hardwareMap.get(DcMotorEx.class, leftRearDriveName);
+        rightRear = hardwareMap.get(DcMotorEx.class, rightRearDriveName);
+        rightFront = hardwareMap.get(DcMotorEx.class, rightFrontDriveName);
 
         motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
 
@@ -112,51 +159,61 @@ public class PantheraDrive extends MecanumDrive {
             motor.setMotorType(motorConfigurationType);
         }
 
-        if (RUN_USING_ENCODER) {
+        if (runUsingEncoder) {
             setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
 
         setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        if (RUN_USING_ENCODER && MOTOR_VELO_PID != null) {
-            setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, MOTOR_VELO_PID);
+        if (runUsingEncoder && motorVeloPID != null) {
+            setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, motorVeloPID);
         }
 
         // TODO: reverse any motors using DcMotor.setDirection()
-        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightRear.setDirection(DcMotorSimple.Direction.REVERSE);
+        //rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        //rightRear.setDirection(DcMotorSimple.Direction.REVERSE);
 
         List<Integer> lastTrackingEncPositions = new ArrayList<>();
         List<Integer> lastTrackingEncVels = new ArrayList<>();
 
         // TODO: if desired, use setLocalizer() to change the localization method
-        setLocalizer(new PantheraTrackingWheelLocalizer(hardwareMap, lastTrackingEncPositions, lastTrackingEncVels));
+        setLocalizer(new TrackingWheelLocalizer(hardwareMap, lastTrackingEncPositions, lastTrackingEncVels,
+                leftEncoderName,
+                rightEncoderName, perpEncoderName,
+        x_mult,
+        y_mult,
+        forward_offset,
+        lateral_distance,
+        gear_ratio,
+        wheel_radius,
+        ticks_per_rev
+        ));
 
 
 
         trajectorySequenceRunner = new TrajectorySequenceRunner(
-                follower, HEADING_PID, batteryVoltageSensor,
+                follower, headingPid, batteryVoltageSensor,
                 lastEncPositions, lastEncVels, lastTrackingEncPositions, lastTrackingEncVels
         );
     }
 
     public TrajectoryBuilder trajectoryBuilder(Pose2d startPose) {
-        return new TrajectoryBuilder(startPose, VEL_CONSTRAINT, ACCEL_CONSTRAINT);
+        return new TrajectoryBuilder(startPose, velocityConstraint, accelerationConstraint);
     }
 
     public TrajectoryBuilder trajectoryBuilder(Pose2d startPose, boolean reversed) {
-        return new TrajectoryBuilder(startPose, reversed, VEL_CONSTRAINT, ACCEL_CONSTRAINT);
+        return new TrajectoryBuilder(startPose, reversed, velocityConstraint, accelerationConstraint);
     }
 
     public TrajectoryBuilder trajectoryBuilder(Pose2d startPose, double startHeading) {
-        return new TrajectoryBuilder(startPose, startHeading, VEL_CONSTRAINT, ACCEL_CONSTRAINT);
+        return new TrajectoryBuilder(startPose, startHeading, velocityConstraint, accelerationConstraint);
     }
 
     public TrajectorySequenceBuilder trajectorySequenceBuilder(Pose2d startPose) {
         return new TrajectorySequenceBuilder(
                 startPose,
-                VEL_CONSTRAINT, ACCEL_CONSTRAINT,
-                MAX_ANG_VEL, MAX_ANG_ACCEL
+                velocityConstraint, accelerationConstraint,
+                maxAngVel, maxAngAccel
         );
     }
 
@@ -313,5 +370,32 @@ public class PantheraDrive extends MecanumDrive {
 
     public static TrajectoryAccelerationConstraint getAccelerationConstraint(double maxAccel) {
         return new ProfileAccelerationConstraint(maxAccel);
+    }
+
+    public enum Quadrant {
+        RED_AUDIENCE,
+        RED_BOARD,
+        BLUE_AUDIENCE,
+        BLUE_BOARD
+    }
+
+    public static TrajectoryDrive.Quadrant whichQuadrant(Pose2d pose) {
+        if (pose.getX() < 0) {
+            if (pose.getY() < 0) {
+                return TrajectoryDrive.Quadrant.RED_AUDIENCE;
+            } else {
+                return TrajectoryDrive.Quadrant.BLUE_AUDIENCE;
+            }
+        } else {
+            if (pose.getY() < 0) {
+                return TrajectoryDrive.Quadrant.RED_BOARD;
+            } else {
+                return TrajectoryDrive.Quadrant.BLUE_BOARD;
+            }
+        }
+    }
+
+    public Quadrant currentQuadrant() {
+        return whichQuadrant(getPoseEstimate());
     }
 }

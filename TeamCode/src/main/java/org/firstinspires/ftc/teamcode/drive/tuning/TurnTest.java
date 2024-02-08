@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.drive.psi.PsiDrive;
+//import org.firstinspires.ftc.teamcode.drive.psi.PsiDrive;
 
 /*
  * This is a simple routine to test turning capabilities.
@@ -18,12 +18,12 @@ public class TurnTest extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        PsiDrive drive = new PsiDrive(hardwareMap);
-
-        waitForStart();
-
-        if (isStopRequested()) return;
-
-        drive.turn(Math.toRadians(ANGLE));
+//        PsiDrive drive = new PsiDrive(hardwareMap);
+//
+//        waitForStart();
+//
+//        if (isStopRequested()) return;
+//
+//        drive.turn(Math.toRadians(ANGLE));
     }
 }

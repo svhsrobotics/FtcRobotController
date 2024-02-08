@@ -1,7 +1,8 @@
-package org.firstinspires.ftc.teamcode.drive.testbot;
+package org.firstinspires.ftc.teamcode.drive;
 
 import androidx.annotation.NonNull;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.localization.ThreeTrackingWheelLocalizer;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -25,40 +26,61 @@ import java.util.List;
  *    \--------------/
  *
  */
-//@Config
-public class StandardTrackingWheelLocalizer extends ThreeTrackingWheelLocalizer {
-    public static double TICKS_PER_REV = 2048;
-    public static double WHEEL_RADIUS = 0.944882; // in
-    public static double GEAR_RATIO = 1; // output (wheel) speed / input (encoder) speed
+@Config
+public class TrackingWheelLocalizer extends ThreeTrackingWheelLocalizer {
+    public final double TICKS_PER_REV;// = 2048;
+    public final double WHEEL_RADIUS;// = 0.944882; // in
+    public final double GEAR_RATIO;// = 1; // output (wheel) speed / input (encoder) speed
 
-    public static double LATERAL_DISTANCE = 14.863; // in; distance between the left and right wheels
-    public static double FORWARD_OFFSET = -9; // in; offset of the lateral wheel
+    public final double LATERAL_DISTANCE;// = 15.83397; // in; distance between the left and right wheels
+    public final double FORWARD_OFFSET;// = -4.25; // in; offset of the lateral wheel
 
     public Encoder leftEncoder, rightEncoder, frontEncoder;
-    public static double X_MULTIPLIER = 88.6/90; // Multiplier in the X direction
-    public static double Y_MULTIPLIER = 88.1/90; // Multiplier in the Y direction
+    public final double X_MULTIPLIER;// = 1.009485424; // Multiplier in the X direction
+    public final double Y_MULTIPLIER;// = 1.017838563; // Multiplier in the Y direction
     private List<Integer> lastEncPositions, lastEncVels;
 
-    public StandardTrackingWheelLocalizer(HardwareMap hardwareMap, List<Integer> lastTrackingEncPositions, List<Integer> lastTrackingEncVels) {
+    public TrackingWheelLocalizer(HardwareMap hardwareMap, List<Integer> lastTrackingEncPositions, List<Integer> lastTrackingEncVels,
+                                  String leftEncoderName,
+                                  String rightEncoderName,
+                                  String perpEncoderName,
+                                  double x_mult,
+                                  double y_mult,
+                                  double forward_offset,
+                                  double lateral_distance,
+                                  double gear_ratio,
+                                  double wheel_radius,
+                                  double ticks_per_rev
+    ) {
         super(Arrays.asList(
-                new Pose2d(0, LATERAL_DISTANCE / 2, 0), // left
-                new Pose2d(0, -LATERAL_DISTANCE / 2, 0), // right
-                new Pose2d(FORWARD_OFFSET, 0, Math.toRadians(90)) // front
+                new Pose2d(0, lateral_distance / 2, 0), // left
+                new Pose2d(0, -lateral_distance / 2, 0), // right
+                new Pose2d(forward_offset, 0, Math.toRadians(90)) // front
         ));
+
+        X_MULTIPLIER = x_mult;
+        Y_MULTIPLIER = y_mult;
+        FORWARD_OFFSET = forward_offset;
+        LATERAL_DISTANCE = lateral_distance;
+        GEAR_RATIO = gear_ratio;
+        WHEEL_RADIUS = wheel_radius;
+        TICKS_PER_REV = ticks_per_rev;
+
+
 
         lastEncPositions = lastTrackingEncPositions;
         lastEncVels = lastTrackingEncVels;
 
-        leftEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "left_front_left_dw"));
-        rightEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "right_back_right_dw"));
-        frontEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "no_motor_perp_dw"));
+        leftEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, leftEncoderName));
+        rightEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, rightEncoderName));
+        frontEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, perpEncoderName));
 
-        rightEncoder.setDirection(Encoder.Direction.REVERSE);
-
+        //rightEncoder.setDirection(Encoder.Direction.REVERSE);
+        //frontEncoder.setDirection(Encoder.Direction.REVERSE);
         // TODO: reverse any encoders using Encoder.setDirection(Encoder.Direction.REVERSE)
     }
 
-    public static double encoderTicksToInches(double ticks) {
+    public double encoderTicksToInches(double ticks) {
         return WHEEL_RADIUS * 2 * Math.PI * GEAR_RATIO * ticks / TICKS_PER_REV;
     }
 
