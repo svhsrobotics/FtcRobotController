@@ -28,27 +28,40 @@ public class PsiBot extends Robot {
         // see https://docs.google.com/document/d/1tyWrXDfMidwYyP_5H4mZyVgaEswhOC35gvdmP-V-5hA/edit#heading=h.61g9ixenznbx
         return 32767 / ticksPerSecond;
     }
-    public static final double TICKS_PER_REV = 537.7;
-    public static final double MAX_RPM = 312;
+//    public static final double TICKS_PER_REV = 537.7;
+//    public static final double MAX_RPM = 312;
+    public static final double TICKS_PER_REV = 383.6;
+    public static final double MAX_RPM = 435;
 
     public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(0, 0, 0,
             getMotorVelocityF(MAX_RPM / 60 * TICKS_PER_REV));
     public static double GEAR_RATIO = 1;
     public static double WHEEL_RADIUS = 1.8898;
-    public static double MAX_VEL = ((MAX_RPM / 60) * GEAR_RATIO * WHEEL_RADIUS * 2 * Math.PI) * 0.85;
+//    public static double MAX_VEL = ((MAX_RPM / 60) * GEAR_RATIO * WHEEL_RADIUS * 2 * Math.PI) * 0.85;
+    public static double MAX_VEL = 73.17330064499293;
+
     public static double MAX_ACCEL = MAX_VEL;
-    public static double MAX_ANG_ACCEL = Math.toRadians(80.66924999999999);
-    public static double MAX_ANG_VEL = Math.toRadians(127.260357);
-    public static double TRACK_WIDTH = 15.96;
-    public static double kV = 0.014129716300132542;
-    public static double kA = 0.0032;
+//    public static double MAX_ANG_ACCEL = Math.toRadians(80.66924999999999);
+//    public static double MAX_ANG_VEL = Math.toRadians(127.260357);
+    public static double MAX_ANG_VEL = Math.toRadians(258.001310769);
+    public static double MAX_ANG_ACCEL = MAX_ANG_VEL;
+
+//    public static double TRACK_WIDTH = 15.96;
+    public static double TRACK_WIDTH = 16.25;
+
+//    public static double kV = 0.014129716300132542;
+     public static double kV = 0.01161656;
+
+//    public static double kA = 0.0032;
+    public static double kA = 0;
     public static double kStatic = 0;
     public static double DW_TICKS_PER_REV = 2048;
     public static double DW_WHEEL_RADIUS = 0.944882; // in
     public static double DW_GEAR_RATIO = 1; // output (wheel) speed / input (encoder) speed
 
     public static double LATERAL_DISTANCE = 8; // in; distance between the left and right wheels
-    public static double FORWARD_OFFSET = -6.5; // in; offset of the lateral wheel
+    //public static double FORWARD_OFFSET = -6.5; // in; offset of the lateral wheel
+    public static double FORWARD_OFFSET = -7.5;
 
     private Encoder leftEncoder, rightEncoder, frontEncoder;
     public static double X_MULTIPLIER = 88.6/90; // Multiplier in the X direction

@@ -10,7 +10,9 @@ import org.firstinspires.ftc.teamcode.drive.PsiBot;
 import org.firstinspires.ftc.teamcode.drive.Robot;
 import org.firstinspires.ftc.teamcode.drive.RoboticaBot;
 import org.firstinspires.ftc.teamcode.drive.TrajectoryDrive;
+import org.firstinspires.ftc.teamcode.util.Debouncer;
 import org.firstinspires.ftc.teamcode.util.GlobalOpMode;
+import org.firstinspires.ftc.teamcode.vision.AprilTagLocalizer;
 
 @TeleOp
 public class TestTeleOp extends LinearOpMode {
@@ -78,22 +80,20 @@ public class TestTeleOp extends LinearOpMode {
 
             if (robot.getClass() == PsiBot.class) {
 
-
-
-                if (gamepad1.left_bumper) {
+                if (gamepad1.left_bumper || gamepad2.left_bumper) {
                     purplePose = purplePose + 0.1;
-                } else if (gamepad1.right_bumper) {
+                } else if (gamepad1.right_bumper|| gamepad2.right_bumper) {
                     purplePose = purplePose - 0.1;
                 }
                 if (purplePose > 1) purplePose = 1;
                 if (purplePose < 0) purplePose = 0;
                 ((PsiBot) robot).planeServo.setPosition(purplePose);
-                telemetry.addData("Plane Pose", purplePose);
-                ((PsiBot) robot).armMotor.setPower((gamepad1.left_trigger*0.1)-((gamepad1.right_trigger*0.1)));
-                telemetry.addData("Arm location", ((PsiBot) robot).armMotor.getCurrentPosition());
-               if (gamepad1.b) {
+              //  telemetry.addData("Plane Pose", purplePose);
+                ((PsiBot) robot).armMotor.setPower((gamepad1.left_trigger*0.1)-((gamepad1.right_trigger*0.1) + (gamepad2.left_trigger*0.1)-((gamepad2.right_trigger*0.1))));
+              //  telemetry.addData("Arm location", ((PsiBot) robot).armMotor.getCurrentPosition());
+               if (gamepad1.b || gamepad2.b) {
                    ((PsiBot) robot).mosaicServo.setPosition(0);
-               } else if (gamepad1.a) {
+               } else if (gamepad1.a || gamepad2.a) {
                    ((PsiBot) robot).mosaicServo.setPosition(1);
                }
                 android.util.Log.i("TELEOP", "LOOP2A");
@@ -161,8 +161,8 @@ public class TestTeleOp extends LinearOpMode {
                 }
                 //telemetry.addData("Wrist Pose", wristPose);
 
-                //telemetry.addData("Arm Pose", rrobot.armMotor.getCurrentPosition());
-                //telemetry.addData("Extend Amount", rrobot.intakeServo.getAdjustedPosition());
+             //   telemetry.addData("Arm Pose", rrobot.armMotor.getCurrentPosition());
+             //   telemetry.addData("Extend Amount", rrobot.intakeServo.getAdjustedPosition());
 
             }
             android.util.Log.i("TELEOP", "LOOPEND");
