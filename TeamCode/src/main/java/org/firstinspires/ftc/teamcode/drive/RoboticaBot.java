@@ -26,32 +26,49 @@ public class RoboticaBot extends Robot {
         // see https://docs.google.com/document/d/1tyWrXDfMidwYyP_5H4mZyVgaEswhOC35gvdmP-V-5hA/edit#heading=h.61g9ixenznbx
         return 32767 / ticksPerSecond;
     }
-    public static final double TICKS_PER_REV = 537.7;
+    public static final double TICKS_PER_REV = 537.6;
     public static final double MAX_RPM = 312;
 
+    // UNUSED B/C NOT USING ENCODERS
     public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(0, 0, 0,
             getMotorVelocityF(MAX_RPM / 60 * TICKS_PER_REV));
     public static double GEAR_RATIO = 1;
-    public static double WHEEL_RADIUS = 2.75;
+    public static double WHEEL_RADIUS = 2.75591;
+    /*
+     * Note from LearnRoadRunner.com:
+     * The velocity and acceleration constraints were calculated based on the following equation:
+     * ((MAX_RPM / 60) * GEAR_RATIO * WHEEL_RADIUS * 2 * Math.PI) * 0.85
+     * Resulting in 76.53624803199908 in/s.
+     * This is only 85% of the theoretical maximum velocity of the bot, following the recommendation above.
+     * This is capped at 85% because there are a number of variables that will prevent your bot from actually
+     * reaching this maximum velocity: voltage dropping over the game, bot weight, general mechanical inefficiencies, etc.
+     * However, you can push this higher yourself if you'd like. Perhaps raise it to 90-95% of the theoretically
+     * max velocity. The theoretically maximum velocity is 90.04264474352833 in/s.
+     * Just make sure that your bot can actually reach this maximum velocity. Path following will be detrimentally
+     * affected if it is aiming for a velocity not actually possible.
+     *
+     * The maximum acceleration is somewhat arbitrary and it is recommended that you tweak this yourself based on
+     * actual testing. Just set it at a reasonable value and keep increasing until your path following starts
+     * to degrade. As of now, it simply mirrors the velocity, resulting in 76.53624803199908 in/s/s
+     *
+     * Maximum Angular Velocity is calculated as: maximum velocity / trackWidth * (180 / Math.PI) but capped at 360°/s.
+     * You are free to raise this on your own if you would like. It is best determined through experimentation.
+     */
     public static double MAX_VEL = 30;
     public static double MAX_ACCEL = MAX_VEL;
-    public static double MAX_ANG_ACCEL = Math.toRadians(290);
+    public static double MAX_ANG_ACCEL = Math.toRadians(360);
     public static double MAX_ANG_VEL = Math.toRadians(360);
     public static double TRACK_WIDTH = 12;
-    public static double kV = 0.014129716300132542;
-    public static double kA = 0.0032;
+    public static double kV = 1.0/30;
+    public static double kA = 0.0;
     public static double kStatic = 0;
-    public static double X_MULTIPLIER = 1.009485424;
-    public static double Y_MULTIPLIER = 1.017838563;
-    public static double FORWARD_OFFSET = -0.5;
-    public static double LATERAL_DISTANCE = 15.83397;
+    public static double X_MULTIPLIER = 1;
+    public static double Y_MULTIPLIER = 1;
+    public static double FORWARD_OFFSET = -3.0;
+    public static double LATERAL_DISTANCE = 16;
     public static double DW_GEAR_RATIO = 1;
     public static double DW_WHEEL_RADIUS = 0.944882;
-    public static double DW_TICKS_PER_REV = 2048;
-    public static double LEFTFORTYFIVE = -45;
-    public static double LEFTSEVENTY = 70;
-    public static double RIGHTFORTYFIVE = 45;
-    public static double RIGHTSEVENTY = -70;
+    public static double DW_TICKS_PER_REV = 2000;
 
     private final AprilTagCamera[] cameras;
 
