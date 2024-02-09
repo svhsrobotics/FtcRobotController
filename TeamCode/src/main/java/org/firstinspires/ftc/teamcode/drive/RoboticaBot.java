@@ -65,7 +65,7 @@ public class RoboticaBot extends Robot {
     public static double X_MULTIPLIER = 1;
     public static double Y_MULTIPLIER = 1;
     public static double FORWARD_OFFSET = -3.0;
-    public static double LATERAL_DISTANCE = 16;
+    public static double LATERAL_DISTANCE = 16.083;
     public static double DW_GEAR_RATIO = 1;
     public static double DW_WHEEL_RADIUS = 0.944882;
     public static double DW_TICKS_PER_REV = 2000;
