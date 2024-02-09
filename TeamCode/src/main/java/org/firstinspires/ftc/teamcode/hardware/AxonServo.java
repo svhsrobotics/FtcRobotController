@@ -20,8 +20,9 @@ public class AxonServo {
         public void run() {
             android.util.Log.w("AXON_THREAD", "Starting thread");
             double lastPosition = getCurrentPosition();
-            while (true) {
+            while (!GlobalOpMode.opMode.isStopRequested()) {
                 //android.util.Log.w("AXON_THREAD", "LOOP");
+                Thread.yield();
                 double currentPosition = getCurrentPosition();
                 // Positive wrap-around from 0 -> 360
                 if (currentPosition > 180 && lastPosition < 180 && innerServo.getPower() > 0) {
