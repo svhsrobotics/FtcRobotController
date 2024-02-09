@@ -59,7 +59,11 @@ public class RoboticaBot extends Robot {
     public static double MAX_ANG_ACCEL = Math.toRadians(360);
     public static double MAX_ANG_VEL = Math.toRadians(360);
     public static double TRACK_WIDTH = 12;
-    public static double kV = 1.0/30;
+
+    public static double rpmToVelocity(double rpm) {
+        return rpm * GEAR_RATIO * 2 * Math.PI * WHEEL_RADIUS / 60.0;
+    }
+    public static double kV = 1.0/rpmToVelocity(30);
     public static double kA = 0.0;
     public static double kStatic = 0;
     public static double X_MULTIPLIER = 1;
