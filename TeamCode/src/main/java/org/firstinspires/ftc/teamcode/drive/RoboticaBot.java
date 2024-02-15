@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.drive;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -87,7 +88,8 @@ public class RoboticaBot extends Robot {
     public final DcMotorEx shoulderMotor;
     public final DcMotorEx hangMotor;
     public final AxonServo elbowServo;
-    public final AxonServo wristTwistServo;
+    //public final AxonServo wristTwistServo;
+    public final Servo wristTwistServo;
     public final Servo wristLiftServo;
     public final Servo pinchServo;
     public final Servo purpleServo;
@@ -120,9 +122,12 @@ public class RoboticaBot extends Robot {
         planeReleaseServo = hardwareMap.get(CRServo.class, "plane_release");
 
         shoulderMotor = hardwareMap.get(DcMotorEx.class, "shoulder");
+        shoulderMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        shoulderMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         hangMotor = hardwareMap.get(DcMotorEx.class, "hang");
         elbowServo = new AxonServo("elbow", "axon_2", hardwareMap);
-        wristTwistServo = new AxonServo("wrist_twist", "axon_3", hardwareMap);
+        //wristTwistServo = new AxonServo("wrist_twist", "axon_3", hardwareMap);
+        wristTwistServo = hardwareMap.get(Servo.class, "wrist_twist");
         wristLiftServo = hardwareMap.get(Servo.class, "wrist_lift");
         //pinchServo = hardwareMap.get(AxonServo.class, "pinch");
         //pinchServo = new AxonServo("pinch", null, hardwareMap); // TODO SWITCH TO NORMAL SERVO
