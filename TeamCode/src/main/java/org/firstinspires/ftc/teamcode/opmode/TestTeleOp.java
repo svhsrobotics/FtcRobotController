@@ -78,11 +78,19 @@ public class TestTeleOp extends LinearOpMode {
 
             if (robot.getClass() == PsiBot.class) {
 
-                if (gamepad1.left_bumper || gamepad2.left_bumper) {
+                if (gamepad1.left_bumper) {
                     purplePose = purplePose + 0.1;
-                } else if (gamepad1.right_bumper|| gamepad2.right_bumper) {
+                } else if (gamepad1.right_bumper) {
                     purplePose = purplePose - 0.1;
                 }
+                if (gamepad2.left_bumper) {
+                    wristPose += 0.005;
+                } else if (gamepad2.right_bumper) {
+                    wristPose -= 0.005;
+                }
+                if (wristPose < 0) wristPose = 0;
+                if (wristPose > 1) wristPose = 1;
+                ((PsiBot) robot).wristServo.setPosition(wristPose);
                 if (purplePose > 1) purplePose = 1;
                 if (purplePose < 0) purplePose = 0;
                 ((PsiBot) robot).planeServo.setPosition(purplePose);
@@ -131,22 +139,22 @@ public class TestTeleOp extends LinearOpMode {
 
 
 
-                if (gamepad1.left_bumper) {
-                    wristPose += 0.05;
-                } else if (gamepad1.right_bumper) {
-                    wristPose -= 0.05;
-                }
-                if (wristPose < 0) wristPose = 0;
-                if (wristPose > 1) wristPose = 1;
+                  if (gamepad1.left_bumper) {
+                      wristPose += 0.05;
+                  } else if (gamepad1.right_bumper) {
+                      wristPose -= 0.05;
+                  }
+                  if (wristPose < 0) wristPose = 0;
+                  if (wristPose > 1) wristPose = 1;
+
+
+
 
                 //rrobot.planeAngleServo.setPosition(wristPose);
 
                 //rrobot..setPosition(wristPose);
                 //rrobot.wristServo.setPosition(wristPose);
 
-                if (robot.getClass() == PsiBot.class) {
-
-                }
 
                 double p;
                 if (gamepad1.dpad_left) {

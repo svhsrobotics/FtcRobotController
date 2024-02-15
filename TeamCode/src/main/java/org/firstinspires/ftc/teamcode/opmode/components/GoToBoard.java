@@ -38,17 +38,20 @@ public class GoToBoard extends Component {
                     .turn(Math.toRadians(-8));
 
             if (propPos == TensorFlowDetection.PropPosition.LEFT) {
-                trajB = trajB.lineTo(new Vector2d(56, -28.25));
+                trajB = trajB.lineTo(new Vector2d(52, -28.25));
             } else if (propPos == TensorFlowDetection.PropPosition.RIGHT) {
-                trajB = trajB.lineTo(new Vector2d(56, -42.5));
+                trajB = trajB.lineTo(new Vector2d(52, -42.5));
             } else {
-                trajB = trajB.lineTo(new Vector2d(56, -35));
+                trajB = trajB.lineTo(new Vector2d(52, -30));
 
             }
             trajB = trajB.addTemporalMarker(() -> {
                         android.util.Log.i("PLACE PIXEL", "Placed pixel at Red Board");
                     })
                     .turnTo(0);
+            if (getRobot().getClass() == PsiBot.class) {
+                trajB.turn(Math.toRadians(-8));
+            }
 
         } else if (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.RED_BOARD) {
             trajB = trajB.lineTo(new Vector2d(startPose.getX(), -12))
@@ -56,11 +59,11 @@ public class GoToBoard extends Component {
                                 .turn(Math.toRadians(-8));
 
             if (propPos == TensorFlowDetection.PropPosition.LEFT) {
-                trajB = trajB.lineTo(new Vector2d(56, -28.25));
+                trajB = trajB.lineTo(new Vector2d(52, -28.25));
             } else if (propPos == TensorFlowDetection.PropPosition.RIGHT) {
-                trajB = trajB.lineTo(new Vector2d(56, -42.5));
+                trajB = trajB.lineTo(new Vector2d(52, -42.5));
             } else {
-                trajB = trajB.lineTo(new Vector2d(56, -35));
+                trajB = trajB.lineTo(new Vector2d(52, -30));
 
             }
             trajB = trajB
@@ -69,6 +72,9 @@ public class GoToBoard extends Component {
                         android.util.Log.i("PLACE PIXEL", "Placed pixel at Red Board");
                     })
                     .turnTo(0);
+            if (getRobot().getClass() == PsiBot.class) {
+                trajB.turn(Math.toRadians(-8));
+            }
 
         } else if (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.BLUE_BOARD) {
             trajB = trajB.lineTo(new Vector2d(startPose.getX(), 12))
@@ -76,11 +82,11 @@ public class GoToBoard extends Component {
                     .turn(Math.toRadians(-8));
 
             if (propPos == TensorFlowDetection.PropPosition.LEFT) {
-                trajB = trajB.lineTo(new Vector2d(56, 33));
+                trajB = trajB.lineTo(new Vector2d(52, 33));
             } else if (propPos == TensorFlowDetection.PropPosition.RIGHT) {
-                trajB = trajB.lineTo(new Vector2d(56, 22));
+                trajB = trajB.lineTo(new Vector2d(52, 22));
             } else {
-                trajB = trajB.lineTo(new Vector2d(56, 28.5));
+                trajB = trajB.lineTo(new Vector2d(52, 30));
 
             }
             trajB = trajB
@@ -91,6 +97,9 @@ public class GoToBoard extends Component {
                         android.util.Log.i("PLACE PIXEL", "Placed pixel at Blue Board");
                     })
                     .turnTo(0);
+            if (getRobot().getClass() == PsiBot.class) {
+                trajB.turn(Math.toRadians(-8));
+            }
 
 
         } else {
@@ -99,11 +108,11 @@ public class GoToBoard extends Component {
                     .turn(Math.toRadians(-8));
 
             if (propPos == TensorFlowDetection.PropPosition.LEFT) {
-                trajB = trajB.lineTo(new Vector2d(56, 28.25));
+                trajB = trajB.lineTo(new Vector2d(52, 28.25));
             } else if (propPos == TensorFlowDetection.PropPosition.RIGHT) {
-                trajB = trajB.lineTo(new Vector2d(56, 42.5));
+                trajB = trajB.lineTo(new Vector2d(52, 42.5));
             } else {
-                trajB = trajB.lineTo(new Vector2d(56, 38.5));
+                trajB = trajB.lineTo(new Vector2d(52, 30));
             }
             trajB = trajB
 
@@ -111,6 +120,9 @@ public class GoToBoard extends Component {
                         android.util.Log.i("PLACE PIXEL", "Placed pixel at Blue Board");
                     })
                     .turnTo(Math.toRadians(0));
+            if (getRobot().getClass() == PsiBot.class) {
+                trajB.turn(Math.toRadians(-8));
+            }
 
 
         }
@@ -127,7 +139,7 @@ public class GoToBoard extends Component {
         while ((((PsiBot) getRobot()).armMotor.getCurrentPosition() >= -1000 || ((PsiBot) getRobot()).armMotor.getCurrentPosition() <= -1100))
             if (getRobot().getClass() == PsiBot.class) {
 
-                ((PsiBot) getRobot()).armMotor.setTargetPosition(-1052);
+                ((PsiBot) getRobot()).armMotor.setTargetPosition(-1056);
                 ((PsiBot) getRobot()).armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 ((PsiBot) getRobot()).armMotor.setPower(.1);
                 Log.i("PROGRESS", "4");
