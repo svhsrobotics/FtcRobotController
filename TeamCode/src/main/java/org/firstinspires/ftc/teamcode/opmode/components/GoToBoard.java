@@ -34,13 +34,15 @@ public class GoToBoard extends Component {
 
         if (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.RED_AUDIENCE) {
             trajB = trajB.lineTo(new Vector2d(startPose.getX(), -12))
-                    .lineTo(new Vector2d(40, -12));
+                    .lineTo(new Vector2d(40, -12))
+                    .turn(Math.toRadians(-8));
+
             if (propPos == TensorFlowDetection.PropPosition.LEFT) {
-                trajB = trajB.lineTo(new Vector2d(40, -28.25));
+                trajB = trajB.lineTo(new Vector2d(56, -28.25));
             } else if (propPos == TensorFlowDetection.PropPosition.RIGHT) {
-                trajB = trajB.lineTo(new Vector2d(40, -42.5));
+                trajB = trajB.lineTo(new Vector2d(56, -42.5));
             } else {
-                trajB = trajB.lineTo(new Vector2d(40, -35));
+                trajB = trajB.lineTo(new Vector2d(56, -35));
 
             }
             trajB = trajB.addTemporalMarker(() -> {
@@ -50,13 +52,15 @@ public class GoToBoard extends Component {
 
         } else if (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.RED_BOARD) {
             trajB = trajB.lineTo(new Vector2d(startPose.getX(), -12))
-                    .lineTo(new Vector2d(40, -12));
+                    .lineTo(new Vector2d(40, -12))
+                                .turn(Math.toRadians(-8));
+
             if (propPos == TensorFlowDetection.PropPosition.LEFT) {
-                trajB = trajB.lineTo(new Vector2d(40, -28.25));
+                trajB = trajB.lineTo(new Vector2d(56, -28.25));
             } else if (propPos == TensorFlowDetection.PropPosition.RIGHT) {
-                trajB = trajB.lineTo(new Vector2d(40, -42.5));
+                trajB = trajB.lineTo(new Vector2d(56, -42.5));
             } else {
-                trajB = trajB.lineTo(new Vector2d(40, -35));
+                trajB = trajB.lineTo(new Vector2d(56, -35));
 
             }
             trajB = trajB
@@ -68,18 +72,20 @@ public class GoToBoard extends Component {
 
         } else if (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.BLUE_BOARD) {
             trajB = trajB.lineTo(new Vector2d(startPose.getX(), 12))
-                    .lineTo(new Vector2d(40, 12));
+                    .lineTo(new Vector2d(40, 12))
+                    .turn(Math.toRadians(-8));
+
             if (propPos == TensorFlowDetection.PropPosition.LEFT) {
-                trajB = trajB.lineTo(new Vector2d(40, 28.25));
+                trajB = trajB.lineTo(new Vector2d(56, 33));
             } else if (propPos == TensorFlowDetection.PropPosition.RIGHT) {
-                trajB = trajB.lineTo(new Vector2d(40, 42.5));
+                trajB = trajB.lineTo(new Vector2d(56, 22));
             } else {
-                trajB = trajB.lineTo(new Vector2d(40, 35));
+                trajB = trajB.lineTo(new Vector2d(56, 28.5));
 
             }
             trajB = trajB
 
-                    .turn(Math.toRadians(90 - startPose.getHeading()))
+                    
                     //TODO:fix error with temporal marker because ryan is a dum dum
                     .addTemporalMarker(() -> {
                         android.util.Log.i("PLACE PIXEL", "Placed pixel at Blue Board");
@@ -88,21 +94,23 @@ public class GoToBoard extends Component {
 
 
         } else {
-            trajB = trajB.lineTo(new Vector2d(startPose.getX(), 12))
-                    .lineTo(new Vector2d(40, 12));
+            trajB = trajB.lineTo(new Vector2d(startPose.getX(), 8))
+                    .lineTo(new Vector2d(40, 8))
+                    .turn(Math.toRadians(-8));
+
             if (propPos == TensorFlowDetection.PropPosition.LEFT) {
-                trajB = trajB.lineTo(new Vector2d(40, 28.25));
+                trajB = trajB.lineTo(new Vector2d(56, 28.25));
             } else if (propPos == TensorFlowDetection.PropPosition.RIGHT) {
-                trajB = trajB.lineTo(new Vector2d(40, 42.5));
+                trajB = trajB.lineTo(new Vector2d(56, 42.5));
             } else {
-                trajB = trajB.lineTo(new Vector2d(40, 38.5));
+                trajB = trajB.lineTo(new Vector2d(56, 38.5));
             }
             trajB = trajB
 
                     .addTemporalMarker(() -> {
                         android.util.Log.i("PLACE PIXEL", "Placed pixel at Blue Board");
                     })
-                    .turnTo(0);
+                    .turnTo(Math.toRadians(0));
 
 
         }

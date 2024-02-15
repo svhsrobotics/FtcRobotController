@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.drive;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -65,9 +66,10 @@ public class PsiBot extends Robot {
     public static double FORWARD_OFFSET = -7.5;
 
     private Encoder leftEncoder, rightEncoder, frontEncoder;
-    public static double X_MULTIPLIER = 96.0/94.8; // Multiplier in the X direction
+    public static double X_MULTIPLIER = 1; // Multiplier in the X direction
     // BAD: 92.8 93.3 92.9
-    public static double Y_MULTIPLIER = 96.0/89.2; // Multiplier in the Y direction
+    public static double Y_MULTIPLIER = 1; // Multiplier in the Y direction
+
     // BAD: 87.8 87.2 87.8
 
     public final Servo purpleServo;
@@ -79,9 +81,9 @@ public class PsiBot extends Robot {
     public PsiBot(HardwareMap hardwareMap) {
         super(hardwareMap);
         cameras = new AprilTagCamera[3];
-        cameras[0] = new AprilTagCamera(hardwareMap.get(WebcamName.class, "Left"), 5.5, -6.5);
+        cameras[0] = new AprilTagCamera(hardwareMap.get(WebcamName.class, "Left"), 5.5, -5);
         cameras[1] = new AprilTagCamera(hardwareMap.get(WebcamName.class, "Center"), 0, 0);
-        cameras[2] = new AprilTagCamera(hardwareMap.get(WebcamName.class, "Right"), 5.5, 6.5);
+        cameras[2] = new AprilTagCamera(hardwareMap.get(WebcamName.class, "Right"), 5.5, 5);
 
         purpleServo = hardwareMap.get(Servo.class, "purple");
         planeServo = hardwareMap.get(Servo.class, "plane");
@@ -125,6 +127,7 @@ public class PsiBot extends Robot {
                 DW_GEAR_RATIO,
                 DW_WHEEL_RADIUS,
                 DW_TICKS_PER_REV
+
         );
         drive.leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
         drive.leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -148,12 +151,12 @@ public class PsiBot extends Robot {
     public void dropPurplePixel(boolean state) {
         if (state) {
             //purpleServo.setPosition(1);
-            for (double i = 0; i < 0.7; i += 0.1) {
+            for (double i = .7; i > 0; i -= 0.1) {
                 purpleServo.setPosition(i);
                 //GlobalOpMode.opMode.sleep(10);
             }
         } else {
-            purpleServo.setPosition(0);
+            purpleServo.setPosition(.7);
         }
     }
 
