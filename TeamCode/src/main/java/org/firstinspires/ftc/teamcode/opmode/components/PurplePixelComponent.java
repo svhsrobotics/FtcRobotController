@@ -4,6 +4,7 @@ import static org.firstinspires.ftc.teamcode.util.Units.fi;
 
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 
+import org.firstinspires.ftc.teamcode.drive.PsiBot;
 import org.firstinspires.ftc.teamcode.drive.Robot;
 import org.firstinspires.ftc.teamcode.drive.RoboticaBot;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
@@ -41,6 +42,8 @@ public class PurplePixelComponent extends Component {
 
     @Override
     public void drive() {
+        double PURPLE_X_OFFSET=0;
+        double PURPLE_Y_OFFSET=0;
 
         TrajectorySequenceBuilder trajB = getRobot().getDrive().trajectorySequenceBuilder(getRobot().getDrive().getPoseEstimate());
         trajB.lineTo(currentTapeMarks());
@@ -49,26 +52,41 @@ public class PurplePixelComponent extends Component {
         if (getRobot().getClass() == RoboticaBot.class) {
             //trajB = trajB.turn(Math.toRadians(180));
             driveBackwards = -1;
+        } else {
+             PURPLE_X_OFFSET=7.5;
+             PURPLE_Y_OFFSET=11.5;
         }
 
         if (propPosition == TensorFlowDetection.PropPosition.LEFT) {
             trajB.turn(Math.toRadians(90))
                     .forward(8 * driveBackwards); // orig 13
+            trajB.waitSeconds(1)
+                    .addTemporalMarker(() -> getRobot().dropPurplePixel(true))
+                    .waitSeconds(2);
         } else if (propPosition == TensorFlowDetection.PropPosition.RIGHT) {
             trajB.turn(Math.toRadians(-90))
                     .forward(12 * driveBackwards);
+            trajB.waitSeconds(1)
+                    .addTemporalMarker(() -> getRobot().dropPurplePixel(true))
+                    .waitSeconds(2);
         } else {
             if (moveTowardsCenter) {
                 trajB.turn(Math.toRadians(180))
-                        .forward(-16 * driveBackwards);
+                        .forward(-20 * driveBackwards)
+                        .forward(8 * driveBackwards + PURPLE_Y_OFFSET);
+                trajB.waitSeconds(1)
+                        .addTemporalMarker(() -> getRobot().dropPurplePixel(true))
+                        .waitSeconds(2);
+                if (getRobot().getClass() == PsiBot.class) {
+                trajB.forward(4 * driveBackwards)
+                            .strafeLeft(16);
+                }
             } else {
                 trajB.forward(10 * driveBackwards);
             }
         }
 
-        trajB.waitSeconds(1)
-                .addTemporalMarker(() -> getRobot().dropPurplePixel(true))
-                .waitSeconds(2);
+
 
         //if (propPosition == TensorFlowDetection.PropPosition.CENTER && (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.BLUE_AUDIENCE || getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.RED_AUDIENCE )) {
         if (moveTowardsCenter && propPosition == TensorFlowDetection.PropPosition.CENTER) {
