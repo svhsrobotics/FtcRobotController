@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.drive;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
-import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -76,13 +76,23 @@ public class RoboticaBot extends Robot {
 
     private final AprilTagCamera[] cameras;
 
-    private final Servo purpleServo;
-    public final DcMotorEx armMotor;
-    public final Servo wristServo;
-    public final AxonServo intakeServo;
-    public final Servo droneServo;
+//    private final Servo purpleServo;
+//    public final DcMotorEx armMotor;
+//    public final Servo wristServo;
+//    public final AxonServo intakeServo;
+//    public final Servo droneServo;
+//    public final DcMotorEx hangMotor;
+//    public final DcMotor intakeMotor;
+
+    public final DcMotorEx shoulderMotor;
     public final DcMotorEx hangMotor;
-    public final DcMotor intakeMotor;
+    public final AxonServo elbowServo;
+    public final AxonServo wristTwistServo;
+    public final Servo wristLiftServo;
+    public final Servo pinchServo;
+    public final Servo purpleServo;
+    public final Servo planeAngleServo;
+    public final CRServo planeReleaseServo;
 
     public RoboticaBot(HardwareMap hardwareMap) {
         super(hardwareMap);
@@ -92,15 +102,43 @@ public class RoboticaBot extends Robot {
         cameras[2] = new AprilTagCamera(hardwareMap.get(WebcamName.class, "Right"), 5.5, 5.5);
 
 
-        purpleServo = hardwareMap.get(Servo.class, "purple");
-        armMotor = hardwareMap.get(DcMotorEx.class, "arm");
-        armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        wristServo = hardwareMap.get(Servo.class, "cup_pivot");
-        intakeServo = new AxonServo("intake_servo", "intake_analog_2", hardwareMap);
-        droneServo = hardwareMap.get(Servo.class, "drone");
+        // plane_release crservo
+        // plane_angle servo
+
+        // shoulder motor
+        // hang motor
+        // elbow axon servo
+        // wrist_twist axon servo
+        // wrist_lift servo
+        // pinch axon servo
+        // purple servo
+
+        // axon_2 analog
+        // axon_3 analog
+
+        planeAngleServo = hardwareMap.get(Servo.class, "plane_angle");
+        planeReleaseServo = hardwareMap.get(CRServo.class, "plane_release");
+
+        shoulderMotor = hardwareMap.get(DcMotorEx.class, "shoulder");
         hangMotor = hardwareMap.get(DcMotorEx.class, "hang");
-        intakeMotor = hardwareMap.get(DcMotor.class, "intake");
+        elbowServo = new AxonServo("elbow", "axon_2", hardwareMap);
+        wristTwistServo = new AxonServo("wrist_twist", "axon_3", hardwareMap);
+        wristLiftServo = hardwareMap.get(Servo.class, "wrist_lift");
+        //pinchServo = hardwareMap.get(AxonServo.class, "pinch");
+        //pinchServo = new AxonServo("pinch", null, hardwareMap); // TODO SWITCH TO NORMAL SERVO
+        pinchServo = hardwareMap.get(Servo.class, "pinch");
+        //pinchServo.setPower(0.1);
+        purpleServo = hardwareMap.get(Servo.class, "purple");
+
+//        purpleServo = hardwareMap.get(Servo.class, "purple");
+//        armMotor = hardwareMap.get(DcMotorEx.class, "arm");
+//        armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        wristServo = hardwareMap.get(Servo.class, "cup_pivot");
+//        intakeServo = new AxonServo("intake_servo", "intake_analog_2", hardwareMap);
+//        droneServo = hardwareMap.get(Servo.class, "drone");
+//        hangMotor = hardwareMap.get(DcMotorEx.class, "hang");
+//        intakeMotor = hardwareMap.get(DcMotor.class, "intake");
 
         // TODO: Reverse Motors, encoders & such
 
@@ -171,9 +209,18 @@ public class RoboticaBot extends Robot {
         }
     }
 
+
+    public static double PLANE_START_ANGLE = 0.6;
+    public static double PLANE_LAUNCH_ANGLE = 0.80;
+    public static double PLANE_FOR_INCR = 0.001;
+    public static int PLANE_DELAY = 10;
     @Override
     public void launchPlane() {
-        // TODO
+        for (double i=PLANE_START_ANGLE; i<PLANE_LAUNCH_ANGLE; i+=PLANE_FOR_INCR) {
+            planeAngleServo.setPosition(i);
+            GlobalOpMode.opMode.sleep(PLANE_DELAY);
+        }
+        planeReleaseServo.setPower(0.1);
     }
 
     @Override
@@ -189,47 +236,47 @@ public class RoboticaBot extends Robot {
 //        }
 //    }
 
-    public void initializeIntakeSystem() {
-        wristServo.setPosition(0.5);
-        GlobalOpMode.opMode.sleep(1000);
-        armMotor.setTargetPosition(100);
-        armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        armMotor.setPower(0.1);
-        while (armMotor.getCurrentPosition() < 90) {
-            GlobalOpMode.opMode.sleep(100);
-        }
-        //extendIntake(true);
-        //intakeServo.setAdjustedPosition(-1350, 0.1);
-    }
-
-    public void readyForIntake() {
-        intakeServo.setAdjustedPosition(-1350, 0.1);
-        armMotor.setTargetPosition(-240);
-        armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        armMotor.setPower(0.1);
-        while (armMotor.getCurrentPosition() > -230) {
-            GlobalOpMode.opMode.sleep(100);
-        }
-        wristServo.setPosition(0.85);
-        intakeServo.setAdjustedPosition(-950, 0.1);
-    }
-
-    public void dropOff() {
-        intakeServo.setAdjustedPosition(-1350, 0.1);
-        armMotor.setTargetPosition(100);
-        armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        armMotor.setPower(0.1);
-        while (armMotor.getCurrentPosition() < 90) {
-            GlobalOpMode.opMode.sleep(100);
-        }
-        wristServo.setPosition(0.5);
-        // Raise the arm the rest of the way around
-        armMotor.setTargetPosition(300);
-        armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        armMotor.setPower(0.1);
-        while (armMotor.getCurrentPosition() < 290) {
-            GlobalOpMode.opMode.sleep(100);
-        }
-        wristServo.setPosition(0);
-    }
+//    public void initializeIntakeSystem() {
+//        wristServo.setPosition(0.5);
+//        GlobalOpMode.opMode.sleep(1000);
+//        armMotor.setTargetPosition(100);
+//        armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        armMotor.setPower(0.1);
+//        while (armMotor.getCurrentPosition() < 90) {
+//            GlobalOpMode.opMode.sleep(100);
+//        }
+//        //extendIntake(true);
+//        //intakeServo.setAdjustedPosition(-1350, 0.1);
+//    }
+//
+//    public void readyForIntake() {
+//        intakeServo.setAdjustedPosition(-1350, 0.1);
+//        armMotor.setTargetPosition(-240);
+//        armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        armMotor.setPower(0.1);
+//        while (armMotor.getCurrentPosition() > -230) {
+//            GlobalOpMode.opMode.sleep(100);
+//        }
+//        wristServo.setPosition(0.85);
+//        intakeServo.setAdjustedPosition(-950, 0.1);
+//    }
+//
+//    public void dropOff() {
+//        intakeServo.setAdjustedPosition(-1350, 0.1);
+//        armMotor.setTargetPosition(100);
+//        armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        armMotor.setPower(0.1);
+//        while (armMotor.getCurrentPosition() < 90) {
+//            GlobalOpMode.opMode.sleep(100);
+//        }
+//        wristServo.setPosition(0.5);
+//        // Raise the arm the rest of the way around
+//        armMotor.setTargetPosition(300);
+//        armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        armMotor.setPower(0.1);
+//        while (armMotor.getCurrentPosition() < 290) {
+//            GlobalOpMode.opMode.sleep(100);
+//        }
+//        wristServo.setPosition(0);
+//    }
 }

@@ -20,7 +20,7 @@ public class AnalogTest extends LinearOpMode {
             servoTest.innerServo.setPower(gamepad1.left_stick_x);
             //servoTest.innerAnalog.getVoltage();
             //servoTest.getCurrentPosition();
-            telemetry.addData("Degrees", servoTest.getCurrentPosition());
+            //telemetry.addData("Degrees", servoTest.getCurrentPosition());
             telemetry.addData("Power", gamepad1.left_stick_x);
             //telemetry.addData("Last Pos", servoTest.getLastPosDebug());
             telemetry.addData("Adjusted Degrees", servoTest.getAdjustedPosition());
