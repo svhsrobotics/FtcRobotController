@@ -64,9 +64,9 @@ public class RoboticaBot extends Robot {
     public static double rpmToVelocity(double rpm) {
         return rpm * GEAR_RATIO * 2 * Math.PI * WHEEL_RADIUS / 60.0;
     }
-    public static double kV = 1.0/rpmToVelocity(30);
-    public static double kA = 0.0;
-    public static double kStatic = 0;
+    public static double kV = 0.0135;
+    public static double kA = 0.004;
+    public static double kStatic = 0.01;
     public static double X_MULTIPLIER = 1;
     public static double Y_MULTIPLIER = 1;
     public static double FORWARD_OFFSET = -3.0;
