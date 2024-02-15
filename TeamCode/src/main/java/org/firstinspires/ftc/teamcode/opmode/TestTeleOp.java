@@ -144,6 +144,10 @@ public class TestTeleOp extends LinearOpMode {
                 //rrobot..setPosition(wristPose);
                 //rrobot.wristServo.setPosition(wristPose);
 
+                if (robot.getClass() == PsiBot.class) {
+
+                }
+
                 double p;
                 if (gamepad1.dpad_left) {
                     p = 0.5;
