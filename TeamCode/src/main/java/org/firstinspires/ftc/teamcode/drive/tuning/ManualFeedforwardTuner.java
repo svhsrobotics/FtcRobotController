@@ -17,7 +17,6 @@ import com.acmerobotics.roadrunner.profile.MotionProfileGenerator;
 import com.acmerobotics.roadrunner.profile.MotionState;
 import com.acmerobotics.roadrunner.util.NanoClock;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.RobotLog;
@@ -25,6 +24,7 @@ import com.qualcomm.robotcore.util.RobotLog;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.drive.PsiBot;
 import org.firstinspires.ftc.teamcode.drive.Robot;
+import org.firstinspires.ftc.teamcode.drive.RoboticaBot;
 import org.firstinspires.ftc.teamcode.drive.TrajectoryDrive;
 
 import java.util.Objects;
@@ -118,7 +118,7 @@ public class ManualFeedforwardTuner extends LinearOpMode {
                     }
 
                     MotionState motionState = activeProfile.get(profileTime);
-                    double targetPower = Kinematics.calculateMotorFeedforward(motionState.getV(), motionState.getA(), PsiBot.kV, PsiBot.kA, PsiBot.kStatic);
+                    double targetPower = Kinematics.calculateMotorFeedforward(motionState.getV(), motionState.getA(), RoboticaBot.kV, RoboticaBot.kA, RoboticaBot.kStatic);
 
 
                     final double NOMINAL_VOLTAGE = 12.0;

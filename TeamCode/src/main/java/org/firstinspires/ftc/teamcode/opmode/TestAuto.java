@@ -59,7 +59,7 @@ public class TestAuto extends LinearOpMode {
 
         // Set servo position right away so that it holds
         if (robot.getClass() == RoboticaBot.class) {
-            ((RoboticaBot) robot).wristServo.setPosition(0.2);
+            //((RoboticaBot) robot).wristServo.setPosition(0.2);
         }
 
         //Pose2d startPose = new Pose2d(12,-62, Math.toRadians(90)); // RED_BOARD
