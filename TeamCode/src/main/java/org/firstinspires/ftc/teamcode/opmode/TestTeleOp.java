@@ -87,7 +87,11 @@ public class TestTeleOp extends LinearOpMode {
                 // WRIST
                 // Just lock wrist twist
                 rrobot.wristTwistServo.setPosition(0.5);
-                wristPos += gamepad1.right_stick_y * .008;
+                if (gamepad1.right_bumper) {
+                    wristPos -= 0.008; // UP
+                } else if (gamepad1.left_bumper) {
+                    wristPos += 0.008; // DOWN
+                }
                 if (wristPos > 1) wristPos = 1;
                 if (wristPos < 0) wristPos = 0;
                 rrobot.wristLiftServo.setPosition(wristPos);
@@ -95,7 +99,7 @@ public class TestTeleOp extends LinearOpMode {
 
                 // SHOULDER : WILL BE REPLACED AFTER WORM GEAR?
                 if (gamepad1.left_trigger + gamepad1.right_trigger > 0.05) {
-                    armPos = rrobot.shoulderMotor.getCurrentPosition() + (int)(gamepad1.left_trigger * 50) - (int)(gamepad1.right_trigger * 50);
+                    armPos = rrobot.shoulderMotor.getCurrentPosition() - (int)(gamepad1.left_trigger * 50) + (int)(gamepad1.right_trigger * 50);
                 }
 
                 rrobot.shoulderMotor.setTargetPosition(armPos);
@@ -103,18 +107,31 @@ public class TestTeleOp extends LinearOpMode {
                 rrobot.shoulderMotor.setPower(1);
 
                 // ELBOW : JUST KICK FOR NOW, REPLACE WITH ANALOG WITH MORE POWER
-                if (gamepad1.y) {
-                    rrobot.elbowServo.innerServo.setPower(-0.3);
+                if (gamepad1.dpad_left) {
+                    rrobot.elbowServo.innerServo.setPower(1.0);
+                } else if (gamepad1.dpad_right) {
+                    rrobot.elbowServo.innerServo.setPower(-1.0);
                 } else {
-                    rrobot.elbowServo.innerServo.setPower(0);
+                    rrobot.elbowServo.innerServo.setPower(0.0);
                 }
 
-                // PINCH
-                if (pinchToggle.update(gamepad1.x)) {
-                    rrobot.pinchServo.setPosition(1);
+                if (gamepad1.dpad_up) {
+                    rrobot.pinchServo.innerServo.setPower(-1.0); // CLOSE
+                } else if (gamepad1.dpad_down) {
+                    rrobot.pinchServo.innerServo.setPower(1.0); // OPEN
                 } else {
-                    rrobot.pinchServo.setPosition(0);
+                    rrobot.pinchServo.innerServo.setPower(0);
                 }
+
+                // HANG
+                if (gamepad1.y) {
+                    rrobot.hangMotor.setPower(1.0);
+                } else if (gamepad1.x) {
+                    rrobot.hangMotor.setPower(-1.0);
+                } else {
+                    rrobot.hangMotor.setPower(0.0);
+                }
+
             }
 
             telemetry.update();

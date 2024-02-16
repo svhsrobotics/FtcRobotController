@@ -6,6 +6,7 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 
 import org.firstinspires.ftc.teamcode.drive.Robot;
 import org.firstinspires.ftc.teamcode.drive.RoboticaBot;
+import org.firstinspires.ftc.teamcode.drive.TrajectoryDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceBuilder;
 import org.firstinspires.ftc.teamcode.vision.TensorFlowDetection;
@@ -52,8 +53,14 @@ public class PurplePixelComponent extends Component {
         }
 
         if (propPosition == TensorFlowDetection.PropPosition.LEFT) {
-            trajB.turn(Math.toRadians(90))
-                    .forward(8 * driveBackwards); // orig 13
+            // Special hack since our dropper is off-center
+            if (getRobot().getClass() == RoboticaBot.class && (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.RED_BOARD || getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.BLUE_AUDIENCE)) {
+                trajB.turn(Math.toRadians(45))
+                        .forward(12 * driveBackwards);
+            } else {
+                trajB.turn(Math.toRadians(90))
+                        .forward(8 * driveBackwards); // orig 13
+            }
         } else if (propPosition == TensorFlowDetection.PropPosition.RIGHT) {
             trajB.turn(Math.toRadians(-90))
                     .forward(12 * driveBackwards);
@@ -71,8 +78,12 @@ public class PurplePixelComponent extends Component {
                 .waitSeconds(2);
 
         //if (propPosition == TensorFlowDetection.PropPosition.CENTER && (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.BLUE_AUDIENCE || getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.RED_AUDIENCE )) {
+        if (propPosition == TensorFlowDetection.PropPosition.LEFT && getRobot().getClass() == RoboticaBot.class && getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.RED_BOARD) {
+            trajB.forward(-14 * driveBackwards)
+                    .turn(Math.toRadians(-45));
+        }
         if (moveTowardsCenter && propPosition == TensorFlowDetection.PropPosition.CENTER) {
-            trajB.forward(-12 * driveBackwards);
+            trajB.forward(-14 * driveBackwards);
         } else {
             trajB.lineTo(currentTapeMarks());
         }
