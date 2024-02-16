@@ -38,9 +38,9 @@ public class GoToBoard extends Component {
                     .turn(Math.toRadians(-8));
 
             if (propPos == TensorFlowDetection.PropPosition.LEFT) {
-                trajB = trajB.lineTo(new Vector2d(52, -28.25));
+                trajB = trajB.lineTo(new Vector2d(52, -33));
             } else if (propPos == TensorFlowDetection.PropPosition.RIGHT) {
-                trajB = trajB.lineTo(new Vector2d(52, -42.5));
+                trajB = trajB.lineTo(new Vector2d(52, -26));
             } else {
                 trajB = trajB.lineTo(new Vector2d(52, -30));
 
@@ -59,9 +59,9 @@ public class GoToBoard extends Component {
                                 .turn(Math.toRadians(-8));
 
             if (propPos == TensorFlowDetection.PropPosition.LEFT) {
-                trajB = trajB.lineTo(new Vector2d(52, -28.25));
+                trajB = trajB.lineTo(new Vector2d(52, -33));
             } else if (propPos == TensorFlowDetection.PropPosition.RIGHT) {
-                trajB = trajB.lineTo(new Vector2d(52, -42.5));
+                trajB = trajB.lineTo(new Vector2d(52, -26));
             } else {
                 trajB = trajB.lineTo(new Vector2d(52, -30));
 
@@ -84,7 +84,7 @@ public class GoToBoard extends Component {
             if (propPos == TensorFlowDetection.PropPosition.LEFT) {
                 trajB = trajB.lineTo(new Vector2d(52, 33));
             } else if (propPos == TensorFlowDetection.PropPosition.RIGHT) {
-                trajB = trajB.lineTo(new Vector2d(52, 22));
+                trajB = trajB.lineTo(new Vector2d(52, 26));
             } else {
                 trajB = trajB.lineTo(new Vector2d(52, 30));
 
@@ -108,9 +108,9 @@ public class GoToBoard extends Component {
                     .turn(Math.toRadians(-8));
 
             if (propPos == TensorFlowDetection.PropPosition.LEFT) {
-                trajB = trajB.lineTo(new Vector2d(52, 28.25));
+                trajB = trajB.lineTo(new Vector2d(52, 33));
             } else if (propPos == TensorFlowDetection.PropPosition.RIGHT) {
-                trajB = trajB.lineTo(new Vector2d(52, 42.5));
+                trajB = trajB.lineTo(new Vector2d(52, 26));
             } else {
                 trajB = trajB.lineTo(new Vector2d(52, 30));
             }

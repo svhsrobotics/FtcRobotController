@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opmode.components;
 import static org.firstinspires.ftc.teamcode.util.Units.fi;
 
 import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.drive.PsiBot;
 import org.firstinspires.ftc.teamcode.drive.Robot;
@@ -59,20 +60,25 @@ public class PurplePixelComponent extends Component {
 
         if (propPosition == TensorFlowDetection.PropPosition.LEFT) {
             trajB.turn(Math.toRadians(90))
-                    .forward(8 * driveBackwards); // orig 13
-            trajB.waitSeconds(1)
+                    .forward(8 * driveBackwards)
+                    .forward(-3.5); // orig 13
+            trajB
                     .addTemporalMarker(() -> getRobot().dropPurplePixel(true))
-                    .waitSeconds(2);
+                    .waitSeconds(2)
+            .addTemporalMarker(() -> getRobot().dropPurplePixel(false));
         } else if (propPosition == TensorFlowDetection.PropPosition.RIGHT) {
             trajB.turn(Math.toRadians(-90))
-                    .forward(12 * driveBackwards);
+                    .forward(8 * driveBackwards)
+                            .forward(-2.5);
+
+
             trajB
                     .addTemporalMarker(() -> getRobot().dropPurplePixel(true))
                     .waitSeconds(2);
         } else {
             if (moveTowardsCenter) {
 
-                trajB.forward(5)
+                trajB.forward(4)
                         .turn(Math.toRadians(180))
                         .forward(-20 * driveBackwards)
                         .forward(8 * driveBackwards + PURPLE_Y_OFFSET);
@@ -81,7 +87,9 @@ public class PurplePixelComponent extends Component {
                         .waitSeconds(1);
 
             } else {
-                trajB.forward(10 * driveBackwards);
+                trajB.forward(10 * driveBackwards)
+                        .addTemporalMarker(() -> getRobot().dropPurplePixel(true))
+                        .waitSeconds(1);
             }
         }
 
@@ -96,6 +104,15 @@ public class PurplePixelComponent extends Component {
 
         TrajectorySequence traj = trajB.build();
         getRobot().getDrive().followTrajectorySequence(traj);
+        if (getRobot().getClass() == PsiBot.class) {
+            while (((PsiBot) getRobot()).armMotor.getCurrentPosition()<-10 || ((PsiBot) getRobot()).armMotor.getCurrentPosition()>10) {
+                ((PsiBot) getRobot()).armMotor.setTargetPosition(0);
+                ((PsiBot) getRobot()).armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                ((PsiBot) getRobot()).armMotor.setPower(.1);
+            }
+
+        }
         getRobot().dropPurplePixel(false);
+
     }
 }

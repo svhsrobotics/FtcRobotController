@@ -37,16 +37,17 @@ public class TestAuto extends LinearOpMode {
     }
 
     private TensorFlowDetection.PropPosition detectProp(Robot robot, int timeout) {
-        if (robot.getClass() == PsiBot.class) {
-            ((PsiBot) robot).armMotor.setTargetPosition(-109);
-            ((PsiBot) robot).armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            ((PsiBot) robot).armMotor.setPower(.1);
-        }
+
         TensorFlowDetection tensor = new TensorFlowDetection(robot.getPrimaryCamera().webcamName);
         TensorFlowDetection.PropPosition position = tensor.getPropPosition(new Timeout(timeout));
         if (position == null) {
             telemetry.log().add("Unable to detect prop, using CENTER");
             position = TensorFlowDetection.PropPosition.CENTER;
+        }
+        if (robot.getClass() == PsiBot.class) {
+            ((PsiBot) robot).armMotor.setTargetPosition(-109);
+            ((PsiBot) robot).armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            ((PsiBot) robot).armMotor.setPower(.1);
         }
         return position;
     }
