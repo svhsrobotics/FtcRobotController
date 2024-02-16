@@ -39,7 +39,7 @@ public class PsiBot extends Robot {
     public static double GEAR_RATIO = 1;
     public static double WHEEL_RADIUS = 1.8898;
 //    public static double MAX_VEL = ((MAX_RPM / 60) * GEAR_RATIO * WHEEL_RADIUS * 2 * Math.PI) * 0.85;
-    public static double MAX_VEL = 30;
+    public static double MAX_VEL = 50;
 
     public static double MAX_ACCEL = MAX_VEL;
 //    public static double MAX_ANG_ACCEL = Math.toRadians(80.66924999999999);
@@ -151,12 +151,12 @@ public class PsiBot extends Robot {
     public void dropPurplePixel(boolean state) {
         if (state) {
             //purpleServo.setPosition(1);
-            for (double i = .7; i > 0; i -= 0.1) {
+            for (double i = 0; i < .7; i += 0.1) {
                 purpleServo.setPosition(i);
                 //GlobalOpMode.opMode.sleep(10);
             }
         } else {
-            purpleServo.setPosition(.7);
+            purpleServo.setPosition(0);
         }
     }
 

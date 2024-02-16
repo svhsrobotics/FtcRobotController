@@ -53,8 +53,8 @@ public class PurplePixelComponent extends Component {
             //trajB = trajB.turn(Math.toRadians(180));
             driveBackwards = -1;
         } else {
-             PURPLE_X_OFFSET=7.5;
-             PURPLE_Y_OFFSET=11.5;
+             PURPLE_X_OFFSET=0;
+             PURPLE_Y_OFFSET=0;
         }
 
         if (propPosition == TensorFlowDetection.PropPosition.LEFT) {
@@ -66,21 +66,20 @@ public class PurplePixelComponent extends Component {
         } else if (propPosition == TensorFlowDetection.PropPosition.RIGHT) {
             trajB.turn(Math.toRadians(-90))
                     .forward(12 * driveBackwards);
-            trajB.waitSeconds(1)
+            trajB
                     .addTemporalMarker(() -> getRobot().dropPurplePixel(true))
                     .waitSeconds(2);
         } else {
             if (moveTowardsCenter) {
-                trajB.turn(Math.toRadians(180))
+
+                trajB.forward(5)
+                        .turn(Math.toRadians(180))
                         .forward(-20 * driveBackwards)
                         .forward(8 * driveBackwards + PURPLE_Y_OFFSET);
-                trajB.waitSeconds(1)
+                trajB
                         .addTemporalMarker(() -> getRobot().dropPurplePixel(true))
-                        .waitSeconds(2);
-                if (getRobot().getClass() == PsiBot.class) {
-                trajB.forward(4 * driveBackwards)
-                            .strafeLeft(16);
-                }
+                        .waitSeconds(1);
+
             } else {
                 trajB.forward(10 * driveBackwards);
             }
