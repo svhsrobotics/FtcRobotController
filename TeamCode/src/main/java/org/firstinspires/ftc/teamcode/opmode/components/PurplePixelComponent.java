@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceBuild
 import org.firstinspires.ftc.teamcode.vision.TensorFlowDetection;
 
 public class PurplePixelComponent extends Component {
-    Vector2d RED_AUDIENCE_TAPE_MARKS = new Vector2d(fi(-3,0), fi(-3,0));
+    Vector2d RED_AUDIENCE_TAPE_MARKS = new Vector2d(fi(-3,2), fi(-3,0));
     Vector2d BLUE_AUDIENCE_TAPE_MARKS = new Vector2d(-3 * 12, 2 * 12 + 12);
     Vector2d RED_BOARD_TAPE_MARKS = new Vector2d(fi(1,0), fi(-3,0));
     Vector2d BLUE_BOARD_TAPE_MARKS = new Vector2d(12, 2 * 12 + 12);
@@ -57,13 +57,17 @@ public class PurplePixelComponent extends Component {
             if (getRobot().getClass() == RoboticaBot.class && (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.RED_BOARD || getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.BLUE_AUDIENCE)) {
                 trajB.turn(Math.toRadians(45))
                         .forward(12 * driveBackwards);
+            } if (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.RED_AUDIENCE) {
+                trajB.forward(9 * driveBackwards)
+                        .turn(Math.toRadians(90))
+                        .forward(8 * driveBackwards);
             } else {
                 trajB.turn(Math.toRadians(90))
                         .forward(8 * driveBackwards); // orig 13
             }
         } else if (propPosition == TensorFlowDetection.PropPosition.RIGHT) {
             trajB.turn(Math.toRadians(-90))
-                    .forward(12 * driveBackwards);
+                    .forward(10 * driveBackwards);
         } else {
             if (moveTowardsCenter) {
                 trajB.turn(Math.toRadians(180))
