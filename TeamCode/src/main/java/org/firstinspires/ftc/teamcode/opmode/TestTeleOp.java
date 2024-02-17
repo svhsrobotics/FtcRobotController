@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmode;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -14,7 +15,18 @@ import org.firstinspires.ftc.teamcode.util.GlobalOpMode;
 import org.firstinspires.ftc.teamcode.util.Toggle;
 
 @TeleOp
+@Config
 public class TestTeleOp extends LinearOpMode {
+    enum ArmState {
+        RAISED,
+        PREP,
+        PICKUP,
+        NEUTRAL,
+        MANUAL
+    }
+
+    public static double SAFETY_ARM_POWER = 0.1;
+    public static int SAFETY_ARM_DELTA = 300;
     @Override
     public void runOpMode() throws InterruptedException {
         GlobalOpMode.opMode = this;
@@ -29,6 +41,7 @@ public class TestTeleOp extends LinearOpMode {
         int armPos = 0;
         double wristPos = 1;
         Toggle pinchToggle = new Toggle();
+        ArmState currentState = ArmState.MANUAL;
 
         while (opModeIsActive()) {
             drive.update(); // MUST be called every loop cycle so that RoadRunner calculates the pose correctly
@@ -47,20 +60,21 @@ public class TestTeleOp extends LinearOpMode {
                     drive.setPoseEstimate(new Pose2d(poseEstimate.getX(), poseEstimate.getY(), 0));
                 }
             } else {
-                drive.setWeightedDrivePower(new Pose2d((-gamepad1.left_stick_y * 0.5)+(-gamepad2.left_stick_y * 0.5), (-gamepad1.left_stick_x * 0.5)+(-gamepad1.left_stick_x * 0.5), (-gamepad1.right_stick_x * 0.5)+(-gamepad1.right_stick_x * 0.5)));
+                drive.setWeightedDrivePower(new Pose2d((-gamepad1.left_stick_y * 0.5)+(-gamepad2.left_stick_y * 0.5), (-gamepad1.left_stick_x * 0.5)+(-gamepad2.left_stick_x * 0.5), (-gamepad1.right_stick_x * 0.5)+(-gamepad2.right_stick_x * 0.5)));
             }
 
             telemetry.addData("Robot", robot.getClass().toString());
             telemetry.addData("Field Centric", config.fieldCentric);
 
             telemetry.addData("Current Quadrant", drive.currentQuadrant().toString());
+            telemetry.addData("Gamepad 2 is for ENDGAME", "");
             android.util.Log.i("TELEOP", "LOOP2");
 
 
             //Pose2d pose = localizer.estimateRobotPoseFromAprilTags(robot.getPrimaryCamera());
             //telemetry.addData("AT Pose", pose);
 
-            if (gamepad1.a || gamepad2.a) {
+            if (gamepad2.a) {
                 robot.launchPlane();
             }
 
@@ -96,15 +110,24 @@ public class TestTeleOp extends LinearOpMode {
                 if (wristPos < 0) wristPos = 0;
                 rrobot.wristLiftServo.setPosition(wristPos);
                 telemetry.addData("WRIST", wristPos);
+                telemetry.addData("ARM", armPos);
+                telemetry.addData("STATE", currentState);
 
                 // SHOULDER : WILL BE REPLACED AFTER WORM GEAR?
                 if (gamepad1.left_trigger + gamepad1.right_trigger + gamepad2.right_trigger + gamepad2.left_trigger > 0.05) {
                     armPos = rrobot.shoulderMotor.getCurrentPosition() - (int)(gamepad1.left_trigger * 50) - (int)(gamepad2.left_trigger * 50) + (int)(gamepad1.right_trigger * 50) + (int)(gamepad2.right_trigger * 50);
+                    currentState = ArmState.MANUAL;
                 }
 
+                // If there is a big difference in positions, turn down the power
                 rrobot.shoulderMotor.setTargetPosition(armPos);
                 rrobot.shoulderMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                rrobot.shoulderMotor.setPower(1);
+                //if (Math.abs(rrobot.shoulderMotor.getCurrentPosition() - armPos) > SAFETY_ARM_DELTA) {
+                if (armPos < rrobot.shoulderMotor.getCurrentPosition() && armPos < 1000) {
+                    rrobot.shoulderMotor.setPower(SAFETY_ARM_POWER);
+                } else {
+                    rrobot.shoulderMotor.setPower(1);
+                }
 
                 // ELBOW
                 if (gamepad1.dpad_left || gamepad2.dpad_left) {
@@ -124,12 +147,31 @@ public class TestTeleOp extends LinearOpMode {
                 }
 
                 // HANG
-                if (gamepad1.y || gamepad2.y) {
+                if (gamepad2.y) {
                     rrobot.hangMotor.setPower(1.0);
-                } else if (gamepad1.x || gamepad2.x) {
+                } else if (gamepad2.x) {
                     rrobot.hangMotor.setPower(-1.0);
                 } else {
                     rrobot.hangMotor.setPower(0.0);
+                }
+
+
+                if (gamepad1.y) { // RAISED
+                    currentState = ArmState.RAISED;
+                    armPos = RAISED_ARM;
+                    wristPos = RAISED_WRIST;
+                } else if (gamepad1.x) { // NEUTRAL
+                    currentState = ArmState.NEUTRAL;
+                    armPos = NEUTRAL_ARM;
+                    wristPos = NEUTRAL_WRIST;
+                } else if (gamepad1.b) { // PREP
+                    currentState = ArmState.PREP;
+                    armPos = PREP_ARM;
+                    wristPos = PREP_WRIST;
+                } else if (gamepad1.a) { // PICKUP
+                    currentState = ArmState.PICKUP;
+                    armPos = PICKUP_ARM;
+                    wristPos = PICKUP_WRIST;
                 }
 
             }
@@ -137,4 +179,18 @@ public class TestTeleOp extends LinearOpMode {
             telemetry.update();
         }
     }
+
+    public static int ARM_OFFSET = 94;
+
+    public static int RAISED_ARM = 756 + ARM_OFFSET;
+    public static double RAISED_WRIST = 0.53;
+
+    public static int NEUTRAL_ARM = 521 + ARM_OFFSET;
+    public static double NEUTRAL_WRIST = 0.58;
+
+    public static int PREP_ARM = 262 + ARM_OFFSET;
+    public static double PREP_WRIST = 0.67;
+
+    public static int PICKUP_ARM = 204 + ARM_OFFSET;
+    public static double PICKUP_WRIST = 0.69;
 }
