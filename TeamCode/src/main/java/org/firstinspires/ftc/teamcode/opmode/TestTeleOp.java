@@ -47,7 +47,7 @@ public class TestTeleOp extends LinearOpMode {
                     drive.setPoseEstimate(new Pose2d(poseEstimate.getX(), poseEstimate.getY(), 0));
                 }
             } else {
-                drive.setWeightedDrivePower(new Pose2d(-gamepad1.left_stick_y * 0.5, -gamepad1.left_stick_x * 0.5, -gamepad1.right_stick_x * 0.5));
+                drive.setWeightedDrivePower(new Pose2d((-gamepad1.left_stick_y * 0.5)+(-gamepad2.left_stick_y * 0.5), (-gamepad1.left_stick_x * 0.5)+(-gamepad1.left_stick_x * 0.5), (-gamepad1.right_stick_x * 0.5)+(-gamepad1.right_stick_x * 0.5)));
             }
 
             telemetry.addData("Robot", robot.getClass().toString());
@@ -60,7 +60,7 @@ public class TestTeleOp extends LinearOpMode {
             //Pose2d pose = localizer.estimateRobotPoseFromAprilTags(robot.getPrimaryCamera());
             //telemetry.addData("AT Pose", pose);
 
-            if (gamepad1.a) {
+            if (gamepad1.a || gamepad2.a) {
                 robot.launchPlane();
             }
 
@@ -87,9 +87,9 @@ public class TestTeleOp extends LinearOpMode {
                 // WRIST
                 // Just lock wrist twist
                 rrobot.wristTwistServo.setPosition(0.5);
-                if (gamepad1.right_bumper) {
+                if (gamepad1.right_bumper || gamepad2.right_bumper) {
                     wristPos -= 0.008; // UP
-                } else if (gamepad1.left_bumper) {
+                } else if (gamepad1.left_bumper || gamepad2.left_bumper) {
                     wristPos += 0.008; // DOWN
                 }
                 if (wristPos > 1) wristPos = 1;
@@ -98,35 +98,35 @@ public class TestTeleOp extends LinearOpMode {
                 telemetry.addData("WRIST", wristPos);
 
                 // SHOULDER : WILL BE REPLACED AFTER WORM GEAR?
-                if (gamepad1.left_trigger + gamepad1.right_trigger > 0.05) {
-                    armPos = rrobot.shoulderMotor.getCurrentPosition() - (int)(gamepad1.left_trigger * 50) + (int)(gamepad1.right_trigger * 50);
+                if (gamepad1.left_trigger + gamepad1.right_trigger + gamepad2.right_trigger + gamepad2.left_trigger > 0.05) {
+                    armPos = rrobot.shoulderMotor.getCurrentPosition() - (int)(gamepad1.left_trigger * 50) - (int)(gamepad2.left_trigger * 50) + (int)(gamepad1.right_trigger * 50) + (int)(gamepad2.right_trigger * 50);
                 }
 
                 rrobot.shoulderMotor.setTargetPosition(armPos);
                 rrobot.shoulderMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 rrobot.shoulderMotor.setPower(1);
 
-                // ELBOW : JUST KICK FOR NOW, REPLACE WITH ANALOG WITH MORE POWER
-                if (gamepad1.dpad_left) {
+                // ELBOW
+                if (gamepad1.dpad_left || gamepad2.dpad_left) {
                     rrobot.elbowServo.innerServo.setPower(1.0);
-                } else if (gamepad1.dpad_right) {
+                } else if (gamepad1.dpad_right || gamepad2.dpad_right) {
                     rrobot.elbowServo.innerServo.setPower(-1.0);
                 } else {
                     rrobot.elbowServo.innerServo.setPower(0.0);
                 }
 
-                if (gamepad1.dpad_up) {
+                if (gamepad1.dpad_up || gamepad2.dpad_up) {
                     rrobot.pinchServo.innerServo.setPower(-1.0); // CLOSE
-                } else if (gamepad1.dpad_down) {
+                } else if (gamepad1.dpad_down || gamepad2.dpad_down) {
                     rrobot.pinchServo.innerServo.setPower(1.0); // OPEN
                 } else {
                     rrobot.pinchServo.innerServo.setPower(0);
                 }
 
                 // HANG
-                if (gamepad1.y) {
+                if (gamepad1.y || gamepad2.y) {
                     rrobot.hangMotor.setPower(1.0);
-                } else if (gamepad1.x) {
+                } else if (gamepad1.x || gamepad2.x) {
                     rrobot.hangMotor.setPower(-1.0);
                 } else {
                     rrobot.hangMotor.setPower(0.0);
