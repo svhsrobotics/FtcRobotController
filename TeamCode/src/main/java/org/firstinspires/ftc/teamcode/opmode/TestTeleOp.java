@@ -167,6 +167,8 @@ public class TestTeleOp extends LinearOpMode {
 
                 //rrobot.intakeServo.innerServo.setPower(p);
                 if (gamepad1.a) {
+
+
                     rrobot.launchPlane();
                 }
 

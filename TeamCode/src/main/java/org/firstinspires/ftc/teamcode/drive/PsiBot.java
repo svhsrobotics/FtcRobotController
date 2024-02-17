@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.util.Encoder;
+import org.firstinspires.ftc.teamcode.util.GlobalOpMode;
 import org.firstinspires.ftc.teamcode.vision.AprilTagCamera;
 
 @Config
@@ -162,7 +163,18 @@ public class PsiBot extends Robot {
 
     @Override
     public void launchPlane() {
-        // TODO: Implement
+        //turn servo angle back a bit
+        //wait a bit
+        //pull the pixel pusher servo to take out the pin
+        //wait a bit here
+        //turn the drone servo forward
+        planeServo.setPosition(.09);
+        GlobalOpMode.opMode.sleep(10);
+        mosaicServo.setPosition(1);
+        GlobalOpMode.opMode.sleep(10);
+        planeServo.setPosition(1);
+
+
     }
 
     @Override

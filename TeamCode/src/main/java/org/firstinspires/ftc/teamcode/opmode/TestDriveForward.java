@@ -21,7 +21,6 @@ public class TestDriveForward extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         GlobalOpMode.opMode = this;
         Robot robot = Robot.thisRobot(hardwareMap);
-        Configuration config = Configurator.load();
 
 
 
