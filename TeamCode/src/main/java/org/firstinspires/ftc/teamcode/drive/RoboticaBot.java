@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.hardware.AxonServo;
@@ -95,6 +96,7 @@ public class RoboticaBot extends Robot {
     public final Servo purpleServo;
     public final Servo planeAngleServo;
     public final CRServo planeReleaseServo;
+    public final TouchSensor magneticLimitSwitch;
 
     public RoboticaBot(HardwareMap hardwareMap) {
         super(hardwareMap);
@@ -134,6 +136,10 @@ public class RoboticaBot extends Robot {
         //pinchServo = hardwareMap.get(Servo.class, "pinch");
         //pinchServo.setPower(0.1);
         purpleServo = hardwareMap.get(Servo.class, "purple");
+
+        magneticLimitSwitch = hardwareMap.get(TouchSensor.class, "magnetic_limit_switch");
+
+
 
 //        purpleServo = hardwareMap.get(Servo.class, "purple");
 //        armMotor = hardwareMap.get(DcMotorEx.class, "arm");
@@ -231,6 +237,40 @@ public class RoboticaBot extends Robot {
     @Override
     public TrajectoryDrive getDrive() {
         return drive;
+    }
+
+
+    public int shoulderOffset = 0;
+
+    public void recalibrateShoulder() {
+        // Raise the arm up
+        shoulderMotor.setTargetPosition(500);
+        shoulderMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        shoulderMotor.setPower(1);
+        while (shoulderMotor.isBusy() && !GlobalOpMode.opMode.isStopRequested()) {}
+        // Drop the arm
+        shoulderMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        shoulderMotor.setPower(-0.1);
+        // Wait for the magnet limit switch to be hit
+        while (!magneticLimitSwitch.isPressed() && !GlobalOpMode.opMode.isStopRequested()) {}
+        // Record the position
+        shoulderOffset = shoulderMotor.getCurrentPosition();
+
+        shoulderMotor.setPower(0);
+    }
+
+    public int getShoulderCurrentPosition() {
+        return shoulderMotor.getCurrentPosition() - shoulderOffset;
+    }
+    public void setShoulderTargetPosition(int position) {
+        shoulderMotor.setTargetPosition(position + shoulderOffset);
+        shoulderMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //if (Math.abs(rrobot.shoulderMotor.getCurrentPosition() - armPos) > SAFETY_ARM_DELTA) {
+        if (position < shoulderMotor.getCurrentPosition() && position < 1000) {
+            shoulderMotor.setPower(0.1);
+        } else {
+            shoulderMotor.setPower(1);
+        }
     }
 
 //    public void extendIntake(boolean state) {
