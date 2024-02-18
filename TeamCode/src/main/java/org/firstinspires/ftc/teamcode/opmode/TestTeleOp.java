@@ -78,14 +78,14 @@ public class TestTeleOp extends LinearOpMode {
 
             if (robot.getClass() == PsiBot.class) {
 
-                if (gamepad1.left_bumper) {
+                if (gamepad2.left_bumper) {
                     purplePose = purplePose + 0.1;
-                } else if (gamepad1.right_bumper) {
+                } else if (gamepad2.right_bumper) {
                     purplePose = purplePose - 0.1;
                 }
-                if (gamepad2.left_bumper) {
+                if (gamepad1.left_bumper) {
                     wristPose += 0.005;
-                } else if (gamepad2.right_bumper) {
+                } else if (gamepad1.right_bumper) {
                     wristPose -= 0.005;
                 }
                 if (wristPose < 0) wristPose = 0;

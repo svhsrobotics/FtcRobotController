@@ -45,7 +45,7 @@ public class TestAuto extends LinearOpMode {
             position = TensorFlowDetection.PropPosition.CENTER;
         }
         if (robot.getClass() == PsiBot.class) {
-            ((PsiBot) robot).armMotor.setTargetPosition(-109);
+            ((PsiBot) robot).armMotor.setTargetPosition(-200);
             ((PsiBot) robot).armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             ((PsiBot) robot).armMotor.setPower(.1);
         }
@@ -131,6 +131,13 @@ public class TestAuto extends LinearOpMode {
 
         for (Component component : componentList) {
             component.drive();
+        }
+        if (robot.getClass() == PsiBot.class) {
+            while (((PsiBot) robot).armMotor.getCurrentPosition() > 10 || ((PsiBot) robot).armMotor.getCurrentPosition() < -10) {
+                ((PsiBot) robot).armMotor.setTargetPosition(-0);
+                ((PsiBot) robot).armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                ((PsiBot) robot).armMotor.setPower(.1);
+            }
         }
 
 

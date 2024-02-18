@@ -15,8 +15,8 @@ import org.firstinspires.ftc.teamcode.vision.TensorFlowDetection;
 public class PurplePixelComponent extends Component {
     Vector2d RED_AUDIENCE_TAPE_MARKS = new Vector2d(fi(-3,0), fi(-3,0));
     Vector2d BLUE_AUDIENCE_TAPE_MARKS = new Vector2d(-3 * 12, 2 * 12 + 12);
-    Vector2d RED_BOARD_TAPE_MARKS = new Vector2d(fi(1,0), fi(-3,0));
-    Vector2d BLUE_BOARD_TAPE_MARKS = new Vector2d(12, 2 * 12 + 12);
+    Vector2d RED_BOARD_TAPE_MARKS = new Vector2d(13.5, (-2*12)-14);
+    Vector2d BLUE_BOARD_TAPE_MARKS = new Vector2d(13.5, 2 * 12 + 14);
     private final TensorFlowDetection.PropPosition propPosition;
     private final boolean moveTowardsCenter;
 
@@ -60,7 +60,7 @@ public class PurplePixelComponent extends Component {
 
         if (propPosition == TensorFlowDetection.PropPosition.LEFT) {
             trajB.turn(Math.toRadians(90))
-                    .forward(8 * driveBackwards)
+                    .forward(10 * driveBackwards)
                     .forward(-3.5); // orig 13
             trajB
                     .addTemporalMarker(() -> getRobot().dropPurplePixel(true))

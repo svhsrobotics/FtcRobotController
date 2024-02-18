@@ -38,17 +38,18 @@ public class GoToBoard extends Component {
                     .turn(Math.toRadians(-8));
 
             if (propPos == TensorFlowDetection.PropPosition.LEFT) {
-                trajB = trajB.lineTo(new Vector2d(52, -33));
+                trajB = trajB.lineTo(new Vector2d(48, -37));
             } else if (propPos == TensorFlowDetection.PropPosition.RIGHT) {
-                trajB = trajB.lineTo(new Vector2d(52, -26));
+                trajB = trajB.lineTo(new Vector2d(48, -31));
             } else {
-                trajB = trajB.lineTo(new Vector2d(52, -30));
+                trajB = trajB.lineTo(new Vector2d(48, -34));
 
             }
             trajB = trajB.addTemporalMarker(() -> {
                         android.util.Log.i("PLACE PIXEL", "Placed pixel at Red Board");
                     })
-                    .turnTo(0);
+                    .turnTo(Math.toRadians(180))                    .forward(-.5);
+
             if (getRobot().getClass() == PsiBot.class) {
                 trajB.turn(Math.toRadians(-8));
             }
@@ -59,11 +60,11 @@ public class GoToBoard extends Component {
                                 .turn(Math.toRadians(-8));
 
             if (propPos == TensorFlowDetection.PropPosition.LEFT) {
-                trajB = trajB.lineTo(new Vector2d(52, -33));
+                trajB = trajB.lineTo(new Vector2d(50, -40));
             } else if (propPos == TensorFlowDetection.PropPosition.RIGHT) {
-                trajB = trajB.lineTo(new Vector2d(52, -26));
+                trajB = trajB.lineTo(new Vector2d(50, -34));
             } else {
-                trajB = trajB.lineTo(new Vector2d(52, -30));
+                trajB = trajB.lineTo(new Vector2d(50, -37));
 
             }
             trajB = trajB
@@ -71,7 +72,8 @@ public class GoToBoard extends Component {
                     .addTemporalMarker(() -> {
                         android.util.Log.i("PLACE PIXEL", "Placed pixel at Red Board");
                     })
-                    .turnTo(0);
+                    .turnTo(Math.toRadians(180))                    .forward(-.5);
+
             if (getRobot().getClass() == PsiBot.class) {
                 trajB.turn(Math.toRadians(-8));
             }
@@ -82,11 +84,11 @@ public class GoToBoard extends Component {
                     .turn(Math.toRadians(-8));
 
             if (propPos == TensorFlowDetection.PropPosition.LEFT) {
-                trajB = trajB.lineTo(new Vector2d(52, 33));
+                trajB = trajB.lineTo(new Vector2d(50, 40));
             } else if (propPos == TensorFlowDetection.PropPosition.RIGHT) {
-                trajB = trajB.lineTo(new Vector2d(52, 26));
+                trajB = trajB.lineTo(new Vector2d(50, 34));
             } else {
-                trajB = trajB.lineTo(new Vector2d(52, 30));
+                trajB = trajB.lineTo(new Vector2d(50, 37));
 
             }
             trajB = trajB
@@ -96,7 +98,9 @@ public class GoToBoard extends Component {
                     .addTemporalMarker(() -> {
                         android.util.Log.i("PLACE PIXEL", "Placed pixel at Blue Board");
                     })
-                    .turnTo(0);
+                    .turnTo(Math.toRadians(180))
+                    .forward(-.5);
+
             if (getRobot().getClass() == PsiBot.class) {
                 trajB.turn(Math.toRadians(-8));
             }
@@ -108,27 +112,28 @@ public class GoToBoard extends Component {
                     .turn(Math.toRadians(-8));
 
             if (propPos == TensorFlowDetection.PropPosition.LEFT) {
-                trajB = trajB.lineTo(new Vector2d(52, 33));
+                trajB = trajB.lineTo(new Vector2d(48, 37));
             } else if (propPos == TensorFlowDetection.PropPosition.RIGHT) {
-                trajB = trajB.lineTo(new Vector2d(52, 26));
+                trajB = trajB.lineTo(new Vector2d(48, 31));
             } else {
-                trajB = trajB.lineTo(new Vector2d(52, 30));
+                trajB = trajB.lineTo(new Vector2d(48, 34));
             }
             trajB = trajB
 
                     .addTemporalMarker(() -> {
                         android.util.Log.i("PLACE PIXEL", "Placed pixel at Blue Board");
                     })
-                    .turnTo(Math.toRadians(0));
+                    .turnTo(Math.toRadians(180))
+                    .forward(-.5);
             if (getRobot().getClass() == PsiBot.class) {
                 trajB.turn(Math.toRadians(-8));
             }
 
 
         }
-        if (getRobot().getClass() == PsiBot.class) {
-            trajB.turn(Math.toRadians(180));
-        }
+       // if (getRobot().getClass() == PsiBot.class) {
+      //      trajB.turn(Math.toRadians(180));
+       // }
 
         TrajectorySequence traj = trajB.build();
         Log.i("PROGRESS", "1");
@@ -137,11 +142,23 @@ public class GoToBoard extends Component {
         Log.i("PROGRESS", "2");
         GlobalOpMode.opMode.telemetry.log().add("2");
         while ((((PsiBot) getRobot()).armMotor.getCurrentPosition() >= -1000 || ((PsiBot) getRobot()).armMotor.getCurrentPosition() <= -1100))
+
             if (getRobot().getClass() == PsiBot.class) {
 
-                ((PsiBot) getRobot()).armMotor.setTargetPosition(-1056);
-                ((PsiBot) getRobot()).armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                ((PsiBot) getRobot()).armMotor.setPower(.1);
+
+                while (((PsiBot) getRobot()).armMotor.getCurrentPosition() > -1046 || ((PsiBot) getRobot()).armMotor.getCurrentPosition() < -1066) {
+                    ((PsiBot) getRobot()).wristServo.setPosition(.65);
+
+                   // ((PsiBot) getRobot()).armMotor.setTargetPosition(-1056);
+                    ((PsiBot) getRobot()).armMotor.setTargetPosition(-1100);
+                    ((PsiBot) getRobot()).armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    ((PsiBot) getRobot()).armMotor.setPower(.1);
+                }
+//                GlobalOpMode.opMode.sleep(400);
+                while (((PsiBot) getRobot()).wristServo.getPosition() > .25 || ((PsiBot) getRobot()).wristServo.getPosition() < .15 ) {
+
+                    ((PsiBot) getRobot()).wristServo.setPosition(.2);
+                }
                 Log.i("PROGRESS", "4");
 
             }
