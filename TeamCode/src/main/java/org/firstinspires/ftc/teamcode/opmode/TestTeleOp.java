@@ -148,6 +148,7 @@ public class TestTeleOp extends LinearOpMode {
                 // HANG
                 if (gamepad2.y) {
                     rrobot.hangMotor.setPower(1.0);
+                    rrobot.planeAngleServo.setPosition(0.3);
                 } else if (gamepad2.x) {
                     rrobot.hangMotor.setPower(-1.0);
                 } else {
@@ -187,15 +188,15 @@ public class TestTeleOp extends LinearOpMode {
 
     public static int ARM_OFFSET = 94;
 
-    public static int RAISED_ARM = 756 + ARM_OFFSET;
-    public static double RAISED_WRIST = 0.53;
+    public static int RAISED_ARM = 403;
+    public static double RAISED_WRIST = 0.28;
 
-    public static int NEUTRAL_ARM = 521 + ARM_OFFSET;
-    public static double NEUTRAL_WRIST = 0.58;
+    public static int NEUTRAL_ARM = 31;
+    public static double NEUTRAL_WRIST = 0.16;
 
-    public static int PREP_ARM = 262 + ARM_OFFSET;
-    public static double PREP_WRIST = 0.67;
+    public static int PREP_ARM = -208;
+    public static double PREP_WRIST = 0.38;
 
-    public static int PICKUP_ARM = 204 + ARM_OFFSET;
-    public static double PICKUP_WRIST = 0.69;
+    public static int PICKUP_ARM = -208;
+    public static double PICKUP_WRIST = 0.48;
 }

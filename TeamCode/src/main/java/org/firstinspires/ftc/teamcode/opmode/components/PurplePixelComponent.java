@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.drive.RoboticaBot;
 import org.firstinspires.ftc.teamcode.drive.TrajectoryDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceBuilder;
+import org.firstinspires.ftc.teamcode.util.GlobalOpMode;
 import org.firstinspires.ftc.teamcode.vision.TensorFlowDetection;
 
 public class PurplePixelComponent extends Component {
@@ -95,5 +96,7 @@ public class PurplePixelComponent extends Component {
         TrajectorySequence traj = trajB.build();
         getRobot().getDrive().followTrajectorySequence(traj);
         getRobot().dropPurplePixel(false);
+
+        GlobalOpMode.opMode.sleep(1000);
     }
 }
