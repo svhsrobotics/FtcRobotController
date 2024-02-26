@@ -13,9 +13,9 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceBuild
 import org.firstinspires.ftc.teamcode.vision.TensorFlowDetection;
 
 public class PurplePixelComponent extends Component {
-    Vector2d RED_AUDIENCE_TAPE_MARKS = new Vector2d(fi(-3,0), fi(-3,0));
+    Vector2d RED_AUDIENCE_TAPE_MARKS = new Vector2d(fi(-3,0), fi(-2,-10));
     Vector2d BLUE_AUDIENCE_TAPE_MARKS = new Vector2d(-3 * 12, 2 * 12 + 12);
-    Vector2d RED_BOARD_TAPE_MARKS = new Vector2d(13.5, (-2*12)-14);
+    Vector2d RED_BOARD_TAPE_MARKS = new Vector2d(14.5, (-2*12)-14);
     Vector2d BLUE_BOARD_TAPE_MARKS = new Vector2d(13.5, 2 * 12 + 14);
     private final TensorFlowDetection.PropPosition propPosition;
     private final boolean moveTowardsCenter;
