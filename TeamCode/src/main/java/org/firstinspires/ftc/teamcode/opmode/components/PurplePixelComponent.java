@@ -9,7 +9,6 @@ import org.firstinspires.ftc.teamcode.drive.RoboticaBot;
 import org.firstinspires.ftc.teamcode.drive.TrajectoryDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceBuilder;
-import org.firstinspires.ftc.teamcode.util.GlobalOpMode;
 import org.firstinspires.ftc.teamcode.vision.TensorFlowDetection;
 
 public class PurplePixelComponent extends Component {
@@ -78,9 +77,10 @@ public class PurplePixelComponent extends Component {
             }
         }
 
-        trajB.waitSeconds(1)
+        //trajB.waitSeconds(0.5)
+        trajB
                 .addTemporalMarker(() -> getRobot().dropPurplePixel(true))
-                .waitSeconds(2);
+                .waitSeconds(0.5);
 
         //if (propPosition == TensorFlowDetection.PropPosition.CENTER && (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.BLUE_AUDIENCE || getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.RED_AUDIENCE )) {
         if (propPosition == TensorFlowDetection.PropPosition.LEFT && getRobot().getClass() == RoboticaBot.class && getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.RED_BOARD) {
@@ -97,6 +97,6 @@ public class PurplePixelComponent extends Component {
         getRobot().getDrive().followTrajectorySequence(traj);
         getRobot().dropPurplePixel(false);
 
-        GlobalOpMode.opMode.sleep(1000);
+        //GlobalOpMode.opMode.sleep(1000);
     }
 }

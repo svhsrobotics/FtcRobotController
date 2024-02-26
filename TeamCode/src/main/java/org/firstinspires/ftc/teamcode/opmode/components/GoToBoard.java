@@ -1,14 +1,20 @@
 package org.firstinspires.ftc.teamcode.opmode.components;
 
+import static org.firstinspires.ftc.teamcode.util.Units.fi;
+
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 
 import org.firstinspires.ftc.teamcode.drive.Robot;
+import org.firstinspires.ftc.teamcode.drive.RoboticaBot;
+import org.firstinspires.ftc.teamcode.drive.TrajectoryDrive;
+import org.firstinspires.ftc.teamcode.opmode.TestTeleOp;
+import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceBuilder;
+import org.firstinspires.ftc.teamcode.util.GlobalOpMode;
 import org.firstinspires.ftc.teamcode.vision.TensorFlowDetection;
 
 public class GoToBoard extends Component {
-
-
     TensorFlowDetection.PropPosition propPos;
 
     public GoToBoard(Robot robot, TensorFlowDetection.PropPosition prop) {
@@ -20,6 +26,56 @@ public class GoToBoard extends Component {
     public void drive() {
         Pose2d startPose = getRobot().getDrive().getPoseEstimate();
         TrajectorySequenceBuilder trajB = getRobot().getDrive().trajectorySequenceBuilder(startPose);
+
+        // If we're on the blue side, then set this to 1 foot, -1 foot on red side
+        int y = (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.BLUE_BOARD) || (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.BLUE_AUDIENCE) ? fi(4,0) : fi(-4,0);
+
+        trajB.lineTo(new Vector2d(startPose.getX(), y))
+            .lineTo(new Vector2d(fi(3, 10), y))
+                .turnTo(Math.toRadians(0))
+            //.turn(Math.toRadians(90))
+            .lineTo(new Vector2d(fi(3,8), fi(-2,11)));
+
+        TrajectorySequence traj = trajB.build();
+
+        getRobot().getDrive().followTrajectorySequence(traj);
+
+        if (getRobot().getClass() == RoboticaBot.class) {
+            ((RoboticaBot) getRobot()).recalibrateShoulder();
+            ((RoboticaBot) getRobot()).setShoulderTargetPosition(TestTeleOp.RAISED_ARM);
+        }
+
+        //GlobalOpMode.opMode.sleep(2000);
+
+        TrajectorySequenceBuilder trajC = getRobot().getDrive().trajectorySequenceBuilder(getRobot().getDrive().getPoseEstimate());
+        trajC.back(5);
+        getRobot().getDrive().followTrajectorySequence(trajC.build());
+
+        ((RoboticaBot) getRobot()).elbowServo.innerServo.setPower(-1.0);
+        GlobalOpMode.opMode.sleep(400);
+        ((RoboticaBot) getRobot()).elbowServo.innerServo.setPower(0.0);
+        ((RoboticaBot) getRobot()).wristTwistServo.setPosition(0.5);
+        ((RoboticaBot) getRobot()).wristLiftServo.setPosition(TestTeleOp.RAISED_WRIST);
+
+        TrajectorySequenceBuilder trajD = getRobot().getDrive().trajectorySequenceBuilder(getRobot().getDrive().getPoseEstimate());
+        trajD.forward(8);
+        getRobot().getDrive().followTrajectorySequence(trajD.build());
+
+        ((RoboticaBot) getRobot()).pinchServo.innerServo.setPower(1.0); // OPEN
+
+        GlobalOpMode.opMode.sleep(900);
+
+        ((RoboticaBot) getRobot()).pinchServo.innerServo.setPower(0.0);
+
+        TrajectorySequenceBuilder trajE = getRobot().getDrive().trajectorySequenceBuilder(getRobot().getDrive().getPoseEstimate());
+        trajE.back(8);
+        getRobot().getDrive().followTrajectorySequence(trajE.build());
+
+
+        GlobalOpMode.opMode.sleep(30000);
+
+
+
 
 
 
