@@ -154,6 +154,7 @@ public class TestTeleOp extends LinearOpMode {
                 // HANG
                 if (gamepad2.y) {
                     rrobot.hangMotor.setPower(1.0);
+                    rrobot.planeAngleServo.setPosition(0.3);
                 } else if (gamepad2.x) {
                     rrobot.hangMotor.setPower(-1.0);
                 } else {
@@ -204,4 +205,4 @@ public class TestTeleOp extends LinearOpMode {
 
     public static int PICKUP_ARM = -116 ;
     public static double PICKUP_WRIST = 0.472;
-}
+    public s

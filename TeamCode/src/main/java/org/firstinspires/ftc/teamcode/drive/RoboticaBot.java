@@ -56,7 +56,7 @@ public class RoboticaBot extends Robot {
      * Maximum Angular Velocity is calculated as: maximum velocity / trackWidth * (180 / Math.PI) but capped at 360°/s.
      * You are free to raise this on your own if you would like. It is best determined through experimentation.
      */
-    public static double MAX_VEL = 30;
+    public static double MAX_VEL = 70;
     public static double MAX_ACCEL = MAX_VEL;
     public static double MAX_ANG_ACCEL = Math.toRadians(360);
     public static double MAX_ANG_VEL = Math.toRadians(360);
@@ -222,7 +222,7 @@ public class RoboticaBot extends Robot {
 
 
     public static double PLANE_START_ANGLE = 0.6;
-    public static double PLANE_LAUNCH_ANGLE = 0.80;
+    public static double PLANE_LAUNCH_ANGLE = 0.74;
     public static double PLANE_FOR_INCR = 0.001;
     public static int PLANE_DELAY = 10;
     @Override
@@ -244,7 +244,7 @@ public class RoboticaBot extends Robot {
 
     public void recalibrateShoulder() {
         // Raise the arm up
-        shoulderMotor.setTargetPosition(500);
+        shoulderMotor.setTargetPosition(700);
         shoulderMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         shoulderMotor.setPower(1);
         while (shoulderMotor.isBusy() && !GlobalOpMode.opMode.isStopRequested()) {}

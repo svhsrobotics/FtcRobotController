@@ -77,9 +77,10 @@ public class PurplePixelComponent extends Component {
             }
         }
 
-        trajB.waitSeconds(1)
+        //trajB.waitSeconds(0.5)
+        trajB
                 .addTemporalMarker(() -> getRobot().dropPurplePixel(true))
-                .waitSeconds(2);
+                .waitSeconds(0.5);
 
         //if (propPosition == TensorFlowDetection.PropPosition.CENTER && (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.BLUE_AUDIENCE || getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.RED_AUDIENCE )) {
         if (propPosition == TensorFlowDetection.PropPosition.LEFT && getRobot().getClass() == RoboticaBot.class && getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.RED_BOARD) {
@@ -95,5 +96,7 @@ public class PurplePixelComponent extends Component {
         TrajectorySequence traj = trajB.build();
         getRobot().getDrive().followTrajectorySequence(traj);
         getRobot().dropPurplePixel(false);
+
+        //GlobalOpMode.opMode.sleep(1000);
     }
 }

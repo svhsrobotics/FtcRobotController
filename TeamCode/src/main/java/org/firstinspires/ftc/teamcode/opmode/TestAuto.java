@@ -113,7 +113,7 @@ public class TestAuto extends LinearOpMode {
         List<Component> componentList = new ArrayList<>();
 
         if (config.placePixel) {
-            componentList.add(new PurplePixelComponent(robot, tensorPos, Objects.equals(config.park, "inner") || Objects.equals(config.park, "board")));
+            componentList.add(new PurplePixelComponent(robot, tensorPos, Objects.equals(config.park, "inner")));
         }
 
         switch (config.park) {
