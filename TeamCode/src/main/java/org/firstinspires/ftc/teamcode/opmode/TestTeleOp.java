@@ -59,7 +59,7 @@ public class TestTeleOp extends LinearOpMode {
                     drive.setPoseEstimate(new Pose2d(poseEstimate.getX(), poseEstimate.getY(), 0));
                 }
             } else {
-                drive.setWeightedDrivePower(new Pose2d((-gamepad1.left_stick_y * 0.5)+(-gamepad2.left_stick_y * 0.5), (-gamepad1.left_stick_x * 0.5)+(-gamepad2.left_stick_x * 0.5), (-gamepad1.right_stick_x * 0.5)+(-gamepad2.right_stick_x * 0.5)));
+                drive.setWeightedDrivePower(new Pose2d((-gamepad1.left_stick_y * 0.5) + (-gamepad2.left_stick_y * 0.5), (-gamepad1.left_stick_x * 0.5) + (-gamepad2.left_stick_x * 0.5), (-gamepad1.right_stick_x * 0.5) + (-gamepad2.right_stick_x * 0.5)));
             }
 
             telemetry.addData("Robot", robot.getClass().toString());
@@ -80,20 +80,20 @@ public class TestTeleOp extends LinearOpMode {
             if (robot.getClass() == PsiBot.class) {
                 if (gamepad1.left_bumper || gamepad2.left_bumper) {
                     purplePose = purplePose + 0.1;
-                } else if (gamepad1.right_bumper|| gamepad2.right_bumper) {
+                } else if (gamepad1.right_bumper || gamepad2.right_bumper) {
                     purplePose = purplePose - 0.1;
                 }
                 if (purplePose > 1) purplePose = 1;
                 if (purplePose < 0) purplePose = 0;
                 ((PsiBot) robot).planeServo.setPosition(purplePose);
-              //  telemetry.addData("Plane Pose", purplePose);
-                ((PsiBot) robot).armMotor.setPower((gamepad1.left_trigger*0.1)-((gamepad1.right_trigger*0.1) + (gamepad2.left_trigger*0.1)-((gamepad2.right_trigger*0.1))));
-              //  telemetry.addData("Arm location", ((PsiBot) robot).armMotor.getCurrentPosition());
-               if (gamepad1.b || gamepad2.b) {
-                   ((PsiBot) robot).mosaicServo.setPosition(0);
-               } else if (gamepad1.a || gamepad2.a) {
-                   ((PsiBot) robot).mosaicServo.setPosition(1);
-               }
+                //  telemetry.addData("Plane Pose", purplePose);
+                ((PsiBot) robot).armMotor.setPower((gamepad1.left_trigger * 0.1) - ((gamepad1.right_trigger * 0.1) + (gamepad2.left_trigger * 0.1) - ((gamepad2.right_trigger * 0.1))));
+                //  telemetry.addData("Arm location", ((PsiBot) robot).armMotor.getCurrentPosition());
+                if (gamepad1.b || gamepad2.b) {
+                    ((PsiBot) robot).mosaicServo.setPosition(0);
+                } else if (gamepad1.a || gamepad2.a) {
+                    ((PsiBot) robot).mosaicServo.setPosition(1);
+                }
             } else if (robot.getClass() == RoboticaBot.class) {
                 RoboticaBot rrobot = (RoboticaBot) robot;
 
@@ -114,7 +114,7 @@ public class TestTeleOp extends LinearOpMode {
 
                 // SHOULDER : WILL BE REPLACED AFTER WORM GEAR?
                 if (gamepad1.left_trigger + gamepad1.right_trigger + gamepad2.right_trigger + gamepad2.left_trigger > 0.05) {
-                    armPos = rrobot.getShoulderCurrentPosition() - (int)(gamepad1.left_trigger * 50) - (int)(gamepad2.left_trigger * 50) + (int)(gamepad1.right_trigger * 50) + (int)(gamepad2.right_trigger * 50);
+                    armPos = rrobot.getShoulderCurrentPosition() - (int) (gamepad1.left_trigger * 50) - (int) (gamepad2.left_trigger * 50) + (int) (gamepad1.right_trigger * 50) + (int) (gamepad2.right_trigger * 50);
                     currentState = ArmState.MANUAL;
                 }
 
@@ -194,15 +194,15 @@ public class TestTeleOp extends LinearOpMode {
 
     //public static int ARM_OFFSET = 94;
 
-    public static int RAISED_ARM = 1671 ;
+    public static int RAISED_ARM = 1671;
     public static double RAISED_WRIST = 0.4;
 
-    public static int NEUTRAL_ARM = 198 ;
+    public static int NEUTRAL_ARM = 198;
     public static double NEUTRAL_WRIST = 0.544;
 
-    public static int PREP_ARM = -7 ;
+    public static int PREP_ARM = -7;
     public static double PREP_WRIST = 0.472;
 
-    public static int PICKUP_ARM = -116 ;
+    public static int PICKUP_ARM = -116;
     public static double PICKUP_WRIST = 0.472;
-    public s
+}

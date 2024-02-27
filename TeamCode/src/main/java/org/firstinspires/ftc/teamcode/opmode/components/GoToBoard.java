@@ -61,11 +61,11 @@ public class GoToBoard extends Component {
         trajD.forward(8);
         getRobot().getDrive().followTrajectorySequence(trajD.build());
 
-        ((RoboticaBot) getRobot()).pinchServo.innerServo.setPower(1.0); // OPEN
+       // ((RoboticaBot) getRobot()).pinchServo.innerServo.setPower(1.0); // OPEN
 
         GlobalOpMode.opMode.sleep(900);
 
-        ((RoboticaBot) getRobot()).pinchServo.innerServo.setPower(0.0);
+       // ((RoboticaBot) getRobot()).pinchServo.innerServo.setPower(0.0);
 
         TrajectorySequenceBuilder trajE = getRobot().getDrive().trajectorySequenceBuilder(getRobot().getDrive().getPoseEstimate());
         trajE.back(8);
