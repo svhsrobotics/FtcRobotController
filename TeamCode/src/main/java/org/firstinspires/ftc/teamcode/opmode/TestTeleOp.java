@@ -40,6 +40,7 @@ public class TestTeleOp extends LinearOpMode {
         Toggle pinchToggle = new Toggle();
         ArmState currentState = ArmState.MANUAL;
         int offset = 0;
+        double pinchLocation = 0.0;
 
         while (opModeIsActive()) {
             drive.update(); // MUST be called every loop cycle so that RoadRunner calculates the pose correctly
@@ -138,12 +139,17 @@ public class TestTeleOp extends LinearOpMode {
                 }
 
                 if (gamepad1.dpad_up || gamepad2.dpad_up) {
-                    rrobot.pinchServo.innerServo.setPower(-1.0); // CLOSE
+                    pinchLocation = pinchLocation + 0.008;
                 } else if (gamepad1.dpad_down || gamepad2.dpad_down) {
-                    rrobot.pinchServo.innerServo.setPower(1.0); // OPEN
-                } else {
-                    rrobot.pinchServo.innerServo.setPower(0);
+                    pinchLocation -= 0.008;
                 }
+                if (pinchLocation > 1) {
+                    pinchLocation = 1;
+                } else if (pinchLocation < 0) {
+                    pinchLocation = 0;
+                }
+                rrobot.pinchServo.setPosition(pinchLocation);
+
 
                 // HANG
                 if (gamepad2.y) {
@@ -185,17 +191,17 @@ public class TestTeleOp extends LinearOpMode {
         }
     }
 
-    public static int ARM_OFFSET = 94;
+    //public static int ARM_OFFSET = 94;
 
-    public static int RAISED_ARM = 756 + ARM_OFFSET;
-    public static double RAISED_WRIST = 0.53;
+    public static int RAISED_ARM = 1671 ;
+    public static double RAISED_WRIST = 0.4;
 
-    public static int NEUTRAL_ARM = 521 + ARM_OFFSET;
-    public static double NEUTRAL_WRIST = 0.58;
+    public static int NEUTRAL_ARM = 198 ;
+    public static double NEUTRAL_WRIST = 0.544;
 
-    public static int PREP_ARM = 262 + ARM_OFFSET;
-    public static double PREP_WRIST = 0.67;
+    public static int PREP_ARM = -7 ;
+    public static double PREP_WRIST = 0.472;
 
-    public static int PICKUP_ARM = 204 + ARM_OFFSET;
-    public static double PICKUP_WRIST = 0.69;
+    public static int PICKUP_ARM = -116 ;
+    public static double PICKUP_WRIST = 0.472;
 }

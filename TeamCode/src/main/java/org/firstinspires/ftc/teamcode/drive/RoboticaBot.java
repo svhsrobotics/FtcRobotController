@@ -92,7 +92,7 @@ public class RoboticaBot extends Robot {
     //public final AxonServo wristTwistServo;
     public final Servo wristTwistServo;
     public final Servo wristLiftServo;
-    public final AxonServo pinchServo;
+    public final Servo pinchServo;
     public final Servo purpleServo;
     public final Servo planeAngleServo;
     public final CRServo planeReleaseServo;
@@ -132,7 +132,7 @@ public class RoboticaBot extends Robot {
         wristTwistServo = hardwareMap.get(Servo.class, "wrist_twist");
         wristLiftServo = hardwareMap.get(Servo.class, "wrist_lift");
         //pinchServo = hardwareMap.get(AxonServo.class, "pinch");
-        pinchServo = new AxonServo("pinch", "axon_pinch", hardwareMap); // TODO SWITCH TO NORMAL SERVO
+        pinchServo = hardwareMap.get(Servo.class, "pinch");
         //pinchServo = hardwareMap.get(Servo.class, "pinch");
         //pinchServo.setPower(0.1);
         purpleServo = hardwareMap.get(Servo.class, "purple");
