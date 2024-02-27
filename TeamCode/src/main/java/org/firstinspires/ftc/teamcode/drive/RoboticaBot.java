@@ -88,7 +88,7 @@ public class RoboticaBot extends Robot {
 
     public final DcMotorEx shoulderMotor;
     public final DcMotorEx hangMotor;
-    public final AxonServo elbowServo;
+    public final Servo elbowServo;
     //public final AxonServo wristTwistServo;
     public final Servo wristTwistServo;
     public final Servo wristLiftServo;
@@ -127,7 +127,8 @@ public class RoboticaBot extends Robot {
         shoulderMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         shoulderMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         hangMotor = hardwareMap.get(DcMotorEx.class, "hang");
-        elbowServo = new AxonServo("elbow", "axon_2", hardwareMap);
+        //elbowServo = new AxonServo("elbow", "axon_2", hardwareMap);
+        elbowServo = hardwareMap.get(Servo.class, "elbow");
         //wristTwistServo = new AxonServo("wrist_twist", "axon_3", hardwareMap);
         wristTwistServo = hardwareMap.get(Servo.class, "wrist_twist");
         wristLiftServo = hardwareMap.get(Servo.class, "wrist_lift");

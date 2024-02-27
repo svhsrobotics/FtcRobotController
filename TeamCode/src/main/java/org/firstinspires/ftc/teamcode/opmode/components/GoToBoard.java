@@ -51,9 +51,9 @@ public class GoToBoard extends Component {
         trajC.back(5);
         getRobot().getDrive().followTrajectorySequence(trajC.build());
 
-        ((RoboticaBot) getRobot()).elbowServo.innerServo.setPower(-1.0);
+        //((RoboticaBot) getRobot()).elbowServo.innerServo.setPower(-1.0);
         GlobalOpMode.opMode.sleep(400);
-        ((RoboticaBot) getRobot()).elbowServo.innerServo.setPower(0.0);
+        //((RoboticaBot) getRobot()).elbowServo.innerServo.setPower(0.0);
         ((RoboticaBot) getRobot()).wristTwistServo.setPosition(0.5);
         ((RoboticaBot) getRobot()).wristLiftServo.setPosition(TestTeleOp.RAISED_WRIST);
 

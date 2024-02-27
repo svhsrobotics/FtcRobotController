@@ -40,6 +40,7 @@ public class TestTeleOp extends LinearOpMode {
         Toggle pinchToggle = new Toggle();
         ArmState currentState = ArmState.MANUAL;
         int offset = 0;
+        double elbowPos=0.2;
         double pinchLocation = 0.0;
 
         while (opModeIsActive()) {
@@ -131,12 +132,13 @@ public class TestTeleOp extends LinearOpMode {
 
                 // ELBOW
                 if (gamepad1.dpad_left || gamepad2.dpad_left) {
-                    rrobot.elbowServo.innerServo.setPower(1.0);
+                    elbowPos -= 0.008; // UP
                 } else if (gamepad1.dpad_right || gamepad2.dpad_right) {
-                    rrobot.elbowServo.innerServo.setPower(-1.0);
-                } else {
-                    rrobot.elbowServo.innerServo.setPower(0.0);
+                    elbowPos += 0.008; // DOWN
                 }
+                if (elbowPos > 0.55) wristPos = 0.55;
+                if (wristPos < 0.2) wristPos = 0.2;
+                rrobot.elbowServo.setPosition(wristPos);
 
                 if (gamepad1.dpad_up || gamepad2.dpad_up) {
                     pinchLocation = pinchLocation + 0.008;
