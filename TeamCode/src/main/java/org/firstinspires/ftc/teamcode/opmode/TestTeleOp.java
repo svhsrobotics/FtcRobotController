@@ -35,8 +35,8 @@ public class TestTeleOp extends LinearOpMode {
         waitForStart();
 
         double purplePose = 0.5;
-        int armPos = 0;
-        double wristPos = 1.0;
+        int armPos = 300;
+        double wristPos = .5;
         Toggle pinchToggle = new Toggle();
         ArmState currentState = ArmState.MANUAL;
         int offset = 0;
@@ -54,14 +54,20 @@ public class TestTeleOp extends LinearOpMode {
 
                 // Pass in the rotated input + right stick value for rotation
                 // Rotation is not part of the rotated input thus must be passed in separately
-                drive.setWeightedDrivePower(new Pose2d(input.getX(), input.getY(), -gamepad1.right_stick_x * 0.5));
+                if (armPos <= 1500) {
+                    drive.setWeightedDrivePower(new Pose2d(input.getX(), input.getY(), -gamepad1.right_stick_x * 0.5));
+                } else {
+                    drive.setWeightedDrivePower(new Pose2d(input.getX(), input.getY(), gamepad1.right_stick_x * 0.5));
+                }
 
                 if (gamepad1.x) {
                     drive.setPoseEstimate(new Pose2d(poseEstimate.getX(), poseEstimate.getY(), 0));
                 }
+            } else if (armPos > 1500) {
+                drive.setWeightedDrivePower(new Pose2d((gamepad1.left_stick_y * 0.5) + (gamepad2.left_stick_y * 0.5), (gamepad1.left_stick_x * 0.5) + (gamepad2.left_stick_x * 0.5), (-gamepad1.right_stick_x * 0.5) + (-gamepad2.right_stick_x * 0.5)));
             } else {
-                drive.setWeightedDrivePower(new Pose2d((-gamepad1.left_stick_y * 0.5) + (-gamepad2.left_stick_y * 0.5), (-gamepad1.left_stick_x * 0.5) + (-gamepad2.left_stick_x * 0.5), (-gamepad1.right_stick_x * 0.5) + (-gamepad2.right_stick_x * 0.5)));
-            }
+            drive.setWeightedDrivePower(new Pose2d((-gamepad1.left_stick_y * 0.5) + (-gamepad2.left_stick_y * 0.5), (-gamepad1.left_stick_x * 0.5) + (-gamepad2.left_stick_x * 0.5), (-gamepad1.right_stick_x * 0.5) + (-gamepad2.right_stick_x * 0.5)));
+        }
 
             telemetry.addData("Robot", robot.getClass().toString());
             telemetry.addData("Field Centric", config.fieldCentric);
@@ -139,6 +145,7 @@ public class TestTeleOp extends LinearOpMode {
                 if (elbowPos > 0.55) elbowPos = 0.55;
                 if (elbowPos < 0.2) elbowPos = 0.2;
                 rrobot.elbowServo.setPosition(elbowPos);
+                telemetry.addData("ELBOW", elbowPos);
 
                 if (gamepad1.dpad_up || gamepad2.dpad_up) {
                     pinchLocation = pinchLocation + 0.008;
@@ -167,18 +174,22 @@ public class TestTeleOp extends LinearOpMode {
                 if (gamepad1.y) { // RAISED
                     currentState = ArmState.RAISED;
                     armPos = RAISED_ARM;
+                    elbowPos = RAISED_ELBOW;
                     wristPos = RAISED_WRIST;
                 } else if (gamepad1.x) { // NEUTRAL
                     currentState = ArmState.NEUTRAL;
                     armPos = NEUTRAL_ARM;
+                    elbowPos = NEUTRAL_ELBOW;
                     wristPos = NEUTRAL_WRIST;
                 } else if (gamepad1.b) { // PREP
                     currentState = ArmState.PREP;
                     armPos = PREP_ARM;
+                    elbowPos = PREP_ELBOW;
                     wristPos = PREP_WRIST;
                 } else if (gamepad1.a) { // PICKUP
                     currentState = ArmState.PICKUP;
                     armPos = PICKUP_ARM;
+                    elbowPos = PICKUP_ELBOW;
                     wristPos = PICKUP_WRIST;
                 }
 
@@ -196,15 +207,19 @@ public class TestTeleOp extends LinearOpMode {
 
     //public static int ARM_OFFSET = 94;
 
-    public static int RAISED_ARM = 1671;
-    public static double RAISED_WRIST = 0.4;
+    public static int RAISED_ARM = 1712;
+    public static double RAISED_ELBOW = 0.272;
+    public static double RAISED_WRIST = 0.456;
 
-    public static int NEUTRAL_ARM = 198;
-    public static double NEUTRAL_WRIST = 0.544;
+    public static int NEUTRAL_ARM = 113;
+    public static double NEUTRAL_ELBOW = 0.248;
+    public static double NEUTRAL_WRIST = 0.336;
 
     public static int PREP_ARM = -7;
+    public static double PREP_ELBOW = 0.0;
     public static double PREP_WRIST = 0.472;
 
-    public static int PICKUP_ARM = -116;
-    public static double PICKUP_WRIST = 0.472;
+    public static int PICKUP_ARM = -249;
+    public static double PICKUP_ELBOW = 0.2;
+    public static double PICKUP_WRIST = 0.816;
 }
