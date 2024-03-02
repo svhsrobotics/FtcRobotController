@@ -223,7 +223,7 @@ public class RoboticaBot extends Robot {
 
 
     public static double PLANE_START_ANGLE = 0.6;
-    public static double PLANE_LAUNCH_ANGLE = 0.74;
+    public static double PLANE_LAUNCH_ANGLE = 0.705;
     public static double PLANE_FOR_INCR = 0.001;
     public static int PLANE_DELAY = 10;
     @Override

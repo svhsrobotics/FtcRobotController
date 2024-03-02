@@ -40,8 +40,9 @@ public class TestTeleOp extends LinearOpMode {
         Toggle pinchToggle = new Toggle();
         ArmState currentState = ArmState.MANUAL;
         int offset = 0;
-        double elbowPos=0.2;
+        double elbowPos = 0.2;
         double pinchLocation = 0.0;
+        boolean barHangTriggered = false;
 
         while (opModeIsActive()) {
             drive.update(); // MUST be called every loop cycle so that RoadRunner calculates the pose correctly
@@ -63,11 +64,11 @@ public class TestTeleOp extends LinearOpMode {
                 if (gamepad1.x) {
                     drive.setPoseEstimate(new Pose2d(poseEstimate.getX(), poseEstimate.getY(), 0));
                 }
-            } else if (armPos > 1500) {
+            } else if (armPos > ARM_FLIP_OVER && !barHangTriggered) {
                 drive.setWeightedDrivePower(new Pose2d((gamepad1.left_stick_y * 0.5) + (gamepad2.left_stick_y * 0.5), (gamepad1.left_stick_x * 0.5) + (gamepad2.left_stick_x * 0.5), (-gamepad1.right_stick_x * 0.5) + (-gamepad2.right_stick_x * 0.5)));
             } else {
-            drive.setWeightedDrivePower(new Pose2d((-gamepad1.left_stick_y * 0.5) + (-gamepad2.left_stick_y * 0.5), (-gamepad1.left_stick_x * 0.5) + (-gamepad2.left_stick_x * 0.5), (-gamepad1.right_stick_x * 0.5) + (-gamepad2.right_stick_x * 0.5)));
-        }
+                drive.setWeightedDrivePower(new Pose2d((-gamepad1.left_stick_y * 0.5) + (-gamepad2.left_stick_y * 0.5), (-gamepad1.left_stick_x * 0.5) + (-gamepad2.left_stick_x * 0.5), (-gamepad1.right_stick_x * 0.5) + (-gamepad2.right_stick_x * 0.5)));
+            }
 
             telemetry.addData("Robot", robot.getClass().toString());
             telemetry.addData("Field Centric", config.fieldCentric);
@@ -163,6 +164,7 @@ public class TestTeleOp extends LinearOpMode {
                 // HANG
                 if (gamepad2.y) {
                     rrobot.hangMotor.setPower(1.0);
+                    barHangTriggered = true;
                     rrobot.planeAngleServo.setPosition(0.3);
                 } else if (gamepad2.x) {
                     rrobot.hangMotor.setPower(-1.0);
@@ -191,6 +193,10 @@ public class TestTeleOp extends LinearOpMode {
                     armPos = PICKUP_ARM;
                     elbowPos = PICKUP_ELBOW;
                     wristPos = PICKUP_WRIST;
+                    while (pinchLocation != 1) {
+                        pinchLocation = pinchLocation + 0.008;
+                    }
+                    rrobot.pinchServo.setPosition(pinchLocation);
                 }
 
 
@@ -207,7 +213,7 @@ public class TestTeleOp extends LinearOpMode {
 
     //public static int ARM_OFFSET = 94;
 
-    public static int RAISED_ARM = 1712;
+    public static int RAISED_ARM = 1855;
     public static double RAISED_ELBOW = 0.272;
     public static double RAISED_WRIST = 0.456;
 
@@ -222,4 +228,7 @@ public class TestTeleOp extends LinearOpMode {
     public static int PICKUP_ARM = -249;
     public static double PICKUP_ELBOW = 0.2;
     public static double PICKUP_WRIST = 0.816;
+
+
+    public static int ARM_FLIP_OVER = 1350;
 }
