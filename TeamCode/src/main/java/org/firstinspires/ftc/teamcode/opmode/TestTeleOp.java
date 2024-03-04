@@ -197,7 +197,8 @@ public class TestTeleOp extends LinearOpMode {
                     armPos = PICKUP_ARM;
                     elbowPos = PICKUP_ELBOW;
                     wristPos = PICKUP_WRIST;
-                    rrobot.pinchServo.setPosition(1);
+                    pinchLocation = 1;
+                    rrobot.pinchServo.setPosition(pinchLocation);
                 }
 
 
