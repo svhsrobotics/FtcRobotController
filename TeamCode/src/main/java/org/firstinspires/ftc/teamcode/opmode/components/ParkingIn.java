@@ -24,7 +24,8 @@ public class ParkingIn extends Component{
         int y = (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.BLUE_BOARD) || (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.BLUE_AUDIENCE) ? fi(0,10) : fi(0,-10);
 
         trajB.lineTo(new Vector2d(currentPose.getX(), y));
-        trajB.lineTo(new Vector2d(fi(4,6), y));
+        trajB.lineTo(new Vector2d(fi(4,0), y));
+        trajB.turnTo(Math.toRadians(180));
 
         TrajectorySequence traj = trajB.build();
         getRobot().getDrive().followTrajectorySequence(traj);

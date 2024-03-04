@@ -215,7 +215,7 @@ public class RoboticaBot extends Robot {
     @Override
     public void dropPurplePixel(boolean state) {
         if (state) {
-            purpleServo.setPosition(1);
+            purpleServo.setPosition(.8);
         } else {
             purpleServo.setPosition(0.5);
         }
@@ -245,7 +245,7 @@ public class RoboticaBot extends Robot {
 
     public void recalibrateShoulder() {
         // Raise the arm up
-        shoulderMotor.setTargetPosition(700);
+        shoulderMotor.setTargetPosition(1200);
         shoulderMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         shoulderMotor.setPower(1);
         while (shoulderMotor.isBusy() && !GlobalOpMode.opMode.isStopRequested()) {}

@@ -217,7 +217,7 @@ public class TestTeleOp extends LinearOpMode {
 
     public static int RAISED_ARM = 1855;
     public static double RAISED_ELBOW = 0.272;
-    public static double RAISED_WRIST = 0.456;
+    public static double RAISED_WRIST = 0.544;
 
     public static int NEUTRAL_ARM = 113;
     public static double NEUTRAL_ELBOW = 0.248;

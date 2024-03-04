@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmode;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -24,6 +25,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Autonomous
+@Config
 public class TestAuto extends LinearOpMode {
     private Pose2d estimateWithAllCameras(AprilTagCamera[] cameras, AprilTagLocalizer aprilTag) {
         Pose2d pose = null;
@@ -35,7 +37,7 @@ public class TestAuto extends LinearOpMode {
         }
         return pose;
     }
-
+    public static TensorFlowDetection.PropPosition TENSORFLOWDEF = TensorFlowDetection.PropPosition.RIGHT;
     private TensorFlowDetection.PropPosition detectProp(Robot robot, int timeout) {
         if (robot.getClass() == PsiBot.class) {
             ((PsiBot) robot).armMotor.setTargetPosition(-109);
@@ -46,7 +48,7 @@ public class TestAuto extends LinearOpMode {
         TensorFlowDetection.PropPosition position = tensor.getPropPosition(new Timeout(timeout));
         if (position == null) {
             telemetry.log().add("Unable to detect prop, using CENTER");
-            position = TensorFlowDetection.PropPosition.CENTER;
+            position = TENSORFLOWDEF;
         }
         return position;
     }

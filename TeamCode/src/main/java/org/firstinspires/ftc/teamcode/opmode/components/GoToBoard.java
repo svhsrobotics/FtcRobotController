@@ -32,7 +32,7 @@ public class GoToBoard extends Component {
 
         trajB.lineTo(new Vector2d(startPose.getX(), y))
             .lineTo(new Vector2d(fi(3, 10), y))
-                .turnTo(Math.toRadians(0))
+                .turnTo(Math.toRadians(180))
             //.turn(Math.toRadians(90))
             .lineTo(new Vector2d(fi(3,8), fi(-2,11)));
 
@@ -40,10 +40,12 @@ public class GoToBoard extends Component {
 
         getRobot().getDrive().followTrajectorySequence(traj);
 
-        if (getRobot().getClass() == RoboticaBot.class) {
-            ((RoboticaBot) getRobot()).recalibrateShoulder();
-            ((RoboticaBot) getRobot()).setShoulderTargetPosition(TestTeleOp.RAISED_ARM);
-        }
+//        if (getRobot().getClass() == RoboticaBot.class) {
+//            ((RoboticaBot) getRobot()).recalibrateShoulder();
+//            ((RoboticaBot) getRobot()).setShoulderTargetPosition(TestTeleOp.RAISED_ARM);
+//            ((RoboticaBot) getRobot()).elbowServo.setPosition(TestTeleOp.RAISED_ELBOW);
+//            ((RoboticaBot) getRobot()).wristLiftServo.setPosition(TestTeleOp.RAISED_WRIST);
+//        }
 
         //GlobalOpMode.opMode.sleep(2000);
 

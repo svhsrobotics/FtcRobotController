@@ -81,7 +81,7 @@ public class AprilTagLocalizer {
         List<AprilTagDetection> detections = aprilTag.getFreshDetections();
         // Wait for detections to not be null
         // TODO: Timeout
-        while (detections == null) {
+        while (detections == null && !GlobalOpMode.opMode.isStopRequested()) {
             //android.util.Log.i("APRILTAG", "Waiting for non null return");
             detections = aprilTag.getFreshDetections();
         }

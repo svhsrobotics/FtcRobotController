@@ -462,9 +462,12 @@ public class TrajectorySequenceBuilder {
     }
 
     public TrajectorySequenceBuilder turnTo(double angle, double maxAngVel, double maxAngAccel) {
-        return turn(angle - lastPose.getHeading(), maxAngVel, maxAngAccel);
+        if (lastPose.getHeading() > Math.toRadians(-180) && lastPose.getHeading() < Math.toRadians(180)) {
+            return turn(angle - lastPose.getHeading(), maxAngVel, maxAngAccel);
+        } else {
+            return turn(angle + (2*Math.PI) - lastPose.getHeading(), maxAngVel, maxAngAccel);
+        }
     }
-
     public TrajectorySequenceBuilder waitSeconds(double seconds) {
         pushPath();
         sequenceSegments.add(new WaitSegment(lastPose, seconds, Collections.emptyList()));
