@@ -108,9 +108,11 @@ public class TestTeleOp extends LinearOpMode {
                 // WRIST
                 // Just lock wrist twist
                 rrobot.wristTwistServo.setPosition(0.5);
-                if (gamepad1.right_bumper || gamepad2.right_bumper) {
+                //if (gamepad1.right_bumper || gamepad2.right_bumper) {
+                if (gamepad1.dpad_right || gamepad2.dpad_right) {
                     wristPos -= 0.008; // UP
-                } else if (gamepad1.left_bumper || gamepad2.left_bumper) {
+                    //} else if (gamepad1.left_bumper || gamepad2.left_bumper) {
+                } else if (gamepad1.dpad_left || gamepad2.dpad_left) {
                     wristPos += 0.008; // DOWN
                 }
                 if (wristPos > 1) wristPos = 1;
@@ -138,13 +140,15 @@ public class TestTeleOp extends LinearOpMode {
 //                }
 
                 // ELBOW
-                if (gamepad1.dpad_left || gamepad2.dpad_left) {
+                //if (gamepad1.dpad_left || gamepad2.dpad_left) {
+                if (gamepad1.left_bumper || gamepad2.left_bumper) {
                     elbowPos -= 0.008; // UP
-                } else if (gamepad1.dpad_right || gamepad2.dpad_right) {
+                    //} else if (gamepad1.dpad_right || gamepad2.dpad_right) {
+                }   else if (gamepad1.right_bumper || gamepad2.right_bumper) {
                     elbowPos += 0.008; // DOWN
                 }
                 if (elbowPos > 0.55) elbowPos = 0.55;
-                if (elbowPos < 0.2) elbowPos = 0.2;
+                if (elbowPos < 0) elbowPos = 0;
                 rrobot.elbowServo.setPosition(elbowPos);
                 telemetry.addData("ELBOW", elbowPos);
 
@@ -193,10 +197,7 @@ public class TestTeleOp extends LinearOpMode {
                     armPos = PICKUP_ARM;
                     elbowPos = PICKUP_ELBOW;
                     wristPos = PICKUP_WRIST;
-                    while (pinchLocation != 1) {
-                        pinchLocation = pinchLocation + 0.008;
-                    }
-                    rrobot.pinchServo.setPosition(pinchLocation);
+                    rrobot.pinchServo.setPosition(1);
                 }
 
 
@@ -226,7 +227,7 @@ public class TestTeleOp extends LinearOpMode {
     public static double PREP_WRIST = 0.472;
 
     public static int PICKUP_ARM = -249;
-    public static double PICKUP_ELBOW = 0.2;
+    public static double PICKUP_ELBOW = 0.16;
     public static double PICKUP_WRIST = 0.816;
 
 
