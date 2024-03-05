@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmode;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.control.PIDFController;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -47,6 +48,8 @@ public class TestTeleOp extends LinearOpMode {
         double pinchLocation = 0.0;
         boolean barHangTriggered = false;
 
+        PIDFController headingController = new PIDFController(RoboticaBot.HEADING_PID); // TODO: Abstract
+        headingController.setInputBounds(0, 2 * Math.PI);
         //double targetHeading = Math.toRadians(180);
         //Pose2d targetHeading = new Pose2d();
 
@@ -82,9 +85,13 @@ public class TestTeleOp extends LinearOpMode {
                 if (lockHeading.update(gamepad1.right_stick_button || gamepad2.right_stick_button)) {
                 //if (gamepad1.right_stick_button || gamepad2.right_stick_button) {
                    // targetHeading = Math.toRadians(90);
-                    double delta = poseEstimate.getHeading() - Math.toRadians(90);
-//                    // Turn towards 0 heading while held
-                    turnPower = -delta * 0.5;
+//                    double delta = poseEstimate.getHeading() - Math.toRadians(90);
+////                    // Turn towards 0 heading while held
+//                    turnPower = -delta * 0.5;
+
+                    headingController.setTargetPosition(Math.toRadians(90));
+                    turnPower = headingController.update(poseEstimate.getHeading());
+
 ////                    if (poseEstimate.getHeading() > Math.toRadians(90)) {
 ////                        turnPower = -0.5;
 ////                    } else if (poseEstimate.getHeading() < Math.toRadians(90)) {
