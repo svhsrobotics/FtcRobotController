@@ -47,11 +47,15 @@ public class TestTeleOp extends LinearOpMode {
         double pinchLocation = 0.0;
         boolean barHangTriggered = false;
 
+        //double targetHeading = Math.toRadians(180);
+        //Pose2d targetHeading = new Pose2d();
+
+        Toggle lockHeading = new Toggle();
         while (opModeIsActive()) {
             drive.update(); // MUST be called every loop cycle so that RoadRunner calculates the pose correctly
             Pose2d poseEstimate = drive.getPoseEstimate();
 
-            double STICK_MULTIPLIER = 0.5;
+            double STICK_MULTIPLIER = 1;
             double left_stick_y = (gamepad1.left_stick_y * STICK_MULTIPLIER) + (gamepad2.left_stick_y * STICK_MULTIPLIER);
             double left_stick_x = (gamepad1.left_stick_x * STICK_MULTIPLIER) + (gamepad2.left_stick_x * STICK_MULTIPLIER);
             double right_stick_x = (gamepad1.right_stick_x * STICK_MULTIPLIER) + (gamepad2.right_stick_x * STICK_MULTIPLIER);
@@ -69,20 +73,36 @@ public class TestTeleOp extends LinearOpMode {
 //                    drive.setWeightedDrivePower(new Pose2d(input.getX(), input.getY(), gamepad1.right_stick_x * 0.5));
 //                }
 
-                double turnPower = right_stick_x;
+                double turnPower = -right_stick_x;
 
-                if (gamepad1.right_stick_button || gamepad2.right_stick_button) {
+
+
+//                targetHeading += Math.toRadians(-right_stick_x * 10);
+
+                if (lockHeading.update(gamepad1.right_stick_button || gamepad2.right_stick_button)) {
+                //if (gamepad1.right_stick_button || gamepad2.right_stick_button) {
+                   // targetHeading = Math.toRadians(90);
                     double delta = poseEstimate.getHeading() - Math.toRadians(90);
-                    // Turn towards 0 heading while held
+//                    // Turn towards 0 heading while held
                     turnPower = -delta * 0.5;
-//                    if (poseEstimate.getHeading() > Math.toRadians(90)) {
-//                        turnPower = -0.5;
-//                    } else if (poseEstimate.getHeading() < Math.toRadians(90)) {
-//                        turnPower = 0.5;
-//                    } else {
-//                        turnPower = 0;
-//                    }
+////                    if (poseEstimate.getHeading() > Math.toRadians(90)) {
+////                        turnPower = -0.5;
+////                    } else if (poseEstimate.getHeading() < Math.toRadians(90)) {
+////                        turnPower = 0.5;
+////                    } else {
+////                        turnPower = 0;
+////                    }
                 }
+
+                // Normalize target heading to be in range 0 to 2pi
+//                if (targetHeading > 2*Math.PI) {
+//                    targetHeading = 0;
+//                } else if (targetHeading < 0) {
+//                    targetHeading = 2*Math.PI;
+//                }
+
+                //double delta = poseEstimate.getHeading() - targetHeading;
+                //double turnPower = -delta * 1;
 
                 drive.setWeightedDrivePower(new Pose2d(input.getX(), input.getY(), turnPower));
 
