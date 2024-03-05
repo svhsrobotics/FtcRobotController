@@ -32,6 +32,9 @@ public class TestTeleOp extends LinearOpMode {
         TrajectoryDrive drive = robot.getDrive();
         Configuration config = Configurator.load();
 
+        // TODO: Get pose estimate from Auto
+        drive.setPoseEstimate(new Pose2d(0, 0, Math.toRadians(180)));
+
         waitForStart();
 
         double purplePose = 0.5;
@@ -48,20 +51,43 @@ public class TestTeleOp extends LinearOpMode {
             drive.update(); // MUST be called every loop cycle so that RoadRunner calculates the pose correctly
             Pose2d poseEstimate = drive.getPoseEstimate();
 
+            double STICK_MULTIPLIER = 0.5;
+            double left_stick_y = (gamepad1.left_stick_y * STICK_MULTIPLIER) + (gamepad2.left_stick_y * STICK_MULTIPLIER);
+            double left_stick_x = (gamepad1.left_stick_x * STICK_MULTIPLIER) + (gamepad2.left_stick_x * STICK_MULTIPLIER);
+            double right_stick_x = (gamepad1.right_stick_x * STICK_MULTIPLIER) + (gamepad2.right_stick_x * STICK_MULTIPLIER);
+
             if (config.fieldCentric) {
                 // Create a vector from the gamepad x/y inputs
                 // Then, rotate that vector by the inverse of that heading
-                Vector2d input = new Vector2d(-gamepad1.left_stick_y * 0.5, -gamepad1.left_stick_x * 0.5).rotated(-poseEstimate.getHeading());
+                Vector2d input = new Vector2d(-left_stick_y, -left_stick_x).rotated(-poseEstimate.getHeading());
 
                 // Pass in the rotated input + right stick value for rotation
                 // Rotation is not part of the rotated input thus must be passed in separately
-                if (armPos <= 1500) {
-                    drive.setWeightedDrivePower(new Pose2d(input.getX(), input.getY(), -gamepad1.right_stick_x * 0.5));
-                } else {
-                    drive.setWeightedDrivePower(new Pose2d(input.getX(), input.getY(), gamepad1.right_stick_x * 0.5));
+//                if (armPos <= 1500) {
+//                    drive.setWeightedDrivePower(new Pose2d(input.getX(), input.getY(), -gamepad1.right_stick_x * 0.5));
+//                } else {
+//                    drive.setWeightedDrivePower(new Pose2d(input.getX(), input.getY(), gamepad1.right_stick_x * 0.5));
+//                }
+
+                double turnPower = right_stick_x;
+
+                if (gamepad1.right_stick_button || gamepad2.right_stick_button) {
+                    double delta = poseEstimate.getHeading() - Math.toRadians(90);
+                    // Turn towards 0 heading while held
+                    turnPower = -delta * 0.5;
+//                    if (poseEstimate.getHeading() > Math.toRadians(90)) {
+//                        turnPower = -0.5;
+//                    } else if (poseEstimate.getHeading() < Math.toRadians(90)) {
+//                        turnPower = 0.5;
+//                    } else {
+//                        turnPower = 0;
+//                    }
                 }
 
-                if (gamepad1.x) {
+                drive.setWeightedDrivePower(new Pose2d(input.getX(), input.getY(), turnPower));
+
+
+                if (gamepad1.left_stick_button || gamepad2.left_stick_button) {
                     drive.setPoseEstimate(new Pose2d(poseEstimate.getX(), poseEstimate.getY(), 0));
                 }
             } else if (armPos > ARM_FLIP_OVER && !barHangTriggered) {
