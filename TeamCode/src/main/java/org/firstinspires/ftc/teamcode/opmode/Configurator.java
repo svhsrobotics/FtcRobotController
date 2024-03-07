@@ -7,7 +7,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ReadWriteFile;
 
 import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
-import org.firstinspires.ftc.teamcode.util.Debouncer;
 import org.firstinspires.ftc.teamcode.util.Toggle;
 
 import java.io.File;
@@ -55,32 +54,44 @@ public class Configurator extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         waitForStart();
-        //telemetry.addData("CONTROLS", "A: place pixel toggle \nB: inner park \nY: outer park \nX: board park \ndpad_down: no park \ndpad_up: field centric toggle");
 
-        Toggle purpleToggle = new Toggle();
+        Toggle placePixelToggle = new Toggle();
+        Toggle doParkToggle = new Toggle();
+        Toggle innerPathToggle = new Toggle();
+        Toggle dropOnBoardToggle = new Toggle();
+
         Toggle fieldCentricToggle = new Toggle();
         Toggle tensorflowToggle = new Toggle();
-        Debouncer innerPark = new Debouncer();
-        Debouncer outerPark = new Debouncer();
-        Debouncer placePixel = new Debouncer();
-
-
-        //String park = "none";
 
         Configuration config = Configurator.load();
 
-        purpleToggle.state = config.placePixel;
+        placePixelToggle.state = config.placePixel;
+        doParkToggle.state = config.doPark;
+        innerPathToggle.state = config.innerPath;
+        dropOnBoardToggle.state = config.dropOnBoard;
+
         fieldCentricToggle.state = config.fieldCentric;
         tensorflowToggle.state = config.tensorFlowInInit;
 
-//        Toggle innerParkToggle = new Toggle();
-//        Toggle outerParkToggle = new Toggle();
-//        Toggle placePixelToggle = new Toggle();
-
         while (!isStopRequested()) {
-            purpleToggle.update(gamepad1.a);
-            telemetry.addData("purple pixel (A)", purpleToggle.state);
-            config.placePixel = purpleToggle.state;
+            placePixelToggle.update(gamepad1.a);
+            telemetry.addData("place pixel (A)", placePixelToggle.state);
+            config.placePixel = placePixelToggle.state;
+
+            doParkToggle.update(gamepad1.dpad_right);
+            telemetry.addData("do park (dpad right)", doParkToggle.state);
+            config.doPark = doParkToggle.state;
+
+            if (config.doPark) {
+                innerPathToggle.update(gamepad1.y);
+                telemetry.addData("inner path (Y)", innerPathToggle.state);
+                config.innerPath = innerPathToggle.state;
+
+                dropOnBoardToggle.update(gamepad1.dpad_up);
+                telemetry.addData("drop on board (dpad up)", dropOnBoardToggle.state);
+                config.dropOnBoard = dropOnBoardToggle.state;
+            }
+
 
 
             tensorflowToggle.update(gamepad1.b);
@@ -91,22 +102,22 @@ public class Configurator extends LinearOpMode {
             telemetry.addData("field centric (X)", fieldCentricToggle.state);
             config.fieldCentric = fieldCentricToggle.state;
 
-            if (config.placePixel) {
-
-                if (innerPark.update(gamepad1.dpad_up)) {
-                    config.park = "inner";
-                } else if (outerPark.update(gamepad1.dpad_down)) {
-                    config.park = "outer";
-                } else if (placePixel.update(gamepad1.dpad_right)) {
-                    config.park = "board";
-                } else if (gamepad1.dpad_left) {
-                    config.park = "none";
-                }
-
-                telemetry.addData("park (dpad)", config.park);
-            } else {
-                config.park = "none";
-            }
+//            if (config.placePixel) {
+//
+//                if (innerPark.update(gamepad1.dpad_up)) {
+//                    config.park = "inner";
+//                } else if (outerPark.update(gamepad1.dpad_down)) {
+//                    config.park = "outer";
+//                } else if (placePixel.update(gamepad1.dpad_right)) {
+//                    config.park = "board";
+//                } else if (gamepad1.dpad_left) {
+//                    config.park = "none";
+//                }
+//
+//                telemetry.addData("park (dpad)", config.park);
+//            } else {
+//                config.park = "none";
+//            }
 
             telemetry.update();
         }

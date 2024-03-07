@@ -22,7 +22,6 @@ import org.firstinspires.ftc.teamcode.vision.TensorFlowDetection;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Autonomous
 @Config
@@ -112,22 +111,29 @@ public class TestAuto extends LinearOpMode {
             telemetry.log().add("Tensorflow detected: " + tensorPos);
         }
 
+        // MARK: Components
+
         List<Component> componentList = new ArrayList<>();
 
+        // Configuration values:
+        // - place pixel?
+        // - park at all?
+        //  - use inner or outer paths?
+        //  - park or drop on board?
+
         if (config.placePixel) {
-            componentList.add(new PurplePixelComponent(robot, tensorPos, Objects.equals(config.park, "inner")));
+            componentList.add(new PurplePixelComponent(robot, tensorPos, config.innerPath && config.doPark));
         }
 
-        switch (config.park) {
-            case "outer":
-                componentList.add(new ParkingOut(robot));
-                break;
-            case "inner":
+        if (config.doPark) {
+            if (config.innerPath) {
                 componentList.add(new ParkingIn(robot));
-                break;
-            case "board":
+            } else {
+                componentList.add(new ParkingOut(robot));
+            }
+            if (config.dropOnBoard) {
                 componentList.add(new GoToBoard(robot, tensorPos));
-                break;
+            }
         }
 
         for (Component component : componentList) {
