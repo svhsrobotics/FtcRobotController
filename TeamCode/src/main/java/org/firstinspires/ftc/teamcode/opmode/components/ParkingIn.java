@@ -25,7 +25,7 @@ public class ParkingIn extends Component{
 
         trajB.lineTo(new Vector2d(currentPose.getX(), y));
         trajB.lineTo(new Vector2d(fi(4,0), y));
-        trajB.turnTo(Math.toRadians(180));
+        //trajB.turnTo(Math.toRadians(180));
 
         TrajectorySequence traj = trajB.build();
         getRobot().getDrive().followTrajectorySequence(traj);

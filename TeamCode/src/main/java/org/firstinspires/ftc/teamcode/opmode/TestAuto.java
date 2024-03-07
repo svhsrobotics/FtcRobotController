@@ -140,6 +140,8 @@ public class TestAuto extends LinearOpMode {
             component.drive();
         }
 
+        sleep(30000);
+
 
     }
 

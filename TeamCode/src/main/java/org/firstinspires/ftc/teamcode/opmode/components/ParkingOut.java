@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmode.components;
 
+import static org.firstinspires.ftc.teamcode.util.Units.fi;
+
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 
@@ -16,28 +18,16 @@ public class ParkingOut extends Component{
 
     @Override
     public void drive() {
-
-        //getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.BLUE_BOARD
-
         Pose2d currentPose = getRobot().getDrive().getPoseEstimate();
         TrajectorySequenceBuilder trajB = getRobot().getDrive().trajectorySequenceBuilder(currentPose);
 
+        // If we're on the blue side, then set this to 1 foot, -1 foot on red side
+        int y = (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.BLUE_BOARD) || (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.BLUE_AUDIENCE) ? fi(5,0) : fi(-5,0);
 
+        trajB.lineTo(new Vector2d(currentPose.getX(), y));
+        trajB.lineTo(new Vector2d(fi(4,0), y));
+        //trajB.turnTo(Math.toRadians(180));
 
-        if (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.RED_AUDIENCE) {
-            trajB =trajB.lineTo(new Vector2d(currentPose.getX(), -(5*12 + 1)))
-                    .lineTo(new Vector2d(55, -61));
-        } else if (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.RED_BOARD) {
-            trajB = trajB.lineTo(new Vector2d(currentPose.getX(), -61))
-                    .lineTo(new Vector2d(55, -61));
-
-        } else if (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.BLUE_BOARD) {
-            trajB = trajB.lineTo(new Vector2d(currentPose.getX(), 59))
-                    .lineTo(new Vector2d(55, 59));
-        } else {
-        trajB = trajB.lineTo(new Vector2d(currentPose.getX(), 59))
-                .lineTo(new Vector2d(55, 59));
-    }
         TrajectorySequence traj = trajB.build();
         getRobot().getDrive().followTrajectorySequence(traj);
     }
