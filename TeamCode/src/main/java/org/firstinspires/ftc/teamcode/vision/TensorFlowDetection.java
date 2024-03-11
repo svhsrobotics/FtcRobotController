@@ -24,7 +24,8 @@ public class TensorFlowDetection {
      */
     private VisionPortal visionPortal;
     //private static String TFOD_MODEL_ASSET = "model_20231127_143238.tflite"; //model without negatives
-    private static String TFOD_MODEL_ASSET = "model_20231209_095349.tflite"; //model with negatives
+    //private static String TFOD_MODEL_ASSET = "model_20231209_095349.tflite"; //model with negatives
+    private static String TFOD_MODEL_ASSET = "model_20240309_150637.tflite";
     private static final String[] LABELS = {
             "prop",
     };
