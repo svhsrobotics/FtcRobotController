@@ -216,6 +216,7 @@ public class TestTeleOp extends LinearOpMode {
                     pinchLocation = 0;
                 }
                 rrobot.pinchServo.setPosition(pinchLocation);
+                telemetry.addData("PINCH", pinchLocation);
 
 
                 // HANG
@@ -268,7 +269,7 @@ public class TestTeleOp extends LinearOpMode {
 
     //public static int ARM_OFFSET = 94;
 
-    public static int RAISED_ARM = 1855;
+    public static int RAISED_ARM = 2118;
     public static double RAISED_ELBOW = 0.272;
     public static double RAISED_WRIST = 0.544;
 
