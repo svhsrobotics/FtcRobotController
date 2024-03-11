@@ -21,7 +21,8 @@ public class ParkingIn extends Component{
         TrajectorySequenceBuilder trajB = getRobot().getDrive().trajectorySequenceBuilder(currentPose);
 
         // If we're on the blue side, then set this to 1 foot, -1 foot on red side
-        int y = (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.BLUE_BOARD) || (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.BLUE_AUDIENCE) ? fi(0,10) : fi(0,-10);
+        int y = (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.BLUE_BOARD) || (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.BLUE_AUDIENCE)
+                ? fi(0,10) : fi(0,-10);
 
         trajB.lineTo(new Vector2d(currentPose.getX(), y));
         trajB.lineTo(new Vector2d(fi(4,0), y));

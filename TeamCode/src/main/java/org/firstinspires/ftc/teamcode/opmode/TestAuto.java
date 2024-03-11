@@ -36,7 +36,7 @@ public class TestAuto extends LinearOpMode {
         }
         return pose;
     }
-    public static TensorFlowDetection.PropPosition TENSORFLOWDEF = TensorFlowDetection.PropPosition.RIGHT;
+    public static TensorFlowDetection.PropPosition TENSORFLOWDEF = TensorFlowDetection.PropPosition.LEFT;
     private TensorFlowDetection.PropPosition detectProp(Robot robot, int timeout) {
         if (robot.getClass() == PsiBot.class) {
             ((PsiBot) robot).armMotor.setTargetPosition(-109);
@@ -60,6 +60,9 @@ public class TestAuto extends LinearOpMode {
 
         // Set servo position right away so that it holds
         if (robot.getClass() == RoboticaBot.class) {
+            ((RoboticaBot) robot).pinchServo.setPosition(0.23);
+            ((RoboticaBot) robot).wristLiftServo.setPosition(0.692);
+            ((RoboticaBot) robot).elbowServo.setPosition(0.494);
             //((RoboticaBot) robot).wristServo.setPosition(0.2);
         }
 

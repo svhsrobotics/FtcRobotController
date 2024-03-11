@@ -12,7 +12,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.hardware.AxonServo;
 import org.firstinspires.ftc.teamcode.util.Encoder;
 import org.firstinspires.ftc.teamcode.util.GlobalOpMode;
 import org.firstinspires.ftc.teamcode.vision.AprilTagCamera;
@@ -57,7 +56,7 @@ public class RoboticaBot extends Robot {
      * You are free to raise this on your own if you would like. It is best determined through experimentation.
      */
     public static double MAX_VEL = 70;
-    public static double MAX_ACCEL = MAX_VEL;
+    public static double MAX_ACCEL = 30; // can't accel that fast, weight is uneven
     public static double MAX_ANG_ACCEL = Math.toRadians(360);
     public static double MAX_ANG_VEL = Math.toRadians(360);
     public static double TRACK_WIDTH = 12;
@@ -245,10 +244,17 @@ public class RoboticaBot extends Robot {
 
     public void recalibrateShoulder() {
         // Raise the arm up
-        shoulderMotor.setTargetPosition(1200);
+        shoulderMotor.setTargetPosition(600);
         shoulderMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         shoulderMotor.setPower(1);
-        while (shoulderMotor.isBusy() && !GlobalOpMode.opMode.isStopRequested()) {}
+        android.util.Log.i("SHOULDER", "isBusy: " + shoulderMotor.isBusy());
+        android.util.Log.i("SHOULDER", "isStopRequested: "+ !GlobalOpMode.opMode.isStopRequested());
+
+        int min = 3;
+        while (min > 0 || (shoulderMotor.isBusy() && !GlobalOpMode.opMode.isStopRequested())) {
+            android.util.Log.i("SHOULDER", "Waiting on busy");
+            min--;
+        }
         // Drop the arm
         shoulderMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         shoulderMotor.setPower(-0.1);
