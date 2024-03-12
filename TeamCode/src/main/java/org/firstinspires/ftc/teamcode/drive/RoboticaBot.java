@@ -56,7 +56,7 @@ public class RoboticaBot extends Robot {
      * You are free to raise this on your own if you would like. It is best determined through experimentation.
      */
     public static double MAX_VEL = 70;
-    public static double MAX_ACCEL = 30; // can't accel that fast, weight is uneven
+    public static double MAX_ACCEL = 45; // can't accel that fast, weight is uneven
     public static double MAX_ANG_ACCEL = Math.toRadians(360);
     public static double MAX_ANG_VEL = Math.toRadians(360);
     public static double TRACK_WIDTH = 12;

@@ -56,6 +56,7 @@ public class TestAuto extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         GlobalOpMode.opMode = this;
         Robot robot = Robot.thisRobot(hardwareMap);
+        GlobalOpMode.robot = robot;
         Configuration config = Configurator.load();
 
         // Set servo position right away so that it holds
@@ -78,6 +79,7 @@ public class TestAuto extends LinearOpMode {
             startPose = estimateWithAllCameras(robot.getCameras(), aprilTag);
             telemetry.log().add("AprilTag found: " + startPose);
         }
+        GlobalOpMode.lastPose = startPose;
 
 
         TensorFlowDetection.PropPosition tensorPos = null;
@@ -140,9 +142,11 @@ public class TestAuto extends LinearOpMode {
         }
 
         for (Component component : componentList) {
+            GlobalOpMode.lastPose = robot.getDrive().getPoseEstimate();
             component.drive();
         }
 
+        GlobalOpMode.lastPose = robot.getDrive().getPoseEstimate();
         sleep(30000);
 
 

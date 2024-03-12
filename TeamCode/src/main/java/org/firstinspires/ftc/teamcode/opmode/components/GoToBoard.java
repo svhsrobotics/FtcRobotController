@@ -51,7 +51,7 @@ public class GoToBoard extends Component {
             rrobot.recalibrateShoulder();
             rrobot.setShoulderTargetPosition(TestTeleOp.RAISED_ARM);
         });
-        traj.waitSeconds(0.5);
+        traj.waitSeconds(1);
 
         // Drive right up to the board
         // depends on which tensor pos

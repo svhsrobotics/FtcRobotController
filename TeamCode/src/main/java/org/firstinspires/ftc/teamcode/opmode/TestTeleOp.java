@@ -28,13 +28,22 @@ public class TestTeleOp extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         GlobalOpMode.opMode = this;
-        Robot robot = Robot.thisRobot(hardwareMap);
+        Robot robot;
+        if (GlobalOpMode.robot != null)
+            robot = GlobalOpMode.robot;
+        else
+            robot = Robot.thisRobot(hardwareMap);
         //AprilTagLocalizer localizer = new AprilTagLocalizer(robot.getCameras());
         TrajectoryDrive drive = robot.getDrive();
         Configuration config = Configurator.load();
 
         // TODO: Get pose estimate from Auto
-        drive.setPoseEstimate(new Pose2d(0, 0, Math.toRadians(180)));
+        if (GlobalOpMode.lastPose == null) {
+            telemetry.log().add("No last pose, setting to 0,0,0, please press down on left stick (when facing board) to reset pose.");
+            drive.setPoseEstimate(new Pose2d(0, 0, Math.toRadians(180)));
+        } else {
+            drive.setPoseEstimate(GlobalOpMode.lastPose);
+        }
 
         waitForStart();
 
@@ -115,7 +124,7 @@ public class TestTeleOp extends LinearOpMode {
 
 
                 if (gamepad1.left_stick_button || gamepad2.left_stick_button) {
-                    drive.setPoseEstimate(new Pose2d(poseEstimate.getX(), poseEstimate.getY(), 0));
+                    drive.setPoseEstimate(new Pose2d(poseEstimate.getX(), poseEstimate.getY(), Math.toRadians(90)));
                 }
             } else if (armPos > ARM_FLIP_OVER && !barHangTriggered) {
                 drive.setWeightedDrivePower(new Pose2d((gamepad1.left_stick_y * 0.5) + (gamepad2.left_stick_y * 0.5), (gamepad1.left_stick_x * 0.5) + (gamepad2.left_stick_x * 0.5), (-gamepad1.right_stick_x * 0.5) + (-gamepad2.right_stick_x * 0.5)));
