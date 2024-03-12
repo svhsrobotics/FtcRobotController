@@ -274,7 +274,7 @@ public class RoboticaBot extends Robot {
         shoulderMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         //if (Math.abs(rrobot.shoulderMotor.getCurrentPosition() - armPos) > SAFETY_ARM_DELTA) {
         if (position < shoulderMotor.getCurrentPosition() && position < 1000) {
-            shoulderMotor.setPower(0.1);
+            shoulderMotor.setPower(0.5);
         } else {
             shoulderMotor.setPower(1);
         }

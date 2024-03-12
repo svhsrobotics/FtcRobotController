@@ -27,13 +27,13 @@ public class GoToBoard extends Component {
 
         // If we're on the blue side, then set this to 1 foot, -1 foot on red side
         int board_y = (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.BLUE_BOARD) || (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.BLUE_AUDIENCE)
-                ? fi(2,9) : fi(-2,9);
-        int board_x = fi(3, 3);
+                ? fi(2,12) : fi(-2,9);
+        int board_x = fi(3, 4);
 
         // Drive in front of board, a little back so we have room to raise the arm
         traj.lineToLinearHeading(new Pose2d(board_x,board_y,Math.toRadians(180)));
 
-        traj.waitSeconds(1); // Let the bot stop moving so that it doesn't mess up when recalibrating
+        traj.waitSeconds(0.4); // Let the bot stop moving so that it doesn't mess up when recalibrating
         traj.addTemporalMarker(() -> {
             // TODO: Raise arm here (sleeping to simulate)
             RoboticaBot rrobot = (RoboticaBot) getRobot();
@@ -51,16 +51,22 @@ public class GoToBoard extends Component {
             rrobot.recalibrateShoulder();
             rrobot.setShoulderTargetPosition(TestTeleOp.RAISED_ARM);
         });
-        traj.waitSeconds(1);
+        traj.waitSeconds(0.5);
 
         // Drive right up to the board
         // depends on which tensor pos
         if (propPos == TensorFlowDetection.PropPosition.CENTER) {
             traj.lineTo(new Vector2d(board_x+8, board_y));
         } else if (propPos == TensorFlowDetection.PropPosition.LEFT) {
-            traj.lineTo(new Vector2d(board_x+8, board_y + 6));
+            if (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.BLUE_AUDIENCE)
+                traj.lineTo(new Vector2d(board_x+8, board_y + 8));
+            else
+                traj.lineTo(new Vector2d(board_x+8, board_y + 6));
         } else if (propPos == TensorFlowDetection.PropPosition.RIGHT) {
-            traj.lineTo(new Vector2d(board_x+8, board_y - 6));
+            if (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.BLUE_BOARD)
+                traj.lineTo(new Vector2d(board_x+8, board_y - 8));
+            else
+                traj.lineTo(new Vector2d(board_x+8, board_y - 6));
         }
 
         traj.addTemporalMarker(() -> {
@@ -68,7 +74,7 @@ public class GoToBoard extends Component {
             RoboticaBot rrobot = (RoboticaBot) getRobot();
             rrobot.pinchServo.setPosition(1.0);
         });
-        traj.waitSeconds(1); // Wait for the arm
+        traj.waitSeconds(0.5); // Wait for the arm
 
 
         // Back up to give room for the arm to come down
