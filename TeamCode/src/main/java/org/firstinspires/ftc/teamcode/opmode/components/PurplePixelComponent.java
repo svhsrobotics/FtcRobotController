@@ -15,7 +15,7 @@ public class PurplePixelComponent extends Component {
     Vector2d RED_AUDIENCE_TAPE_MARKS = new Vector2d(fi(-3,0), fi(-3,0));
     Vector2d BLUE_AUDIENCE_TAPE_MARKS = new Vector2d(fi(-3,3), 2 * 12 + 12);
     Vector2d RED_BOARD_TAPE_MARKS = new Vector2d(fi(1,0), fi(-3,0));
-    Vector2d BLUE_BOARD_TAPE_MARKS = new Vector2d(fi(1,0), 2 * 12 + 12);
+    Vector2d BLUE_BOARD_TAPE_MARKS = new Vector2d(fi(1,2), 2 * 12 + 12);
     private final TensorFlowDetection.PropPosition propPosition;
     private final boolean moveTowardsCenter;
 
@@ -60,15 +60,21 @@ public class PurplePixelComponent extends Component {
         if (propPosition == TensorFlowDetection.PropPosition.LEFT) {
             // Special hack since our dropper is off-center
             //if (getRobot().getClass() == RoboticaBot.class && (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.RED_BOARD || getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.BLUE_AUDIENCE)) {
-            if (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.RED_BOARD || getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.BLUE_AUDIENCE) {
-                trajB.back(6 * driveBackwards)
-                        .turn(Math.toRadians(45))
-                        .forward(14 * driveBackwards);
+            if (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.BLUE_BOARD) {
+                trajB.forward(5 * driveBackwards)
+                        .turn(Math.toRadians(90))
+                        .forward(7 * driveBackwards);
             } else {
-                trajB.forward(5*driveBackwards)
-                    .turn(Math.toRadians(90))
-                    .forward(9 * driveBackwards);
+                if (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.RED_BOARD || getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.BLUE_AUDIENCE) {
+                    trajB.back(6 * driveBackwards)
+                            .turn(Math.toRadians(45))
+                            .forward(14 * driveBackwards);
+                } else {
+                    trajB.forward(5 * driveBackwards)
+                            .turn(Math.toRadians(90))
+                            .forward(9 * driveBackwards);
 
+                }
             }
 //            } if (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.RED_AUDIENCE) {
 //                trajB.forward(9 * driveBackwards)
@@ -79,8 +85,13 @@ public class PurplePixelComponent extends Component {
 //                        .forward(8 * driveBackwards); // orig 13
 //            }
         } else if (propPosition == TensorFlowDetection.PropPosition.RIGHT) {
-            trajB.turn(Math.toRadians(-90))
-                    .forward(7 * driveBackwards);
+            if (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.BLUE_BOARD) {
+                trajB.turn(Math.toRadians(-90))
+                        .forward(9 * driveBackwards);
+            } else {
+                trajB.turn(Math.toRadians(-90))
+                        .forward(7 * driveBackwards);
+            }
         } else {
             if (moveTowardsCenter) {
                 trajB.turn(Math.toRadians(180))
