@@ -217,7 +217,7 @@ public class RoboticaBot extends Robot {
     @Override
     public void dropPurplePixel(boolean state) {
         if (state) {
-            purpleServo.setPosition(.8);
+            purpleServo.setPosition(.85);
         } else {
             purpleServo.setPosition(0.5);
         }

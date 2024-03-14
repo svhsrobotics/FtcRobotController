@@ -64,6 +64,7 @@ public class TestAuto extends LinearOpMode {
             ((RoboticaBot) robot).wristLiftServo.setPosition(0.692);
             ((RoboticaBot) robot).elbowServo.setPosition(0.494);
             //((RoboticaBot) robot).wristServo.setPosition(0.2);
+            ((RoboticaBot) robot).planeAngleServo.setPosition(0.3);
         }
 
         //Pose2d startPose = new Pose2d(12,-62, Math.toRadians(90)); // RED_BOARD

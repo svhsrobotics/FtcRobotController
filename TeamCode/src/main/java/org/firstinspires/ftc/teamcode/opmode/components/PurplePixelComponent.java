@@ -15,7 +15,7 @@ public class PurplePixelComponent extends Component {
     Vector2d RED_AUDIENCE_TAPE_MARKS = new Vector2d(fi(-3,0), fi(-3,0));
     Vector2d BLUE_AUDIENCE_TAPE_MARKS = new Vector2d(fi(-3,3), 2 * 12 + 12);
     Vector2d RED_BOARD_TAPE_MARKS = new Vector2d(fi(1,0), fi(-3,0));
-    Vector2d BLUE_BOARD_TAPE_MARKS = new Vector2d(11, 2 * 12 + 12);
+    Vector2d BLUE_BOARD_TAPE_MARKS = new Vector2d(fi(1,0), 2 * 12 + 12);
     private final TensorFlowDetection.PropPosition propPosition;
     private final boolean moveTowardsCenter;
 
@@ -44,6 +44,11 @@ public class PurplePixelComponent extends Component {
     public void drive() {
 
         TrajectorySequenceBuilder trajB = getRobot().getDrive().trajectorySequenceBuilder(getRobot().getDrive().getPoseEstimate());
+        if (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.RED_AUDIENCE) {
+            trajB.lineTo(new Vector2d(RED_AUDIENCE_TAPE_MARKS.getX() - 2, RED_AUDIENCE_TAPE_MARKS.getY()));
+        } else if (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.BLUE_BOARD) {
+            trajB.lineTo(new Vector2d(BLUE_BOARD_TAPE_MARKS.getX() + 2, BLUE_BOARD_TAPE_MARKS.getY()));
+        }
         trajB.lineTo(currentTapeMarks());
         int driveBackwards = 1;
 

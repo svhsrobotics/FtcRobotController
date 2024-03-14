@@ -28,7 +28,7 @@ public class TestTeleOp extends LinearOpMode {
         MANUAL
     }
 
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(4, 0, 0);
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(3, 1, 0.1);
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -77,6 +77,7 @@ public class TestTeleOp extends LinearOpMode {
         //Pose2d targetHeading = new Pose2d();
 
         Toggle lockHeading = new Toggle();
+        lockHeading.state = true;
         while (opModeIsActive()) {
             drive.update(); // MUST be called every loop cycle so that RoadRunner calculates the pose correctly
             Pose2d poseEstimate = drive.getPoseEstimate();
@@ -233,8 +234,8 @@ public class TestTeleOp extends LinearOpMode {
                 } else if (gamepad1.dpad_up || gamepad2.dpad_up) {
                     pinchLocation -= 0.008;
                 }
-                if (pinchLocation > 1) {
-                    pinchLocation = 1;
+                if (pinchLocation > 0.6) {
+                    pinchLocation = 0.6;
                 } else if (pinchLocation < 0) {
                     pinchLocation = 0;
                 }
@@ -274,7 +275,7 @@ public class TestTeleOp extends LinearOpMode {
                     armPos = PICKUP_ARM;
                     elbowPos = PICKUP_ELBOW;
                     wristPos = PICKUP_WRIST;
-                    pinchLocation = 1;
+                    pinchLocation = PICKUP_PINCH;
                     rrobot.pinchServo.setPosition(pinchLocation);
                 }
 
@@ -307,6 +308,8 @@ public class TestTeleOp extends LinearOpMode {
     public static int PICKUP_ARM = -249;
     public static double PICKUP_ELBOW = 0.16;
     public static double PICKUP_WRIST = 0.816;
+    public static double PICKUP_PINCH = 0.6;
+
 
 
     public static int ARM_FLIP_OVER = 1350;
