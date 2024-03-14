@@ -56,7 +56,6 @@ public class TestAuto extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         GlobalOpMode.opMode = this;
         Robot robot = Robot.thisRobot(hardwareMap);
-        GlobalOpMode.robot = robot;
         Configuration config = Configurator.load();
 
         // Set servo position right away so that it holds
