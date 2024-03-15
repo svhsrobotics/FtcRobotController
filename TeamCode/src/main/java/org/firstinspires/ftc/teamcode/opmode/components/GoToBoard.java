@@ -55,18 +55,21 @@ public class GoToBoard extends Component {
 
         // Drive right up to the board
         // depends on which tensor pos
+        if (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.BLUE_BOARD) {
+            board_x += 2;
+        }
         if (propPos == TensorFlowDetection.PropPosition.CENTER) {
             traj.lineTo(new Vector2d(board_x+8, board_y));
         } else if (propPos == TensorFlowDetection.PropPosition.LEFT) {
-            if (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.BLUE_AUDIENCE)
-                traj.lineTo(new Vector2d(board_x+8, board_y + 8));
-            else
-                traj.lineTo(new Vector2d(board_x+8, board_y + 6));
+            //if (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.BLUE_AUDIENCE)
+            //    traj.lineTo(new Vector2d(board_x+8, board_y + 8));
+            //else
+            traj.lineTo(new Vector2d(board_x+8, board_y + 8));
         } else if (propPos == TensorFlowDetection.PropPosition.RIGHT) {
-            if (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.BLUE_BOARD)
-                traj.lineTo(new Vector2d(board_x+8, board_y - 8));
-            else
-                traj.lineTo(new Vector2d(board_x+8, board_y - 6));
+            //if (getRobot().getDrive().currentQuadrant() == TrajectoryDrive.Quadrant.BLUE_BOARD)
+            //    traj.lineTo(new Vector2d(board_x+8, board_y - 8));
+            //else
+            traj.lineTo(new Vector2d(board_x+8, board_y - 6));
         }
 
         traj.addTemporalMarker(() -> {

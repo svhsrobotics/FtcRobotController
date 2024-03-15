@@ -250,7 +250,10 @@ public class TestTeleOp extends LinearOpMode {
                     rrobot.planeAngleServo.setPosition(0.3);
                 } else if (gamepad2.x) {
                     rrobot.hangMotor.setPower(-1.0);
-                } else {
+                } else if (gamepad2.b) {
+                    rrobot.planeAngleServo.setPosition(0.3);
+                }
+                else {
                     rrobot.hangMotor.setPower(0.0);
                 }
 
