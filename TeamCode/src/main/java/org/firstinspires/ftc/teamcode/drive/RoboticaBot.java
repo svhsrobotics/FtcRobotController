@@ -56,7 +56,7 @@ public class RoboticaBot extends Robot {
      * You are free to raise this on your own if you would like. It is best determined through experimentation.
      */
     public static double MAX_VEL = 70;
-    public static double MAX_ACCEL = 30; // can't accel that fast, weight is uneven
+    public static double MAX_ACCEL = 45; // can't accel that fast, weight is uneven
     public static double MAX_ANG_ACCEL = Math.toRadians(360);
     public static double MAX_ANG_VEL = Math.toRadians(360);
     public static double TRACK_WIDTH = 12;
@@ -123,8 +123,10 @@ public class RoboticaBot extends Robot {
         planeReleaseServo = hardwareMap.get(CRServo.class, "plane_release");
 
         shoulderMotor = hardwareMap.get(DcMotorEx.class, "shoulder");
-        shoulderMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        shoulderMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        if (GlobalOpMode.shoulderCalib == 0) {// only reset encode if we have no existing calibration
+            shoulderMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            shoulderMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        }
         hangMotor = hardwareMap.get(DcMotorEx.class, "hang");
         //elbowServo = new AxonServo("elbow", "axon_2", hardwareMap);
         elbowServo = hardwareMap.get(Servo.class, "elbow");
@@ -199,6 +201,7 @@ public class RoboticaBot extends Robot {
         drive.rightRear.setDirection(DcMotorSimple.Direction.REVERSE);
 
         ((TrackingWheelLocalizer)drive.getLocalizer()).rightEncoder.setDirection(Encoder.Direction.REVERSE);
+        shoulderOffset = GlobalOpMode.shoulderCalib;
     }
 
     @Override
@@ -214,7 +217,7 @@ public class RoboticaBot extends Robot {
     @Override
     public void dropPurplePixel(boolean state) {
         if (state) {
-            purpleServo.setPosition(.8);
+            purpleServo.setPosition(.85);
         } else {
             purpleServo.setPosition(0.5);
         }
@@ -222,7 +225,7 @@ public class RoboticaBot extends Robot {
 
 
     public static double PLANE_START_ANGLE = 0.6;
-    public static double PLANE_LAUNCH_ANGLE = 0.705;
+    public static double PLANE_LAUNCH_ANGLE = 0.715;
     public static double PLANE_FOR_INCR = 0.001;
     public static int PLANE_DELAY = 10;
     @Override
@@ -264,6 +267,8 @@ public class RoboticaBot extends Robot {
         shoulderOffset = shoulderMotor.getCurrentPosition();
 
         shoulderMotor.setPower(0);
+
+        GlobalOpMode.shoulderCalib = shoulderOffset;
     }
 
     public int getShoulderCurrentPosition() {
@@ -274,7 +279,7 @@ public class RoboticaBot extends Robot {
         shoulderMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         //if (Math.abs(rrobot.shoulderMotor.getCurrentPosition() - armPos) > SAFETY_ARM_DELTA) {
         if (position < shoulderMotor.getCurrentPosition() && position < 1000) {
-            shoulderMotor.setPower(0.1);
+            shoulderMotor.setPower(0.5);
         } else {
             shoulderMotor.setPower(1);
         }

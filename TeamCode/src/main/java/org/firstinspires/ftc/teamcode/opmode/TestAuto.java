@@ -64,6 +64,7 @@ public class TestAuto extends LinearOpMode {
             ((RoboticaBot) robot).wristLiftServo.setPosition(0.692);
             ((RoboticaBot) robot).elbowServo.setPosition(0.494);
             //((RoboticaBot) robot).wristServo.setPosition(0.2);
+            ((RoboticaBot) robot).planeAngleServo.setPosition(0.3);
         }
 
         //Pose2d startPose = new Pose2d(12,-62, Math.toRadians(90)); // RED_BOARD
@@ -78,6 +79,7 @@ public class TestAuto extends LinearOpMode {
             startPose = estimateWithAllCameras(robot.getCameras(), aprilTag);
             telemetry.log().add("AprilTag found: " + startPose);
         }
+        GlobalOpMode.lastPose = startPose;
 
 
         TensorFlowDetection.PropPosition tensorPos = null;
@@ -140,9 +142,11 @@ public class TestAuto extends LinearOpMode {
         }
 
         for (Component component : componentList) {
+            GlobalOpMode.lastPose = robot.getDrive().getPoseEstimate();
             component.drive();
         }
 
+        GlobalOpMode.lastPose = robot.getDrive().getPoseEstimate();
         sleep(30000);
 
 

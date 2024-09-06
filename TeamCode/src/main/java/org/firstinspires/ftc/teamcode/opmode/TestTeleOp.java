@@ -1,6 +1,9 @@
 package org.firstinspires.ftc.teamcode.opmode;
 
+import static org.firstinspires.ftc.teamcode.util.Units.fi;
+
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.control.PIDCoefficients;
 import com.acmerobotics.roadrunner.control.PIDFController;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
@@ -25,16 +28,36 @@ public class TestTeleOp extends LinearOpMode {
         MANUAL
     }
 
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(3, 1, 0.1);
+
     @Override
     public void runOpMode() throws InterruptedException {
         GlobalOpMode.opMode = this;
-        Robot robot = Robot.thisRobot(hardwareMap);
+        Robot robot= Robot.thisRobot(hardwareMap);
+//        if (GlobalOpMode.robot != null)
+//            robot = GlobalOpMode.robot;
+//        else
+//            robot = Robot.thisRobot(hardwareMap);
         //AprilTagLocalizer localizer = new AprilTagLocalizer(robot.getCameras());
         TrajectoryDrive drive = robot.getDrive();
         Configuration config = Configurator.load();
 
         // TODO: Get pose estimate from Auto
-        drive.setPoseEstimate(new Pose2d(0, 0, Math.toRadians(180)));
+        if (GlobalOpMode.lastPose == null) {
+            telemetry.log().add("No last pose, assuming you left it in front of red board, please press down on left stick (when facing board) to reset pose.");
+            drive.setPoseEstimate(new Pose2d(fi(3,4), fi(-2,9), Math.toRadians(180)));
+        } else {
+            telemetry.log().add("Setting pose to last pose: " + GlobalOpMode.lastPose);
+            drive.setPoseEstimate(GlobalOpMode.lastPose);
+        }
+
+        double driverPerspective = Math.toRadians(270); // Where driver is facing RED
+        if (drive.currentQuadrant() == TrajectoryDrive.Quadrant.BLUE_AUDIENCE || drive.currentQuadrant() == TrajectoryDrive.Quadrant.BLUE_BOARD) {
+            driverPerspective = Math.toRadians(90); // BLUE
+        }
+
+
+        //drive.setPoseEstimate(new Pose2d(0, 0, Math.toRadians(180)));
 
         waitForStart();
 
@@ -48,12 +71,13 @@ public class TestTeleOp extends LinearOpMode {
         double pinchLocation = 0.0;
         boolean barHangTriggered = false;
 
-        PIDFController headingController = new PIDFController(RoboticaBot.HEADING_PID); // TODO: Abstract
+        PIDFController headingController = new PIDFController(HEADING_PID); // TODO: Abstract
         headingController.setInputBounds(0, 2 * Math.PI);
         //double targetHeading = Math.toRadians(180);
         //Pose2d targetHeading = new Pose2d();
 
         Toggle lockHeading = new Toggle();
+        lockHeading.state = true;
         while (opModeIsActive()) {
             drive.update(); // MUST be called every loop cycle so that RoadRunner calculates the pose correctly
             Pose2d poseEstimate = drive.getPoseEstimate();
@@ -66,7 +90,7 @@ public class TestTeleOp extends LinearOpMode {
             if (config.fieldCentric) {
                 // Create a vector from the gamepad x/y inputs
                 // Then, rotate that vector by the inverse of that heading
-                Vector2d input = new Vector2d(-left_stick_y, -left_stick_x).rotated(-poseEstimate.getHeading());
+                Vector2d input = new Vector2d(-left_stick_y, -left_stick_x).rotated(-poseEstimate.getHeading()).rotated(-driverPerspective);
 
                 // Pass in the rotated input + right stick value for rotation
                 // Rotation is not part of the rotated input thus must be passed in separately
@@ -89,7 +113,7 @@ public class TestTeleOp extends LinearOpMode {
 ////                    // Turn towards 0 heading while held
 //                    turnPower = -delta * 0.5;
 
-                    headingController.setTargetPosition(Math.toRadians(90));
+                    headingController.setTargetPosition(Math.toRadians(180));
                     turnPower = headingController.update(poseEstimate.getHeading());
 
 ////                    if (poseEstimate.getHeading() > Math.toRadians(90)) {
@@ -115,7 +139,7 @@ public class TestTeleOp extends LinearOpMode {
 
 
                 if (gamepad1.left_stick_button || gamepad2.left_stick_button) {
-                    drive.setPoseEstimate(new Pose2d(poseEstimate.getX(), poseEstimate.getY(), 0));
+                    drive.setPoseEstimate(new Pose2d(poseEstimate.getX(), poseEstimate.getY(), Math.toRadians(180)));
                 }
             } else if (armPos > ARM_FLIP_OVER && !barHangTriggered) {
                 drive.setWeightedDrivePower(new Pose2d((gamepad1.left_stick_y * 0.5) + (gamepad2.left_stick_y * 0.5), (gamepad1.left_stick_x * 0.5) + (gamepad2.left_stick_x * 0.5), (-gamepad1.right_stick_x * 0.5) + (-gamepad2.right_stick_x * 0.5)));
@@ -205,13 +229,13 @@ public class TestTeleOp extends LinearOpMode {
                 rrobot.elbowServo.setPosition(elbowPos);
                 telemetry.addData("ELBOW", elbowPos);
 
-                if (gamepad1.dpad_up || gamepad2.dpad_up) {
+                if (gamepad1.dpad_down || gamepad2.dpad_down) {
                     pinchLocation = pinchLocation + 0.008;
-                } else if (gamepad1.dpad_down || gamepad2.dpad_down) {
+                } else if (gamepad1.dpad_up || gamepad2.dpad_up) {
                     pinchLocation -= 0.008;
                 }
-                if (pinchLocation > 1) {
-                    pinchLocation = 1;
+                if (pinchLocation > 0.6) {
+                    pinchLocation = 0.6;
                 } else if (pinchLocation < 0) {
                     pinchLocation = 0;
                 }
@@ -226,7 +250,10 @@ public class TestTeleOp extends LinearOpMode {
                     rrobot.planeAngleServo.setPosition(0.3);
                 } else if (gamepad2.x) {
                     rrobot.hangMotor.setPower(-1.0);
-                } else {
+                } else if (gamepad2.b) {
+                    rrobot.planeAngleServo.setPosition(0.3);
+                }
+                else {
                     rrobot.hangMotor.setPower(0.0);
                 }
 
@@ -251,7 +278,7 @@ public class TestTeleOp extends LinearOpMode {
                     armPos = PICKUP_ARM;
                     elbowPos = PICKUP_ELBOW;
                     wristPos = PICKUP_WRIST;
-                    pinchLocation = 1;
+                    pinchLocation = PICKUP_PINCH;
                     rrobot.pinchServo.setPosition(pinchLocation);
                 }
 
@@ -269,21 +296,23 @@ public class TestTeleOp extends LinearOpMode {
 
     //public static int ARM_OFFSET = 94;
 
-    public static int RAISED_ARM = 2118;
+    public static int RAISED_ARM = 2070;
     public static double RAISED_ELBOW = 0.272;
-    public static double RAISED_WRIST = 0.544;
+    public static double RAISED_WRIST = 0.616;
 
     public static int NEUTRAL_ARM = 113;
     public static double NEUTRAL_ELBOW = 0.248;
     public static double NEUTRAL_WRIST = 0.336;
 
-    public static int PREP_ARM = -7;
-    public static double PREP_ELBOW = 0.0;
-    public static double PREP_WRIST = 0.472;
+    public static int PREP_ARM = 2099;
+    public static double PREP_ELBOW = 0.032;
+    public static double PREP_WRIST = 0.372;
 
     public static int PICKUP_ARM = -249;
     public static double PICKUP_ELBOW = 0.16;
     public static double PICKUP_WRIST = 0.816;
+    public static double PICKUP_PINCH = 0.6;
+
 
 
     public static int ARM_FLIP_OVER = 1350;
