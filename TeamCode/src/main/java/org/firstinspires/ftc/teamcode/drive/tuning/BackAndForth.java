@@ -7,7 +7,10 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.drive.testbot.TestBotDrive;
+import org.firstinspires.ftc.teamcode.drive.Robot;
+import org.firstinspires.ftc.teamcode.drive.TrajectoryDrive;
+
+//import org.firstinspires.ftc.teamcode.drive.psi.PsiDrive;
 
 /*
  * Op mode for preliminary tuning of the follower PID coefficients (located in the drive base
@@ -27,14 +30,15 @@ import org.firstinspires.ftc.teamcode.drive.testbot.TestBotDrive;
  */
 @Config
 @Autonomous(group = "drive")
-@Disabled
 public class BackAndForth extends LinearOpMode {
 
     public static double DISTANCE = 50;
 
     @Override
     public void runOpMode() throws InterruptedException {
-        TestBotDrive drive = new TestBotDrive(hardwareMap);
+        Robot robot = Robot.thisRobot(hardwareMap);
+        TrajectoryDrive drive = robot.getDrive();
+        //PsiDrive drive = new PsiDrive(hardwareMap);
 
         Trajectory trajectoryForward = drive.trajectoryBuilder(new Pose2d())
                 .forward(DISTANCE)

@@ -2,10 +2,8 @@ package org.firstinspires.ftc.teamcode.vision;
 
 import android.util.Size;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
-import org.firstinspires.ftc.teamcode.util.GlobalOpMode;
 import org.firstinspires.ftc.teamcode.util.Timeout;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.tfod.TfodProcessor;
@@ -26,7 +24,9 @@ public class TensorFlowDetection {
      */
     private VisionPortal visionPortal;
     //private static String TFOD_MODEL_ASSET = "model_20231127_143238.tflite"; //model without negatives
-    private static String TFOD_MODEL_ASSET = "model_20231209_095349.tflite"; //model with negatives
+    //private static String TFOD_MODEL_ASSET = "model_20231209_095349.tflite"; //model with negatives
+    //private static String TFOD_MODEL_ASSET = "model_20240309_150637.tflite";
+    private static String TFOD_MODEL_ASSET = "goodModel.tflite";
     private static final String[] LABELS = {
             "prop",
     };
@@ -108,11 +108,14 @@ public class TensorFlowDetection {
 
 
 
-    public PropPosition getPropPosition() {
+    public PropPosition getPropPosition(Timeout timeout) {
         List<Recognition> currentRecognitions = tfod.getRecognitions();
-        while(currentRecognitions.size() < 1 && !GlobalOpMode.opMode.isStopRequested()) {
+        while(currentRecognitions.size() < 1 && !timeout.expired()) {
             //android.util.Log.w("TENSORFLOW", "Spinning for current recognitions...");
             currentRecognitions = tfod.getRecognitions();
+        }
+        if (currentRecognitions.size() < 1) {
+            return null;
         }
         Recognition recognition = currentRecognitions.get(0);
 //        while (recognition.getWidth() > 300 && !GlobalOpMode.opMode.isStopRequested()) {
@@ -126,6 +129,8 @@ public class TensorFlowDetection {
         // GET MORE CURRENT RECOGNITIONS?
 //        }
         //visionPortal.close();
+
+
 
         double centerX = (recognition.getLeft() + recognition.getRight()) / 2 ;
         if (centerX < 214) {
@@ -142,4 +147,5 @@ public class TensorFlowDetection {
 
 
     }
+
 }

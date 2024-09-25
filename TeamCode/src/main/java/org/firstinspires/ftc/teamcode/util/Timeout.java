@@ -43,6 +43,7 @@ public class Timeout {
     // I really think that using !expired is more intuitive, so I'm suppressing the warning
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean expired() {
+        if (GlobalOpMode.opMode.isStopRequested()) return true;
         return elapsed() > this.duration;
     }
 

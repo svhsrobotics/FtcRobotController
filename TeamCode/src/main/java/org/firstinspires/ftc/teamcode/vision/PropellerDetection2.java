@@ -31,6 +31,7 @@ package org.firstinspires.ftc.teamcode.vision;
 
 import android.util.Size;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -40,7 +41,6 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.teamcode.util.GlobalOpMode;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.tfod.TfodProcessor;
-import org.tensorflow.lite.Tensor;
 
 import java.util.List;
 
@@ -52,7 +52,7 @@ import java.util.List;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list.
  */
 @TeleOp(name = "betterPropeller", group = "Concept")
-
+@Disabled
 public class PropellerDetection2 extends LinearOpMode {
 
     private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
@@ -82,7 +82,7 @@ public class PropellerDetection2 extends LinearOpMode {
 
         if (opModeIsActive() || opModeInInit()) {
             while (opModeIsActive() || opModeInInit()) {
-                tfod.getPropPosition();
+                //tfod.getPropPosition();
 //                telemetryTfod();
 //
 //                // Push telemetry to the Driver Station.

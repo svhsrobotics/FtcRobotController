@@ -7,11 +7,10 @@ public class Debouncer {
         if (buttonState) {
             if (!lastState) {
                 lastState = true;
-                return true;
             }
         } else {
             lastState = false;
         }
-        return false;
+        return lastState;
     }
 }

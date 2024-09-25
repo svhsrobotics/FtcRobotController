@@ -3,13 +3,15 @@ package org.firstinspires.ftc.teamcode.drive.tuning;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.util.Angle;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.RobotLog;
 
-import org.firstinspires.ftc.teamcode.drive.testbot.TestBotDrive;
-import org.firstinspires.ftc.teamcode.drive.testbot.StandardTrackingWheelLocalizer;
+import org.firstinspires.ftc.teamcode.drive.PsiBot;
+import org.firstinspires.ftc.teamcode.drive.Robot;
+import org.firstinspires.ftc.teamcode.drive.RoboticaBot;
+import org.firstinspires.ftc.teamcode.drive.TrackingWheelLocalizer;
+import org.firstinspires.ftc.teamcode.drive.TrajectoryDrive;
 
 /**
  * Opmode designed to assist the user in tuning the `StandardTrackingWheelLocalizer`'s
@@ -64,15 +66,16 @@ import org.firstinspires.ftc.teamcode.drive.testbot.StandardTrackingWheelLocaliz
  */
 @Config
 @TeleOp(group = "drive")
-@Disabled
 public class TrackingWheelLateralDistanceTuner extends LinearOpMode {
     public static int NUM_TURNS = 10;
 
     @Override
     public void runOpMode() throws InterruptedException {
-        TestBotDrive drive = new TestBotDrive(hardwareMap);
+        Robot robot = Robot.thisRobot(hardwareMap);
+        TrajectoryDrive drive = robot.getDrive();
+        //PantheraDrive drive = new PantheraDrive(hardwareMap);
 
-        if (!(drive.getLocalizer() instanceof StandardTrackingWheelLocalizer)) {
+        if (!(drive.getLocalizer() instanceof TrackingWheelLocalizer)) {
             RobotLog.setGlobalErrorMsg("StandardTrackingWheelLocalizer is not being set in the "
                     + "drive class. Ensure that \"setLocalizer(new StandardTrackingWheelLocalizer"
                     + "(hardwareMap));\" is called in SampleMecanumDrive.java");
@@ -123,7 +126,7 @@ public class TrackingWheelLateralDistanceTuner extends LinearOpMode {
         telemetry.clearAll();
         telemetry.addLine("Localizer's total heading: " + Math.toDegrees(headingAccumulator) + "°");
         telemetry.addLine("Effective LATERAL_DISTANCE: " +
-                (headingAccumulator / (NUM_TURNS * Math.PI * 2)) * StandardTrackingWheelLocalizer.LATERAL_DISTANCE);
+                (headingAccumulator / (NUM_TURNS * Math.PI * 2)) * PsiBot.LATERAL_DISTANCE);
 
         telemetry.update();
 

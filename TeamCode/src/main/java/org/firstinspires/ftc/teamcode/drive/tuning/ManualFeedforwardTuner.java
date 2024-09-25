@@ -1,11 +1,11 @@
 package org.firstinspires.ftc.teamcode.drive.tuning;
 
-import static org.firstinspires.ftc.teamcode.drive.testbot.DriveConstants.MAX_ACCEL;
-import static org.firstinspires.ftc.teamcode.drive.testbot.DriveConstants.MAX_VEL;
-import static org.firstinspires.ftc.teamcode.drive.testbot.DriveConstants.RUN_USING_ENCODER;
-import static org.firstinspires.ftc.teamcode.drive.testbot.DriveConstants.kA;
-import static org.firstinspires.ftc.teamcode.drive.testbot.DriveConstants.kStatic;
-import static org.firstinspires.ftc.teamcode.drive.testbot.DriveConstants.kV;
+//import static org.firstinspires.ftc.teamcode.drive.panthera.PantheraDriveConstants.MAX_ACCEL;
+//import static org.firstinspires.ftc.teamcode.drive.panthera.PantheraDriveConstants.MAX_VEL;
+//import static org.firstinspires.ftc.teamcode.drive.panthera.PantheraDriveConstants.RUN_USING_ENCODER;
+//import static org.firstinspires.ftc.teamcode.drive.panthera.PantheraDriveConstants.kA;
+//import static org.firstinspires.ftc.teamcode.drive.panthera.PantheraDriveConstants.kStatic;
+//import static org.firstinspires.ftc.teamcode.drive.panthera.PantheraDriveConstants.kV;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -17,13 +17,15 @@ import com.acmerobotics.roadrunner.profile.MotionProfileGenerator;
 import com.acmerobotics.roadrunner.profile.MotionState;
 import com.acmerobotics.roadrunner.util.NanoClock;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.drive.testbot.TestBotDrive;
+import org.firstinspires.ftc.teamcode.drive.PsiBot;
+import org.firstinspires.ftc.teamcode.drive.Robot;
+import org.firstinspires.ftc.teamcode.drive.RoboticaBot;
+import org.firstinspires.ftc.teamcode.drive.TrajectoryDrive;
 
 import java.util.Objects;
 
@@ -44,13 +46,13 @@ import java.util.Objects;
  */
 @Config
 @Autonomous(group = "drive")
-@Disabled
+
 public class ManualFeedforwardTuner extends LinearOpMode {
     public static double DISTANCE = 72; // in
 
     private FtcDashboard dashboard = FtcDashboard.getInstance();
 
-    private TestBotDrive drive;
+    //private PantheraDrive drive;
 
     enum Mode {
         DRIVER_MODE,
@@ -62,19 +64,20 @@ public class ManualFeedforwardTuner extends LinearOpMode {
     private static MotionProfile generateProfile(boolean movingForward) {
         MotionState start = new MotionState(movingForward ? 0 : DISTANCE, 0, 0, 0);
         MotionState goal = new MotionState(movingForward ? DISTANCE : 0, 0, 0, 0);
-        return MotionProfileGenerator.generateSimpleMotionProfile(start, goal, MAX_VEL, MAX_ACCEL);
+        return MotionProfileGenerator.generateSimpleMotionProfile(start, goal, PsiBot.MAX_VEL, PsiBot.MAX_ACCEL);
     }
 
     @Override
     public void runOpMode() {
-        if (RUN_USING_ENCODER) {
+        if (false) {
             RobotLog.setGlobalErrorMsg("Feedforward constants usually don't need to be tuned " +
                     "when using the built-in drive motor velocity PID.");
         }
 
         Telemetry telemetry = new MultipleTelemetry(this.telemetry, dashboard.getTelemetry());
+        Robot robot = Robot.thisRobot(hardwareMap);
+        TrajectoryDrive drive = robot.getDrive();
 
-        drive = new TestBotDrive(hardwareMap);
 
         final VoltageSensor voltageSensor = hardwareMap.voltageSensor.iterator().next();
 
@@ -115,7 +118,8 @@ public class ManualFeedforwardTuner extends LinearOpMode {
                     }
 
                     MotionState motionState = activeProfile.get(profileTime);
-                    double targetPower = Kinematics.calculateMotorFeedforward(motionState.getV(), motionState.getA(), kV, kA, kStatic);
+                    double targetPower = Kinematics.calculateMotorFeedforward(motionState.getV(), motionState.getA(), RoboticaBot.kV, RoboticaBot.kA, RoboticaBot.kStatic);
+
 
                     final double NOMINAL_VOLTAGE = 12.0;
                     final double voltage = voltageSensor.getVoltage();

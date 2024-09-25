@@ -81,7 +81,7 @@ public class AprilTagLocalizer {
         List<AprilTagDetection> detections = aprilTag.getFreshDetections();
         // Wait for detections to not be null
         // TODO: Timeout
-        while (detections == null) {
+        while (detections == null && !GlobalOpMode.opMode.isStopRequested()) {
             //android.util.Log.i("APRILTAG", "Waiting for non null return");
             detections = aprilTag.getFreshDetections();
         }
@@ -126,6 +126,7 @@ public class AprilTagLocalizer {
             absX = detection.metadata.fieldPosition.get(0) - a; // + for lower side
             absY = detection.metadata.fieldPosition.get(1) + b; // - for lower side
             absRot = 180 - detection.ftcPose.yaw + 180;
+            absX += 2; // TODO: Examine this fudge for some weirdness on board side
         } else {
             absX = detection.metadata.fieldPosition.get(0) + a; // + for lower side
             absY = detection.metadata.fieldPosition.get(1) - b; // - for lower side
