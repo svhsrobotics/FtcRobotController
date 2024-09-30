@@ -25,9 +25,13 @@ public class LukeandJacksnDoStuff extends LinearOpMode {
                 back_right.setPower(1);
             }
             else{
-                //front
+                front_left.setPower(0);
+                front_right.setPower(0);
+                back_left.setPower(0);
+                back_right.setPower(0);}
+
                 }
             }
         }
-    }
-}
+
+

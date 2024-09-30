@@ -22,10 +22,11 @@ public class Test17334 extends LinearOpMode {
     private DcMotor rightBackMotor;
     private Servo servo;
     private DcMotor low_lift;
+    private DcMotor lift_high;
 
     @Override
     public void runOpMode() throws InterruptedException {
-
+        lift_high = hardwareMap.get(DcMotor.class, "lift_high");
         leftFrontMotor = hardwareMap.get(DcMotor.class, "front_left");
         rightFrontMotor = hardwareMap.get(DcMotor.class, "front_right");
         leftBackMotor = hardwareMap.get(DcMotor.class, "back_left");
@@ -35,6 +36,7 @@ public class Test17334 extends LinearOpMode {
         leftBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         waitForStart();
+
        while(opModeIsActive()){
            double y = -gamepad1.left_stick_y; // Remember, Y stick is reversed!
            double x = gamepad1.left_stick_x;
@@ -54,8 +56,8 @@ public class Test17334 extends LinearOpMode {
            else if (!(gamepad1.left_bumper && gamepad1.right_bumper)){
                servo.setPosition(0);
            }
-           if(gamepad1.a){
-               low_lift = hardwareMap.get(DcMotor.class, "lift_low");
+           while(gamepad1.dpad_up){
+               low_lift = hardwareMap.get(DcMotor.class, "lift_high");
                low_lift.setPower(1);
            }
 
