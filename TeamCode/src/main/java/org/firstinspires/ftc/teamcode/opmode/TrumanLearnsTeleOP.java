@@ -1,14 +1,10 @@
-package org.firstinspires.ftc.teamcode.opmode.components;
+package org.firstinspires.ftc.teamcode.opmode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.ServoController;
-
-import org.firstinspires.ftc.robotcore.internal.camera.delegating.DelegatingCaptureSequence;
 
 
 @TeleOp
@@ -24,6 +20,7 @@ public class TrumanLearnsTeleOP extends LinearOpMode {
         float ly;
         float lx;
         float rx;
+        float ry;
         topLeftMotor = hardwareMap.get(DcMotor.class,"FL");
         topRightMotor = hardwareMap.get(DcMotor.class,"FR");
         bottomLeftMotor = hardwareMap.get(DcMotor.class,"BL");
@@ -38,20 +35,12 @@ public class TrumanLearnsTeleOP extends LinearOpMode {
              lx=gamepad1.left_stick_x;
              ly=gamepad1.left_stick_y;
              rx=gamepad1.right_stick_x;
-             topLeftMotor.setPower((ly-lx-rx)*motorSpeed);
-            // topRightMotor.setPower((ly-lx-rx)*motorSpeed);
-          //   bottomLeftMotor.setPower((ly-lx+rx)*motorSpeed);
-          //   bottomRightMotor.setPower((-rx+lx+ly)*motorSpeed);
-             /*
-             if (gamepad1.a) {
-                tail.setDirection(DcMotorSimple.Direction.FORWARD);
-             }
-             else {
-                 tail.setDirection(DcMotorSimple.Direction.REVERSE);
-             }
+             ry=gamepad1.right_stick_y;
 
-              */
-//             System.out.println();
+             topLeftMotor.setPower(ly);
+             bottomLeftMotor.setPower(lx);
+             topRightMotor.setPower(rx);
+             bottomRightMotor.setPower(rx);
         }
     }
 }
