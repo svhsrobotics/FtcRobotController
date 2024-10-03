@@ -17,6 +17,7 @@ public class TrumanLearnsTeleOP extends LinearOpMode {
     private CRServo tail;
     @Override
     public void runOpMode() throws InterruptedException {
+        System.out.println("trumans code");
         float ly;
         float lx;
         float rx;
@@ -32,15 +33,28 @@ public class TrumanLearnsTeleOP extends LinearOpMode {
         double motorSpeed = 0.3;
         waitForStart();
         while (opModeIsActive()){
-             lx=gamepad1.left_stick_x;
-             ly=gamepad1.left_stick_y;
-             rx=gamepad1.right_stick_x;
-             ry=gamepad1.right_stick_y;
+             lx=gamepad1.right_stick_y;
+             ly=gamepad1.right_stick_y;
+             rx=gamepad1.left_stick_y;
+             ry=gamepad1.left_stick_y;
+
+             if (Math.abs(gamepad1.left_trigger)>0) {
+                 ly=-1;
+                 lx=1;
+                 ly=-1;
+                 lx=1;
+             }
+            if (Math.abs(gamepad1.right_trigger)>0) {
+                ly=1;
+                lx=-1;
+                ly=1;
+                lx=-1;
+            }
 
              topLeftMotor.setPower(ly);
              bottomLeftMotor.setPower(lx);
              topRightMotor.setPower(rx);
-             bottomRightMotor.setPower(rx);
+             bottomRightMotor.setPower(ry);
         }
     }
 }
