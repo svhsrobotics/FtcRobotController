@@ -18,6 +18,7 @@ public class TrumanLearnsTeleOP extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         float ly;
+        float MaxSpeed= 0.8F;
         float lx;
         float rx;
         float ry;
@@ -37,10 +38,20 @@ public class TrumanLearnsTeleOP extends LinearOpMode {
              rx=gamepad1.right_stick_x;
              ry=gamepad1.right_stick_y;
 
-             topLeftMotor.setPower(ly);
-             bottomLeftMotor.setPower(lx);
-             topRightMotor.setPower(rx);
-             bottomRightMotor.setPower(rx);
+             lx= (float) (lx*MaxSpeed);
+           if(gamepad1.left_bumper){
+               MaxSpeed= (float) (MaxSpeed+0.1);
+
+           }
+            if (gamepad1.right_bumper){
+                MaxSpeed= (float) (MaxSpeed-0.1)
+            }
+
+            topLeftMotor.setPower(lx);
+            bottomLeftMotor.setPower(lx);
+             topRightMotor.setPower(lx);
+             bottomRightMotor.setPower(lx);
+
         }
     }
 }
