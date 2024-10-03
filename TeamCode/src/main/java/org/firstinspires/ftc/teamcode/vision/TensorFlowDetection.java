@@ -3,10 +3,10 @@ package org.firstinspires.ftc.teamcode.vision;
 import android.util.Size;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+//import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.teamcode.util.Timeout;
 import org.firstinspires.ftc.vision.VisionPortal;
-import org.firstinspires.ftc.vision.tfod.TfodProcessor;
+//import org.firstinspires.ftc.vision.tfod.TfodProcessor;
 
 import java.util.List;
 
@@ -17,7 +17,7 @@ public class TensorFlowDetection {
     /**
      * The variable to store our instance of the TensorFlow Object Detection processor.
      */
-    private TfodProcessor tfod;
+    //private TfodProcessor tfod;
 
     /**
      * The variable to store our instance of the vision portal.
@@ -34,21 +34,21 @@ public class TensorFlowDetection {
 
 
         // Create the TensorFlow processor by using a builder.
-        tfod = new TfodProcessor.Builder()
-                //   .setModelAssetName("model_20231104_124524.tflite")
-
-                // Use setModelAssetName() if the TF Model is built in as an asset.
-                // Use setModelFileName() if you have downloaded a custom team model to the Robot Controller.
-                .setModelAssetName(TFOD_MODEL_ASSET)
-                //.setModelFileName(TFOD_MODEL_FILE)
-
-                .setModelLabels(LABELS)
-                //.setIsModelTensorFlow2(true)
-                //.setIsModelQuantized(true)
-                //.setModelInputSize(300)
-                //.setModelAspectRatio(16.0 / 9.0)
-
-                .build();
+//        tfod = new TfodProcessor.Builder()
+//                //   .setModelAssetName("model_20231104_124524.tflite")
+//
+//                // Use setModelAssetName() if the TF Model is built in as an asset.
+//                // Use setModelFileName() if you have downloaded a custom team model to the Robot Controller.
+//                .setModelAssetName(TFOD_MODEL_ASSET)
+//                //.setModelFileName(TFOD_MODEL_FILE)
+//
+//                .setModelLabels(LABELS)
+//                //.setIsModelTensorFlow2(true)
+//                //.setIsModelQuantized(true)
+//                //.setModelInputSize(300)
+//                //.setModelAspectRatio(16.0 / 9.0)
+//
+//                .build();
 
         // Create the vision portal by using a builder.
         VisionPortal.Builder builder = new VisionPortal.Builder();
@@ -71,7 +71,7 @@ public class TensorFlowDetection {
         //builder.setAutoStopLiveView(false);
 
         // Set and enable the processor.
-        builder.addProcessor(tfod);
+        //builder.addProcessor(tfod);
 
         // Build the Vision Portal, using the above settings.
         visionPortal = builder.build();
@@ -109,15 +109,15 @@ public class TensorFlowDetection {
 
 
     public PropPosition getPropPosition(Timeout timeout) {
-        List<Recognition> currentRecognitions = tfod.getRecognitions();
-        while(currentRecognitions.size() < 1 && !timeout.expired()) {
-            //android.util.Log.w("TENSORFLOW", "Spinning for current recognitions...");
-            currentRecognitions = tfod.getRecognitions();
-        }
-        if (currentRecognitions.size() < 1) {
-            return null;
-        }
-        Recognition recognition = currentRecognitions.get(0);
+//        List<Recognition> currentRecognitions = tfod.getRecognitions();
+//        while(currentRecognitions.size() < 1 && !timeout.expired()) {
+//            //android.util.Log.w("TENSORFLOW", "Spinning for current recognitions...");
+//            currentRecognitions = tfod.getRecognitions();
+//        }
+//        if (currentRecognitions.size() < 1) {
+//            return null;
+//        }
+//        Recognition recognition = currentRecognitions.get(0);
 //        while (recognition.getWidth() > 300 && !GlobalOpMode.opMode.isStopRequested()) {
 //            android.util.Log.w("TENSORFLOW", "Spinning for current recognitions...");
 //            for (Recognition rec :currentRecognitions) {
@@ -132,20 +132,20 @@ public class TensorFlowDetection {
 
 
 
-        double centerX = (recognition.getLeft() + recognition.getRight()) / 2 ;
-        if (centerX < 214) {
-            //android.util.Log.w("TENSORFLOW", "LEFT");
-            return PropPosition.LEFT;
-        } else if(centerX > 214 && centerX < 428) {
-            //android.util.Log.w("TENSORFLOW", "CENTER");
-            return PropPosition.CENTER;
-        } else {
-            //android.util.Log.w("TENSORFLOW", "RIGHT");
-            return PropPosition.RIGHT;
-        }
+//        double centerX = (recognition.getLeft() + recognition.getRight()) / 2 ;
+//        if (centerX < 214) {
+//            //android.util.Log.w("TENSORFLOW", "LEFT");
+//            return PropPosition.LEFT;
+//        } else if(centerX > 214 && centerX < 428) {
+//            //android.util.Log.w("TENSORFLOW", "CENTER");
+//            return PropPosition.CENTER;
+//        } else {
+//            //android.util.Log.w("TENSORFLOW", "RIGHT");
+//            return PropPosition.RIGHT;
+//        }
 
 
-
+        return null;
     }
 
 }
