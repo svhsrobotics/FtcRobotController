@@ -1,7 +1,8 @@
 package org.firstinspires.ftc.teamcode.opmode;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.roadrunner.Pose2d;
+
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -10,9 +11,6 @@ import org.firstinspires.ftc.teamcode.drive.PsiBot;
 import org.firstinspires.ftc.teamcode.drive.Robot;
 import org.firstinspires.ftc.teamcode.drive.RoboticaBot;
 import org.firstinspires.ftc.teamcode.opmode.components.Component;
-import org.firstinspires.ftc.teamcode.opmode.components.GoToBoard;
-import org.firstinspires.ftc.teamcode.opmode.components.ParkingIn;
-import org.firstinspires.ftc.teamcode.opmode.components.ParkingOut;
 import org.firstinspires.ftc.teamcode.opmode.components.PurplePixelComponent;
 import org.firstinspires.ftc.teamcode.util.GlobalOpMode;
 import org.firstinspires.ftc.teamcode.util.Timeout;
@@ -29,7 +27,7 @@ public class TestAuto extends LinearOpMode {
     private Pose2d estimateWithAllCameras(AprilTagCamera[] cameras, AprilTagLocalizer aprilTag) {
         Pose2d pose = null;
         for (AprilTagCamera camera : cameras) {
-            pose = aprilTag.estimateRobotPoseFromAprilTags(camera);
+ //           pose = aprilTag.estimateRobotPoseFromAprilTags(camera);
             if (pose != null) {
                 break;
             }
@@ -60,11 +58,11 @@ public class TestAuto extends LinearOpMode {
 
         // Set servo position right away so that it holds
         if (robot.getClass() == RoboticaBot.class) {
-            ((RoboticaBot) robot).pinchServo.setPosition(0.23);
-            ((RoboticaBot) robot).wristLiftServo.setPosition(0.692);
-            ((RoboticaBot) robot).elbowServo.setPosition(0.494);
-            //((RoboticaBot) robot).wristServo.setPosition(0.2);
-            ((RoboticaBot) robot).planeAngleServo.setPosition(0.3);
+//            ((RoboticaBot) robot).pinchServo.setPosition(0.23);
+//            ((RoboticaBot) robot).wristLiftServo.setPosition(0.692);
+//            ((RoboticaBot) robot).elbowServo.setPosition(0.494);
+//            //((RoboticaBot) robot).wristServo.setPosition(0.2);
+//            ((RoboticaBot) robot).planeAngleServo.setPosition(0.3);
         }
 
         //Pose2d startPose = new Pose2d(12,-62, Math.toRadians(90)); // RED_BOARD
@@ -108,7 +106,7 @@ public class TestAuto extends LinearOpMode {
         if (robot.getClass() == RoboticaBot.class) {
             startPose = new Pose2d(startPose.getX(), startPose.getY(), startPose.getHeading() + Math.toRadians(180));
         }
-        robot.getDrive().setPoseEstimate(startPose);
+      //  robot.getDrive().setPoseEstimate(startPose);
 
         if (!config.tensorFlowInInit || tensorPos == null) {
             aprilTag.close();
@@ -130,24 +128,24 @@ public class TestAuto extends LinearOpMode {
             componentList.add(new PurplePixelComponent(robot, tensorPos, config.innerPath && config.doPark));
         }
 
-        if (config.doPark) {
-            if (config.innerPath) {
-                componentList.add(new ParkingIn(robot));
-            } else {
-                componentList.add(new ParkingOut(robot));
-            }
-            if (config.dropOnBoard) {
-                componentList.add(new GoToBoard(robot, tensorPos));
-            }
+//        if (config.doPark) {
+//            if (config.innerPath) {
+//                componentList.add(new ParkingIn(robot));
+//            } else {
+//                componentList.add(new ParkingOut(robot));
+//            }
+//            if (config.dropOnBoard) {
+//                componentList.add(new GoToBoard(robot, tensorPos));
+//            }
         }
 
-        for (Component component : componentList) {
-            GlobalOpMode.lastPose = robot.getDrive().getPoseEstimate();
-            component.drive();
-        }
+//        for (Component component : componentList) {
+//            GlobalOpMode.lastPose = robot.getDrive().getPoseEstimate();
+//            component.drive();
+//        }
 
-        GlobalOpMode.lastPose = robot.getDrive().getPoseEstimate();
-        sleep(30000);
+//        GlobalOpMode.lastPose = robot.getDrive().getPoseEstimate();
+        //sleep(30000);
 
 
     }

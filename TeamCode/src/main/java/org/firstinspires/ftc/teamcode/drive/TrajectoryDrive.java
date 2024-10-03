@@ -13,15 +13,26 @@ package org.firstinspires.ftc.teamcode.drive;
 //import static org.firstinspires.ftc.teamcode.drive.testbot.DriveConstants.maxAngAccel;
 //import static org.firstinspires.ftc.teamcode.drive.testbot.DriveConstants.maxAngVel;
 
+import static org.openftc.apriltag.ApriltagDetectionJNI.getPoseEstimate;
+
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.config.Config;
 
+import com.acmerobotics.roadrunner.drive.DriveSignal;
+import com.acmerobotics.roadrunner.followers.HolonomicPIDVAFollower;
+import com.acmerobotics.roadrunner.followers.TrajectoryFollower;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
+import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryAccelerationConstraint;
+import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
@@ -116,8 +127,8 @@ public class TrajectoryDrive extends MecanumDrive {
         this.maxAngAccel = maxAngAccel;
         this.maxAngVel = maxAngVel;
 
-        follower = new HolonomicPIDVAFollower(translationalPid, translationalPid, headingPid,
-                new Pose2d(0.5, 0.5, Math.toRadians(5.0)), 0.5);
+     //   follower = new HolonomicPIDVAFollower(translationalPid, translationalPid, headingPid,
+        //         new Pose2d(0.5, 0.5, Math.toRadians(5.0)), 0.5);
 
         LynxModuleUtil.ensureMinimumFirmwareVersion(hardwareMap);
 
@@ -164,17 +175,17 @@ public class TrajectoryDrive extends MecanumDrive {
         List<Integer> lastTrackingEncVels = new ArrayList<>();
 
         // TODO: if desired, use setLocalizer() to change the localization method
-        setLocalizer(new TrackingWheelLocalizer(hardwareMap, lastTrackingEncPositions, lastTrackingEncVels,
-                leftEncoderName,
-                rightEncoderName, perpEncoderName,
-        x_mult,
-        y_mult,
-        forward_offset,
-        lateral_distance,
-        gear_ratio,
-        wheel_radius,
-        ticks_per_rev
-        ));
+//        setLocalizer(new TrackingWheelLocalizer(hardwareMap, lastTrackingEncPositions, lastTrackingEncVels,
+//                leftEncoderName,
+//                rightEncoderName, perpEncoderName,
+//        x_mult,
+//        y_mult,
+//        forward_offset,
+//        lateral_distance,
+//        gear_ratio,
+//        wheel_radius,
+//        ticks_per_rev
+//        ));
 
 
 
@@ -249,6 +260,15 @@ public class TrajectoryDrive extends MecanumDrive {
         if (signal != null) setDriveSignal(signal);
     }
 
+    private Object getPoseVelocity() {
+    }
+
+    private void setDriveSignal(DriveSignal signal) {
+    }
+
+    private void updatePoseEstimate() {
+    }
+
     public void waitForIdle() {
         while (!Thread.currentThread().isInterrupted() && isBusy())
             update();
@@ -301,8 +321,11 @@ public class TrajectoryDrive extends MecanumDrive {
         setDrivePower(vel);
     }
 
+    private void setDrivePower(Pose2d vel) {
+    }
+
     @NonNull
-    @Override
+
     public List<Double> getWheelPositions() {
         lastEncPositions.clear();
 
@@ -315,7 +338,7 @@ public class TrajectoryDrive extends MecanumDrive {
         return wheelPositions;
     }
 
-    @Override
+
     public List<Double> getWheelVelocities() {
         lastEncVels.clear();
 
@@ -328,7 +351,7 @@ public class TrajectoryDrive extends MecanumDrive {
         return wheelVelocities;
     }
 
-    @Override
+
     public void setMotorPowers(double v, double v1, double v2, double v3) {
         leftFront.setPower(v);
         leftRear.setPower(v1);
@@ -336,28 +359,28 @@ public class TrajectoryDrive extends MecanumDrive {
         rightFront.setPower(v3);
     }
 
-    @Override
+
     public double getRawExternalHeading() {
  //       return imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
         return 0;
     }
 
-    @Override
+
     public Double getExternalHeadingVelocity() {
     //    return (double) imu.getRobotAngularVelocity(AngleUnit.RADIANS).zRotationRate;
         return 0.0;
     }
 
-    public static TrajectoryVelocityConstraint getVelocityConstraint(double maxVel, double maxAngularVel, double trackWidth) {
-        return new MinVelocityConstraint(Arrays.asList(
-                new AngularVelocityConstraint(maxAngularVel),
-                new MecanumVelocityConstraint(maxVel, trackWidth)
-        ));
-    }
+//    public static TrajectoryVelocityConstraint getVelocityConstraint(double maxVel, double maxAngularVel, double trackWidth) {
+//        return new MinVelocityConstraint(Arrays.asList(
+//                new AngularVelocityConstraint(maxAngularVel),
+//                new MecanumVelocityConstraint(maxVel, trackWidth)
+//        ));
+//    }
 
-    public static TrajectoryAccelerationConstraint getAccelerationConstraint(double maxAccel) {
-        return new ProfileAccelerationConstraint(maxAccel);
-    }
+//    public static TrajectoryAccelerationConstraint getAccelerationConstraint(double maxAccel) {
+//        return new ProfileAccelerationConstraint(maxAccel);
+//    }
 
     public enum Quadrant {
         RED_AUDIENCE,
@@ -383,6 +406,7 @@ public class TrajectoryDrive extends MecanumDrive {
     }
 
     public Quadrant currentQuadrant() {
-        return whichQuadrant(getPoseEstimate());
+       // return whichQuadrant(getPoseEstimate());
+        return null;
     }
 }
