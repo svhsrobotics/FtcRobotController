@@ -44,7 +44,7 @@ public class TrumanLearnsTeleOP extends LinearOpMode {
 
            }
             if (gamepad1.right_bumper){
-                MaxSpeed= (float) (MaxSpeed-0.1)
+                MaxSpeed= (float) (MaxSpeed-0.1);
             }
 
             topLeftMotor.setPower(lx);
