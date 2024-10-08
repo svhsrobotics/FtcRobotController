@@ -1,15 +1,17 @@
 package org.firstinspires.ftc.teamcode.opmode;
 
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+import org.firstinspires.ftc.teamcode.util.Toggle;
 
 @TeleOp
-
 public class TrumanLearnsTeleOP extends LinearOpMode {
+
     private DcMotor topLeftMotor;
     private DcMotor topRightMotor;
     private DcMotor bottomLeftMotor;
@@ -17,11 +19,13 @@ public class TrumanLearnsTeleOP extends LinearOpMode {
     private CRServo tail;
     @Override
     public void runOpMode() throws InterruptedException {
-        System.out.println("trumans code");
-        float ly;
-        float lx;
-        float rx;
-        float ry;
+        Toggle myToggleButton = new Toggle();
+        double ly;
+        double lx;
+        double rx;
+        double ry;
+        boolean leftBumper;
+        boolean rightBumper; //why? just use if statements
         topLeftMotor = hardwareMap.get(DcMotor.class,"FL");
         topRightMotor = hardwareMap.get(DcMotor.class,"FR");
         bottomLeftMotor = hardwareMap.get(DcMotor.class,"BL");
@@ -29,33 +33,57 @@ public class TrumanLearnsTeleOP extends LinearOpMode {
         topLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         bottomLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         //tail = hardwareMap.get(CRServo.class,"servo"); ONLY FOR DOG
-        int tailAngle = 1;
-        double motorSpeed = 0.3;
+        //double tailAngle = 1;
+        double motorSpeed = 0.3; //^^
         waitForStart();
-        while (opModeIsActive()){
-             lx=gamepad1.right_stick_y;
-             ly=gamepad1.right_stick_y;
-             rx=gamepad1.left_stick_y;
-             ry=gamepad1.left_stick_y;
 
-             if (Math.abs(gamepad1.left_trigger)>0) {
-                 ly=-1;
-                 lx=1;
-                 ly=-1;
-                 lx=1;
-             }
-            if (Math.abs(gamepad1.right_trigger)>0) {
-                ly=1;
-                lx=-1;
-                ly=1;
-                lx=-1;
+        while (opModeIsActive()){
+
+            myToggleButton.update(gamepad1.a);
+
+            if (myToggleButton.state){
+                lx=gamepad1.right_stick_y;
+                ly=gamepad1.right_stick_y;
+                rx=gamepad1.left_stick_y;
+                ry=gamepad1.left_stick_y;
+                leftBumper=gamepad1.left_bumper;
+                rightBumper=gamepad1.right_bumper;
+                if (leftBumper) {
+                    ly=-1;
+                    lx=1;
+                }
+                if (rightBumper) {
+                    rx=1;
+                    ry=-1;
+
+                }
+                topLeftMotor.setPower(ly);
+                bottomLeftMotor.setPower(lx);
+                topRightMotor.setPower(rx);
+                bottomRightMotor.setPower(ry);
+                telemetry.addData("Ly", ly);
+                telemetry.addData("Lx", lx);
+                telemetry.addData("Rx", rx);
+                telemetry.addData("Ry", ry);
+                telemetry.update();
+            }
+            else{
+                double y = -gamepad1.left_stick_y; // Remember, Y stick is reversed!
+                double x = gamepad1.left_stick_x;
+                double rx2 = gamepad1.right_stick_x;
+
+                topLeftMotor.setPower(y+ x + rx2);
+                bottomLeftMotor.setPower(y - x + rx2);
+                topRightMotor.setPower(y - x - rx2);
+                bottomRightMotor.setPower(y + x - rx2);
             }
 
-             topLeftMotor.setPower(ly);
-             bottomLeftMotor.setPower(lx);
-             topRightMotor.setPower(rx);
-             bottomRightMotor.setPower(ry);
+            //while(!check){
+                //put the other stuff that isn't t-bar steering here
+            }
         }
-    }
 }
+
+
+
 
