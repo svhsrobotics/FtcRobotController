@@ -13,9 +13,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class LearningTeleOp extends LinearOpMode {
 
 
-
-
-
     private DcMotor leftFrontMotor;
     private DcMotor rightFrontMotor;
     private DcMotor leftBackMotor;
@@ -32,24 +29,36 @@ public class LearningTeleOp extends LinearOpMode {
         Grabber = hardwareMap.get(CRServo.class, "Grabber");
 
         waitForStart();
-       while(opModeIsActive()) {
-           leftFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-           leftBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-           double y = -gamepad1.left_stick_y; // Remember, Y stick is reversed!
-           double x = gamepad1.left_stick_x;
-           double rx = gamepad1.right_stick_x;
+        while (opModeIsActive()) {
+            leftFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+            leftBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+            double y = -gamepad1.left_stick_y; // Remember, Y stick is reversed!
+            double x = gamepad1.left_stick_x;
+            double rx = gamepad1.right_stick_x;
 
-           leftFrontMotor.setPower(y + x + rx);
-           leftBackMotor.setPower(y - x + rx);
-           rightFrontMotor.setPower(y - x - rx);
-           rightBackMotor.setPower(y + x - rx);}
-    if (gamepad1.left_bumper){
-        Grabber.setPower(1.0);}
-        else if(gamepad1.right_bumper){
-            Grabber.setPower(-1.0);}
-        else {
-            Grabber.setPower(0.0);
-            }
+            leftFrontMotor.setPower(y + x + rx);
+            leftBackMotor.setPower(y - x + rx);
+            rightFrontMotor.setPower(y - x - rx);
+            rightBackMotor.setPower(y + x - rx);
+            if (gamepad1.a){
+                leftBackMotor.setPower(2);
+            rightBackMotor.setPower(2);
+            leftFrontMotor.setPower(2);
+            rightFrontMotor.setPower(2);}
+
+
+
+            if (gamepad1.left_bumper)
+                Grabber.setPower(1);
+            else if (gamepad1.right_bumper)
+                Grabber.setPower(-1);
+            else Grabber.setPower(0);
+            //3 hours for 1 bracket... always remember to click code->reformat code
+
+            //TODO: Mess with servo in slot 2 in order to make the dog's arm rotate
+
         }
+
     }
+}
 

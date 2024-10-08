@@ -108,7 +108,7 @@ public class PropellerDetection2 extends LinearOpMode {
     //private static String TFOD_MODEL_ASSET = "model_20231106_171216.tflite";
     //private static String TFOD_MODEL_ASSET = "model_20231116_151933.tflite";
     //private static String TFOD_MODEL_ASSET = "model_20231121_104059.tflite";
-    private static String TFOD_MODEL_ASSET = "model_20231127_143238.tflite";
+    private static final String TFOD_MODEL_ASSET = "model_20231127_143238.tflite";
     //private static String TFOD_MODEL_ASSET = "model_20231207_153054.tflite";
     private static final String[] LABELS = {
             "prop",

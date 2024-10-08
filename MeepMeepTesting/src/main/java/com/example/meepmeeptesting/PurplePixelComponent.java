@@ -7,7 +7,7 @@ import com.noahbres.meepmeep.roadrunner.trajectorysequence.TrajectorySequenceBui
 
 
 public class PurplePixelComponent extends Component {
-    private TensorFlowDetection.PropPosition propPosition;
+    private final TensorFlowDetection.PropPosition propPosition;
     public PurplePixelComponent(Robot robot, TensorFlowDetection.PropPosition propPosition) {
         super(robot);
         this.propPosition = propPosition;

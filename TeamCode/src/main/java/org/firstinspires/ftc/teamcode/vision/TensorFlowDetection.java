@@ -17,16 +17,16 @@ public class TensorFlowDetection {
     /**
      * The variable to store our instance of the TensorFlow Object Detection processor.
      */
-    private TfodProcessor tfod;
+    private final TfodProcessor tfod;
 
     /**
      * The variable to store our instance of the vision portal.
      */
-    private VisionPortal visionPortal;
+    private final VisionPortal visionPortal;
     //private static String TFOD_MODEL_ASSET = "model_20231127_143238.tflite"; //model without negatives
     //private static String TFOD_MODEL_ASSET = "model_20231209_095349.tflite"; //model with negatives
     //private static String TFOD_MODEL_ASSET = "model_20240309_150637.tflite";
-    private static String TFOD_MODEL_ASSET = "goodModel.tflite";
+    private static final String TFOD_MODEL_ASSET = "goodModel.tflite";
     private static final String[] LABELS = {
             "prop",
     };

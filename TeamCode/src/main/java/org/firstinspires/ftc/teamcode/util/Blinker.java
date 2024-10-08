@@ -63,7 +63,7 @@ public class Blinker {
     public static class Pattern {
         public static final int MAX_STEPS = 16;
 
-        private List<com.qualcomm.robotcore.hardware.Blinker.Step> steps = new ArrayList<>();
+        private final List<com.qualcomm.robotcore.hardware.Blinker.Step> steps = new ArrayList<>();
 
         /**
          * Add a step to the pattern. You can have a maximum of 16 steps.
