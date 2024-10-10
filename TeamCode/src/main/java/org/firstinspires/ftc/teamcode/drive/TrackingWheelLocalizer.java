@@ -38,7 +38,8 @@ public class TrackingWheelLocalizer extends ThreeTrackingWheelLocalizer {
     public Encoder leftEncoder, rightEncoder, frontEncoder;
     public final double X_MULTIPLIER;// = 1.009485424; // Multiplier in the X direction
     public final double Y_MULTIPLIER;// = 1.017838563; // Multiplier in the Y direction
-    private List<Integer> lastEncPositions, lastEncVels;
+    private final List<Integer> lastEncPositions;
+    private final List<Integer> lastEncVels;
 
     public TrackingWheelLocalizer(HardwareMap hardwareMap, List<Integer> lastTrackingEncPositions, List<Integer> lastTrackingEncVels,
                                   String leftEncoderName,
