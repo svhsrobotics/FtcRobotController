@@ -23,12 +23,35 @@ public class PatrickTeleOP extends LinearOpMode {
         back_right = hardwareMap.get(DcMotor.class, "right_back_right_dw");
 
         while (opModeIsActive()) {
-            if (gamepad1.left_stick_x > 0) {
+            if (gamepad1.left_stick_x > 0.3) {
+                front_left.setPower(1);
+                front_right.setPower(1);
+                back_left.setPower(1);
+                back_right.setPower(1);
+            }
+            if (gamepad1.left_stick_x < 0.3) {
+                front_left.setPower(0);
+                front_right.setPower(0);
+                back_right.setPower(0);
+                back_left.setPower(0);
+            }
+            if (gamepad1.left_bumper) {
+                front_left.setPower(1);
+                back_left.setPower(1);
+            }
+            else {
+                front_left.setPower(0);
+                back_left.setPower(0);
+            }
+            if (gamepad1.right_bumper) {
+                front_right.setPower(1);
+                back_right.setPower(1);
+            }
+            else {
+                front_right.setPower(0);
+                back_right.setPower(0);
+            }
             }
         }
-
     }
-
-
-}
 
