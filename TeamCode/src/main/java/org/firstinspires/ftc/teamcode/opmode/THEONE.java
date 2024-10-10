@@ -71,7 +71,7 @@ public class THEONE extends LinearOpMode {
                 previous_error = current_error
                 previous_time = current_time
                 Arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-                Arm.setPower(0);
+                Arm.setPower(0);*/
             }
             //3 hours for 1 bracket... always remember to click code->reformat code
 
