@@ -12,7 +12,6 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 public class NickTeleOp extends LinearOpMode {
 
 
-    private DcMotor leftFrontMotor;
     private DcMotor rightFrontMotor;
     private DcMotor leftBackMotor;
     private DcMotor rightBackMotor;
@@ -22,7 +21,7 @@ public class NickTeleOp extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        leftFrontMotor = hardwareMap.get(DcMotor.class, "left_front_left_dw");
+        DcMotor leftFrontMotor = hardwareMap.get(DcMotor.class, "left_front_left_dw");
         rightFrontMotor = hardwareMap.get(DcMotor.class, "right_front");
         leftBackMotor = hardwareMap.get(DcMotor.class, "left_back");
         rightBackMotor = hardwareMap.get(DcMotor.class, "right_back_right_dw");
