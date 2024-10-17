@@ -7,6 +7,8 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+import org.firstinspires.ftc.robotcore.internal.camera.delegating.DelegatingCaptureSequence;
+
 @Config
 @TeleOp
 public class NickTeleOp extends LinearOpMode {
@@ -57,6 +59,28 @@ public class NickTeleOp extends LinearOpMode {
                     Grabber.setPower(0.0);
                 }
             }
+//            if (gamepad1.left_stick_y >.5 ) {
+//                leftFrontMotor.setPower(1.0);
+//                leftBackMotor.setPower(1.0);
+//                rightBackMotor.setPower(1.0);
+//                rightFrontMotor.setPower(1.0);
+//
+//
+//
+//            } else if  (gamepad1.left_stick_y <-.5 ) {
+//                leftFrontMotor.setPower(-1.0);
+//                leftBackMotor.setPower(-1.0);
+//                rightBackMotor.setPower(-1.0);
+//                rightFrontMotor.setPower(-1.0);
+//
+//
+//
+//            } else {leftFrontMotor.setPower(0);
+//                leftBackMotor.setPower(0);
+//                rightBackMotor.setPower(0);
+//                rightFrontMotor.setPower(0);}
+//
+
         }
     }
 }
