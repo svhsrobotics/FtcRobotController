@@ -17,6 +17,7 @@ public class THEONE extends LinearOpMode {
     private DcMotor leftBackMotor;
     private DcMotor rightBackMotor;
     private DcMotor Arm;
+    double reference;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -26,9 +27,47 @@ public class THEONE extends LinearOpMode {
         leftBackMotor = hardwareMap.get(DcMotor.class, "back_left");
         rightBackMotor = hardwareMap.get(DcMotor.class, "back_right");
         Arm = hardwareMap.get(DcMotor.class, "arm");
-
+        double encoderPosition;
         waitForStart();
+        double error;
+        error = 1.1;
+        double power = 0;
+
+
+        reference = 300;
+        Arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        Arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         while (opModeIsActive()) {
+
+            while (gamepad1.b) {
+
+
+                // obtain the encoder position
+                encoderPosition = Arm.getCurrentPosition();
+                // calculate the error
+                error = reference - encoderPosition;
+                power = (error/250)*.7;
+                if(power>0.7){
+                    power = 0.7;
+                }
+                else if(power<-0.7){
+                    power = -0.7;
+                }
+
+               Arm.setPower(power);
+                while (gamepad1.a) {
+                    reference = encoderPosition + 5;
+                }
+                telemetry.addData("arm", encoderPosition);
+                telemetry.addData("error", error);
+                telemetry.addData("stick", gamepad2.left_stick_y);
+                telemetry.addData("power", power);
+                telemetry.update();
+
+
+            }
+            Arm.setPower(0);
             leftFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
             leftBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
             double y = -gamepad1.left_stick_y; // Remember, Y stick is reversed!
@@ -39,45 +78,20 @@ public class THEONE extends LinearOpMode {
             leftBackMotor.setPower(y - x + rx);
             rightFrontMotor.setPower(y - x - rx);
             rightBackMotor.setPower(y + x - rx);
-            if (gamepad1.a) {
-                leftBackMotor.setPower(2);
-                rightBackMotor.setPower(2);
-                leftFrontMotor.setPower(2);
-                rightFrontMotor.setPower(2);
-            }
 
-
-            if (gamepad1.left_bumper) {
-                Arm.setPower(.3);
-            } else if (gamepad1.right_bumper) {
-                Arm.setPower(-.3);
-            } else {
-                /*current_time = get_current_time()
-                current_error = desire_position-current_position
-
-                p = k_p * current_error
-
-                i += k_i * (current_error * (current_time - previous_time))
-
-                if i > max_i:
-                i = max_i
-                elif i < -max_i:
-                i = -max_i
-
-                D = k_d * (current_error - previous_error) / (current_time - previous_time)
-
-                output = p + i + d
-
-                previous_error = current_error
-                previous_time = current_time
-                Arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-                Arm.setPower(0);*/
-            }
-            //3 hours for 1 bracket... always remember to click code->reformat code
-
-
+//oops i didn't push right :P
         }
-
     }
 }
+
+
+//3 hours for 1 bracket... always remember to click code->reformat code
+
+
+
+        
+
+
+
+
 
