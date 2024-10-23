@@ -79,7 +79,7 @@ public class THEONE extends LinearOpMode {
             rightFrontMotor.setPower(y - x - rx);
             rightBackMotor.setPower(y + x - rx);
 
-
+//oops i didn't push right :P
         }
     }
 }
