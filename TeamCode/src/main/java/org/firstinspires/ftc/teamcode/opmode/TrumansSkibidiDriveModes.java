@@ -10,8 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import org.firstinspires.ftc.teamcode.util.Toggle;
 
 @TeleOp
-public class TrumanLearnsTeleOP extends LinearOpMode {
-
+public class TrumansSkibidiDriveModes extends LinearOpMode {
     private DcMotor topLeftMotor;
     private DcMotor topRightMotor;
     private DcMotor bottomLeftMotor;
@@ -25,7 +24,7 @@ public class TrumanLearnsTeleOP extends LinearOpMode {
         double rx;
         double ry;
         boolean leftBumper;
-        boolean rightBumper; //why? just use if statements
+        boolean rightBumper; //why? just use if statements       /////why not.....
         topLeftMotor = hardwareMap.get(DcMotor.class,"FL");
         topRightMotor = hardwareMap.get(DcMotor.class,"FR");
         bottomLeftMotor = hardwareMap.get(DcMotor.class,"BL");
@@ -68,7 +67,7 @@ public class TrumanLearnsTeleOP extends LinearOpMode {
                 telemetry.update();
             }
             else{
-                double y = -gamepad1.left_stick_y; // Remember, Y stick is reversed!
+                double y = -gamepad1.left_stick_y; // Y stick is reversed!
                 double x = gamepad1.left_stick_x;
                 double rx2 = gamepad1.right_stick_x;
 
@@ -76,10 +75,11 @@ public class TrumanLearnsTeleOP extends LinearOpMode {
                 bottomLeftMotor.setPower(y - x + rx2);
                 topRightMotor.setPower(y - x - rx2);
                 bottomRightMotor.setPower(y + x - rx2);
+                // remember kids plagiarism is wrong
             }
 
-            //while(!check){
-                //put the other stuff that isn't t-bar steering here
+            // while(!check){
+                // put the other stuff that isn't t-bar steering here
             }
         }
 }
