@@ -56,9 +56,7 @@ public class THEONE extends LinearOpMode {
                 }
 
                Arm.setPower(power);
-                while (gamepad1.a) {
-                    reference = encoderPosition + 5;
-                }
+
                 telemetry.addData("arm", encoderPosition);
                 telemetry.addData("error", error);
                 telemetry.addData("stick", gamepad2.left_stick_y);
