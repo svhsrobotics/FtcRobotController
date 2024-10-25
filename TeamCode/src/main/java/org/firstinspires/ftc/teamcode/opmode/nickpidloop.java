@@ -28,6 +28,9 @@ public class nickpidloop extends LinearOpMode {
         waitForStart();
         double error = 1.1;
         double power = 0;
+        double difference = 0;
+        double preverror = 0;
+
 
         refrence = 300;
         Arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -35,23 +38,16 @@ public class nickpidloop extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            while (gamepad1.b)
+            while (gamepad1.b);
 
+                error = preverror + error;
+                difference = error -preverror;
+                preverror = error;
+//                power = error + what?? ask brennan on monday
 
-                // obtaining encoder position
-                encoderPosition = Arm.getCurrentPosition();
-                // calculate error
-                error = refrence - encoderPosition;
-                power = (error/250)*.7;
-                if(power>0.7){
-                    power = 0.7;
-                }
-                else if(power<-.7){
-                    power = -0.7;
                 }
 
         }
     }
 
 
-}
