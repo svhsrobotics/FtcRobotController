@@ -38,7 +38,7 @@ public class nickpidloop extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            while (gamepad1.b);
+        while (gamepad1.b);
 
                 error = preverror + error;
                 difference = error -preverror;
