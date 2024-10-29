@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+import kotlin.reflect.KDeclarationContainer;
+
 @Config
 @TeleOp
 public class nickpidloop extends LinearOpMode {
@@ -30,6 +32,11 @@ public class nickpidloop extends LinearOpMode {
         double power = 0;
         double difference = 0;
         double preverror = 0;
+        double kp = 0;
+        double Ki = 0;
+        double kg = 0;
+        double k = 0;
+
 
 
         refrence = 300;
@@ -40,10 +47,10 @@ public class nickpidloop extends LinearOpMode {
 
         while (gamepad1.b);
 
-                error = preverror + error;
+        error = preverror + error;
                 difference = error -preverror;
                 preverror = error;
-//                power = error + what?? ask brennan on monday
+                power = k*(error) + Ki*(error)+ kg;
 
                 }
 
