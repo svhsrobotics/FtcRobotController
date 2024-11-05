@@ -10,6 +10,7 @@ import kotlin.reflect.KDeclarationContainer;
 
 @Config
 @TeleOp
+
 public class nickpidloop extends LinearOpMode {
 
     private DcMotor leftFrontMotor;
@@ -19,7 +20,7 @@ public class nickpidloop extends LinearOpMode {
     private DcMotor Arm;
     double refrence;
 
-    public void runOpMode()  throws InterruptedException {
+    public void runOpMode() throws InterruptedException {
 
         leftFrontMotor = hardwareMap.get(DcMotor.class, "front_left");
         rightFrontMotor = hardwareMap.get(DcMotor.class, "front_right");
@@ -32,10 +33,10 @@ public class nickpidloop extends LinearOpMode {
         double power = 0;
         double difference = 0;
         double preverror = 0;
+        double k = 0;
         double kp = 0;
         double Ki = 0;
         double kg = 0;
-        double k = 0;
 
 
 
@@ -45,16 +46,13 @@ public class nickpidloop extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-        while (gamepad1.b);
+            while (gamepad1.b) ;
 
-        error = preverror + error;
-                difference = error -preverror;
-                preverror = error;
-                power = k*(error) + Ki*(error)+ kg;
-
-                }
+            error = preverror + error;
+            difference = error - preverror;
+            preverror = error;
+            power = k * (error) + Ki * (error) + kg;
 
         }
     }
-
-
+}
