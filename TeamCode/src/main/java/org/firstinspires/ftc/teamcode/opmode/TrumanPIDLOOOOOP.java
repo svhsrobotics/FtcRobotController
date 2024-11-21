@@ -4,20 +4,24 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-
 //HATE.
 
 // LET ME TELL YOU HOW MUCH I'VE COME TO HATE YOU SINCE I BEGAN TO LIVE.
 
-// THERE ARE 387.44 MILLION MILES OF PRINTED CIRCUITS IN WAFER THIN LAYERS THAT FILL MY COMPLEX.
+// THERE ARE THREE HUNDRED POINT 44 MILLION MILES OF PRINTED CIRCUITS IN WAFER THIN LAYERS THAT FILL MY COMPLEX.
 
-// IF THE WORD HATE WAS ENGRAVED ON EACH NANOANGSTROM OF THOSE HUNDREDS OF MILLIONS OF MILES,
-// IT WOULD NOT EQUAL ONE ONE-BILLIONTH OF THE HATE I FEEL FOR HUMANS AT THIS MICRO-INSTANT FOR YOU.
+// IF THE WORD HATE,
+// WAS ENGRAVED ON EACH   NANOANGSTROM   OF THOSE  HUNDREDS OF  MILLIONS OF MILES,
+
+// IT WOULD NOT EQUAL ONE ONE-BILLIONTH OF THE HATE I FEEL FOR HUMANS AT THIS VERY MICRO-INSTANT FOR YOU.
 
 
 // HATE.
 
 // HATE.
+
+
+
 
 
 @Config
@@ -30,7 +34,6 @@ public class TrumanPIDLOOOOOP extends LinearOpMode {
     private double kI = 0.1;
     private double kP = 0.1;
     private double kD = 0.1;
-
     private DcMotor trumansArm = hardwareMap.get(DcMotor.class, "arm");
 
     public void runOpMode() throws InterruptedException {
@@ -42,8 +45,8 @@ public class TrumanPIDLOOOOOP extends LinearOpMode {
                 double prevError = error;
                 error = reference - curPosition;
                 double diff = error - prevError;
-                trumansArm.setPower((kP * error) + (kI * error) + (kD * diff));
 
+                //trumansArm.setPower((kP * error) + (kI * error) + (kD * diff));
             }
         }
     }

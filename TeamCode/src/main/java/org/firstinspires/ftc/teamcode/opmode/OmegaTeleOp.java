@@ -1,16 +1,18 @@
 package org.firstinspires.ftc.teamcode.opmode;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-
+@TeleOp
+@Config
 public class OmegaTeleOp extends LinearOpMode {
     private DcMotor topLeftMotor;
     private DcMotor topRightMotor;
     private DcMotor bottomLeftMotor;
     private DcMotor bottomRightMotor;
 
-    private DcMotor trumansArm = hardwareMap.get(DcMotor.class, "arm");
 
     @Override
 
@@ -21,6 +23,7 @@ public class OmegaTeleOp extends LinearOpMode {
         bottomRightMotor = hardwareMap.get(DcMotor.class,"BR");
         topLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         bottomLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        waitForStart();
         while (opModeIsActive()) {
             double y = -gamepad1.left_stick_y; // Y stick is reversed!
             double x = gamepad1.left_stick_x;

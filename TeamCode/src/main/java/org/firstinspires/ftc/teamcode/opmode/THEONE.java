@@ -41,8 +41,6 @@ public class THEONE extends LinearOpMode {
         while (opModeIsActive()) {
 
             while (gamepad1.b) {
-
-
                 // obtain the encoder position
                 encoderPosition = Arm.getCurrentPosition();
                 // calculate the error
@@ -54,7 +52,6 @@ public class THEONE extends LinearOpMode {
                 else if(power<-0.7){
                     power = -0.7;
                 }
-
                Arm.setPower(power);
 
                 telemetry.addData("arm", encoderPosition);
