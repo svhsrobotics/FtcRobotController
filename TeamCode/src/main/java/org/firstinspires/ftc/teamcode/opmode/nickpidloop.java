@@ -1,60 +1,40 @@
 package org.firstinspires.ftc.teamcode.opmode;
-
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-import kotlin.reflect.KDeclarationContainer;
+
 
 @Config
 @TeleOp
 public class nickpidloop extends LinearOpMode {
+    private double reference = 250;
+    private double error = 0;
+    private double power = 0;
+    private double maxpower = 0.5;
+    private double kI = 0.1;
+    private double kP = 0.1;
+    private double kD = 0.1;
 
-    private DcMotor leftFrontMotor;
-    private DcMotor rightFrontMotor;
-    private DcMotor leftBackMotor;
-    private DcMotor rightBackMotor;
-    private DcMotor Arm;
-    double refrence;
+    private DcMotor arm = hardwareMap.get(DcMotor.class, "arm");
 
-    public void runOpMode()  throws InterruptedException {
-
-        leftFrontMotor = hardwareMap.get(DcMotor.class, "front_left");
-        rightFrontMotor = hardwareMap.get(DcMotor.class, "front_right");
-        leftBackMotor = hardwareMap.get(DcMotor.class, "back_left");
-        rightBackMotor = hardwareMap.get(DcMotor.class, "back_right");
-        Arm = hardwareMap.get(DcMotor.class, "arm");
-        double encoderPosition = 0;
-        waitForStart();
-        double error = 1.1;
-        double power = 0;
-        double difference = 0;
-        double preverror = 0;
-        double kp = 0;
-        double Ki = 0;
-        double kg = 0;
-        double k = 0;
-
-
-
-        refrence = 300;
-        Arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        Arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
+    public void runOpMode() throws InterruptedException {
+        arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         while (opModeIsActive()) {
+            while (gamepad1.a) {
+                //for encoder position
+                double curPosition = arm.getCurrentPosition();
+               //the other error + current error
+                double prevError = error;
+                //other poop that i don't understand yes
+                // todo learn the stuff under here
+                error = reference - curPosition;
+                double diff = error - prevError;
+                arm.setPower((kP * error) + (kI * error) + (kD * diff));
 
-        while (gamepad1.b);
-
-        error = preverror + error;
-                difference = error -preverror;
-                preverror = error;
-                power = k*(error) + Ki*(error)+ kg;
-
-                }
-
+            }
         }
     }
-
-
+}
